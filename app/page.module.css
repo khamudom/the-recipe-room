@@ -99,6 +99,12 @@
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  height: 2.5rem;
+  width: 100%;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  color: #78350f;
 }
 
 .searchInput:focus {
@@ -191,4 +197,17 @@
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-style: italic;
   margin: 0;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

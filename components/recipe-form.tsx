@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useState, useRef } from "react";
-import { ArrowLeft, Plus, X, Upload, ImageIcon } from "lucide-react";
+import { ArrowLeft, Plus, X, Upload, ImageIcon, Loader2 } from "lucide-react";
 import type { Recipe } from "@/types/recipe";
 import styles from "./recipe-form.module.css";
 
@@ -10,9 +10,15 @@ interface RecipeFormProps {
   recipe?: Recipe | null;
   onSubmit: (recipe: Omit<Recipe, "id" | "createdAt">) => void;
   onCancel: () => void;
+  isSubmitting?: boolean;
 }
 
-export function RecipeForm({ recipe, onSubmit, onCancel }: RecipeFormProps) {
+export function RecipeForm({
+  recipe,
+  onSubmit,
+  onCancel,
+  isSubmitting = false,
+}: RecipeFormProps) {
   const [formData, setFormData] = useState({
     title: recipe?.title || "",
     description: recipe?.description || "",
@@ -387,11 +393,27 @@ export function RecipeForm({ recipe, onSubmit, onCancel }: RecipeFormProps) {
               type="button"
               onClick={onCancel}
               className={styles.cancelSubmitButton}
+              disabled={isSubmitting}
             >
               Cancel
             </button>
-            <button type="submit" className={styles.saveButton}>
-              {recipe ? "Update Recipe" : "Save Recipe"}
+            <button
+              type="submit"
+              className={styles.saveButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2
+                    className={`${styles.buttonIcon} ${styles.spinning}`}
+                  />
+                  {recipe ? "Updating..." : "Saving..."}
+                </>
+              ) : recipe ? (
+                "Update Recipe"
+              ) : (
+                "Save Recipe"
+              )}
             </button>
           </div>
         </form>

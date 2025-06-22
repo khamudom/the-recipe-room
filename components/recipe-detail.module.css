@@ -41,8 +41,8 @@
 }
 
 .backButton:hover {
-  color: #78350f;
-  background-color: #fef3c7;
+  background-color: #78350f;
+  color: #fef3c7;
 }
 
 .actionButtons {
@@ -201,6 +201,11 @@
   background: linear-gradient(135deg, #fefcf3 0%, #fef7ed 100%);
   border: 2px solid #fbbf24;
   border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.cardHeader {
+  padding: 1.5rem;
 }
 
 .sectionTitle {

@@ -1,100 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Search, BookOpen, ChefHat } from "lucide-react";
+import { Plus, Search, BookOpen, ChefHat, Loader2 } from "lucide-react";
 import { RecipeCard } from "@/components/recipe-card";
 import { RecipeForm } from "@/components/recipe-form";
 import { RecipeDetail } from "@/components/recipe-detail";
+import { database } from "@/lib/database";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
-
-const sampleRecipes: Recipe[] = [
-  {
-    id: "1",
-    title: "Grandma's Apple Pie",
-    description: "A classic apple pie recipe passed down through generations",
-    ingredients: [
-      "6 cups sliced apples",
-      "3/4 cup sugar",
-      "2 tbsp flour",
-      "1 tsp cinnamon",
-      "1/4 tsp nutmeg",
-      "2 pie crusts",
-    ],
-    instructions: [
-      "Preheat oven to 425°F",
-      "Mix apples with sugar, flour, and spices",
-      "Place filling in bottom crust",
-      "Cover with top crust and seal edges",
-      "Bake for 45-50 minutes until golden",
-    ],
-    prepTime: "30 minutes",
-    cookTime: "50 minutes",
-    servings: 8,
-    category: "Dessert",
-    image: "/placeholder.svg?height=200&width=300",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    title: "Hearty Beef Stew",
-    description: "A warming, comforting stew perfect for cold evenings",
-    ingredients: [
-      "2 lbs beef chuck, cubed",
-      "4 carrots, sliced",
-      "3 potatoes, cubed",
-      "1 onion, diced",
-      "2 cups beef broth",
-      "2 tbsp tomato paste",
-      "Salt and pepper to taste",
-    ],
-    instructions: [
-      "Brown beef in a large pot",
-      "Add onions and cook until soft",
-      "Add remaining ingredients",
-      "Simmer for 2 hours until tender",
-      "Season to taste and serve hot",
-    ],
-    prepTime: "20 minutes",
-    cookTime: "2 hours",
-    servings: 6,
-    category: "Main Course",
-    image: "/placeholder.svg?height=200&width=300",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    title: "Mediterranean Quinoa Salad",
-    description:
-      "A fresh and healthy salad bursting with Mediterranean flavors",
-    ingredients: [
-      "1 cup quinoa, rinsed",
-      "2 cups water",
-      "1 cucumber, diced",
-      "1 cup cherry tomatoes, halved",
-      "1/2 cup kalamata olives, pitted and sliced",
-      "1/4 cup red onion, finely diced",
-      "1/2 cup feta cheese, crumbled",
-      "2 tbsp extra virgin olive oil",
-      "1 tbsp lemon juice",
-      "1 tsp dried oregano",
-      "Salt and pepper to taste",
-    ],
-    instructions: [
-      "Cook quinoa according to package instructions, then let cool",
-      "In a large bowl, combine cooled quinoa with cucumber, tomatoes, olives, and red onion",
-      "In a small bowl, whisk together olive oil, lemon juice, oregano, salt, and pepper",
-      "Pour dressing over salad and toss gently to combine",
-      "Sprinkle feta cheese on top and serve chilled",
-    ],
-    prepTime: "15 minutes",
-    cookTime: "15 minutes",
-    servings: 4,
-    category: "Salad",
-    image: "/placeholder.svg?height=200&width=300",
-    createdAt: new Date().toISOString(),
-  },
-];
 
 export default function RecipeBook() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -102,58 +15,111 @@ export default function RecipeBook() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Load recipes from database
   useEffect(() => {
-    setRecipes(sampleRecipes);
+    loadRecipes();
   }, []);
 
-  useEffect(() => {
-    if (
-      recipes.length > 0 ||
-      localStorage.getItem("recipe-room-recipes") !== null
-    ) {
-      localStorage.setItem("recipe-room-recipes", JSON.stringify(recipes));
+  const loadRecipes = async () => {
+    try {
+      setIsLoading(true);
+      const data = await database.getRecipes();
+      setRecipes(data);
+    } catch (error) {
+      console.error("Error loading recipes:", error);
+      // Fallback to empty array if database is not available
+      setRecipes([]);
+    } finally {
+      setIsLoading(false);
     }
-  }, [recipes]);
-
-  const filteredRecipes = recipes.filter(
-    (recipe) =>
-      recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      recipe.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      recipe.ingredients.some((ingredient) =>
-        ingredient.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-  );
-
-  const handleAddRecipe = (recipe: Omit<Recipe, "id" | "createdAt">) => {
-    const newRecipe: Recipe = {
-      ...recipe,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    setRecipes((prev) => [newRecipe, ...prev]);
-    setIsFormOpen(false);
   };
 
-  const handleEditRecipe = (recipe: Omit<Recipe, "id" | "createdAt">) => {
-    if (editingRecipe) {
-      const updatedRecipe: Recipe = {
-        ...recipe,
-        id: editingRecipe.id,
-        createdAt: editingRecipe.createdAt,
-      };
-      setRecipes((prev) =>
-        prev.map((r) => (r.id === editingRecipe.id ? updatedRecipe : r))
+  // Search recipes
+  const searchRecipes = async (query: string) => {
+    if (!query.trim()) {
+      await loadRecipes();
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const data = await database.searchRecipes(query);
+      setRecipes(data);
+    } catch (error) {
+      console.error("Error searching recipes:", error);
+      // Fallback to client-side filtering
+      const filtered = recipes.filter(
+        (recipe) =>
+          recipe.title.toLowerCase().includes(query.toLowerCase()) ||
+          recipe.category.toLowerCase().includes(query.toLowerCase()) ||
+          recipe.ingredients.some((ingredient) =>
+            ingredient.toLowerCase().includes(query.toLowerCase())
+          )
       );
-      setEditingRecipe(null);
-      setIsFormOpen(false);
-      setSelectedRecipe(updatedRecipe);
+      setRecipes(filtered);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleDeleteRecipe = (id: string) => {
-    setRecipes((prev) => prev.filter((r) => r.id !== id));
-    setSelectedRecipe(null);
+  // Debounced search
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      searchRecipes(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  const handleAddRecipe = async (recipe: Omit<Recipe, "id" | "createdAt">) => {
+    try {
+      setIsSubmitting(true);
+      const newRecipe = await database.createRecipe(recipe);
+      setRecipes((prev) => [newRecipe, ...prev]);
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error("Error creating recipe:", error);
+      alert("Failed to create recipe. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleEditRecipe = async (recipe: Omit<Recipe, "id" | "createdAt">) => {
+    if (editingRecipe) {
+      try {
+        setIsSubmitting(true);
+        const updatedRecipe = await database.updateRecipe(
+          editingRecipe.id,
+          recipe
+        );
+        setRecipes((prev) =>
+          prev.map((r) => (r.id === editingRecipe.id ? updatedRecipe : r))
+        );
+        setEditingRecipe(null);
+        setIsFormOpen(false);
+        setSelectedRecipe(updatedRecipe);
+      } catch (error) {
+        console.error("Error updating recipe:", error);
+        alert("Failed to update recipe. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+  };
+
+  const handleDeleteRecipe = async (id: string) => {
+    try {
+      await database.deleteRecipe(id);
+      setRecipes((prev) => prev.filter((r) => r.id !== id));
+      setSelectedRecipe(null);
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+      alert("Failed to delete recipe. Please try again.");
+    }
   };
 
   const openEditForm = (recipe: Recipe) => {
@@ -171,6 +137,7 @@ export default function RecipeBook() {
           setIsFormOpen(false);
           setEditingRecipe(null);
         }}
+        isSubmitting={isSubmitting}
       />
     );
   }
@@ -218,6 +185,7 @@ export default function RecipeBook() {
           <button
             onClick={() => setIsFormOpen(true)}
             className={styles.addButton}
+            disabled={isSubmitting}
           >
             <Plus className={styles.buttonIcon} />
             Add New Recipe
@@ -225,10 +193,20 @@ export default function RecipeBook() {
         </div>
 
         {/* Recipe Grid */}
-        {filteredRecipes.length === 0 ? (
+        {isLoading ? (
+          <div className={styles.emptyState}>
+            <Loader2 className={`${styles.emptyIcon} ${styles.spinning}`} />
+            <h3 className={styles.emptyTitle}>Loading recipes...</h3>
+            <p className={styles.emptyText}>
+              Please wait while we fetch your recipes
+            </p>
+          </div>
+        ) : recipes.length === 0 ? (
           <div className={styles.emptyState}>
             <ChefHat className={styles.emptyIcon} />
-            <h3 className={styles.emptyTitle}>No recipes found</h3>
+            <h3 className={styles.emptyTitle}>
+              {searchTerm ? "No recipes found" : "No recipes yet"}
+            </h3>
             <p className={styles.emptyText}>
               {searchTerm
                 ? "Try adjusting your search terms"
@@ -237,7 +215,7 @@ export default function RecipeBook() {
           </div>
         ) : (
           <div className={styles.recipeGrid}>
-            {filteredRecipes.map((recipe) => (
+            {recipes.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
                 recipe={recipe}
