@@ -80,6 +80,7 @@
   position: relative;
   flex: 1;
   max-width: 24rem;
+  width: 100%;
 }
 
 .searchIcon {
