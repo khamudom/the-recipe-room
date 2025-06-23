@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Search, BookOpen, ChefHat, Loader2 } from "lucide-react";
+import { Plus, Search, BookOpen, ChefHat, Loader2, Star } from "lucide-react";
 import { RecipeCard } from "@/components/recipe-card";
 import { RecipeForm } from "@/components/recipe-form";
 import { RecipeDetail } from "@/components/recipe-detail";
 import { database } from "@/lib/database";
+import { useAuth } from "@/lib/auth-context";
+import ProtectedRoute from "@/components/protected-route";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
@@ -17,16 +19,20 @@ export default function RecipeBook() {
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
 
   // Load recipes from database
   useEffect(() => {
     loadRecipes();
-  }, []);
+  }, [user]);
 
   const loadRecipes = async () => {
     try {
       setIsLoading(true);
-      const data = await database.getRecipes();
+      // If user is authenticated, load their recipes, otherwise load featured recipes
+      const data = user
+        ? await database.getRecipes()
+        : await database.getFeaturedRecipes();
       setRecipes(data);
     } catch (error) {
       console.error("Error loading recipes:", error);
@@ -130,15 +136,17 @@ export default function RecipeBook() {
 
   if (isFormOpen) {
     return (
-      <RecipeForm
-        recipe={editingRecipe}
-        onSubmit={editingRecipe ? handleEditRecipe : handleAddRecipe}
-        onCancel={() => {
-          setIsFormOpen(false);
-          setEditingRecipe(null);
-        }}
-        isSubmitting={isSubmitting}
-      />
+      <ProtectedRoute>
+        <RecipeForm
+          recipe={editingRecipe}
+          onSubmit={editingRecipe ? handleEditRecipe : handleAddRecipe}
+          onCancel={() => {
+            setIsFormOpen(false);
+            setEditingRecipe(null);
+          }}
+          isSubmitting={isSubmitting}
+        />
+      </ProtectedRoute>
     );
   }
 
@@ -167,7 +175,9 @@ export default function RecipeBook() {
           </div>
           <div className={styles.decorativeLine}></div>
           <p className={styles.subtitle}>
-            Treasured recipes from our kitchen to yours
+            {user
+              ? "Your personal recipe collection"
+              : "Featured recipes from our kitchen"}
           </p>
         </div>
 
@@ -182,14 +192,21 @@ export default function RecipeBook() {
               className={styles.searchInput}
             />
           </div>
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className={styles.addButton}
-            disabled={isSubmitting}
-          >
-            <Plus className={styles.buttonIcon} />
-            Add New Recipe
-          </button>
+          {user ? (
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className={styles.addButton}
+              disabled={isSubmitting}
+            >
+              <Plus className={styles.buttonIcon} />
+              Add New Recipe
+            </button>
+          ) : (
+            <a href="/auth/signin" className={styles.addButton}>
+              <Plus className={styles.buttonIcon} />
+              Sign In to Add Recipe
+            </a>
+          )}
         </div>
 
         {/* Recipe Grid */}
@@ -205,12 +222,18 @@ export default function RecipeBook() {
           <div className={styles.emptyState}>
             <ChefHat className={styles.emptyIcon} />
             <h3 className={styles.emptyTitle}>
-              {searchTerm ? "No recipes found" : "No recipes yet"}
+              {searchTerm
+                ? "No recipes found"
+                : user
+                ? "No recipes yet"
+                : "No featured recipes"}
             </h3>
             <p className={styles.emptyText}>
               {searchTerm
                 ? "Try adjusting your search terms"
-                : "Start by adding your first recipe!"}
+                : user
+                ? "Start by adding your first recipe!"
+                : "Check back later for featured recipes!"}
             </p>
           </div>
         ) : (

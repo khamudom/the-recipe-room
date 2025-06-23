@@ -1,6 +1,8 @@
 import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "../lib/auth-context";
+import Navigation from "../components/navigation";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",
@@ -17,7 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning={true}>{children}</body>
+      <body suppressHydrationWarning={true}>
+        <AuthProvider>
+          <Navigation />
+          <main>{children}</main>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

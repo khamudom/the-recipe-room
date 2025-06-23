@@ -25,3 +25,7 @@ next-env.d.ts
 
 # turbo
 .turbo
+
+# supabase
+supabase/.temp/
+supabase/.env

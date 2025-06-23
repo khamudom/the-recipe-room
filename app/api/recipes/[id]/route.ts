@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/auth-helpers";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("recipes")
       .select("*")
@@ -29,6 +30,7 @@ export async function GET(
 
     const recipe = {
       ...data,
+      userId: data.user_id,
       prepTime: data.prep_time,
       cookTime: data.cook_time,
       createdAt: data.created_at,
@@ -50,6 +52,36 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = await createClient();
+
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Check if recipe exists and belongs to user
+    const { data: existingRecipe, error: fetchError } = await supabase
+      .from("recipes")
+      .select("user_id")
+      .eq("id", params.id)
+      .single();
+
+    if (fetchError || !existingRecipe) {
+      return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
+    }
+
+    if (existingRecipe.user_id !== user.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
     const { prepTime, cookTime, ...updates } = await request.json();
     const dbUpdates: { [key: string]: any } = { ...updates };
     if (prepTime !== undefined) dbUpdates.prep_time = prepTime;
@@ -69,6 +101,7 @@ export async function PUT(
 
     const updatedRecipe = {
       ...data,
+      userId: data.user_id,
       prepTime: data.prep_time,
       cookTime: data.cook_time,
       createdAt: data.created_at,
@@ -90,6 +123,36 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = await createClient();
+
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Check if recipe exists and belongs to user
+    const { data: existingRecipe, error: fetchError } = await supabase
+      .from("recipes")
+      .select("user_id")
+      .eq("id", params.id)
+      .single();
+
+    if (fetchError || !existingRecipe) {
+      return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
+    }
+
+    if (existingRecipe.user_id !== user.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
     const { error } = await supabase
       .from("recipes")
       .delete()

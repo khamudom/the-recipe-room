@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Users, Tag, ImageIcon } from "lucide-react";
+import { Clock, Users, Tag, ImageIcon, Star } from "lucide-react";
 import type { Recipe } from "@/types/recipe";
 import styles from "./recipe-card.module.css";
 
@@ -30,6 +30,12 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
           <Tag className={styles.tagIcon} />
           <span className={styles.categoryText}>{recipe.category}</span>
         </div>
+        {recipe.featured && (
+          <div className={styles.featuredBadge}>
+            <Star className={styles.featuredIcon} />
+            <span className={styles.featuredText}>Featured</span>
+          </div>
+        )}
       </div>
 
       <div className={styles.header}>

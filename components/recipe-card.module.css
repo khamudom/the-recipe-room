@@ -81,6 +81,34 @@
   font-weight: 600;
 }
 
+.featuredBadge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(239, 68, 68, 0.95);
+  backdrop-filter: blur(4px);
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid #dc2626;
+  color: white;
+}
+
+.featuredIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: white;
+}
+
+.featuredText {
+  font-size: 0.75rem;
+  font-family: "Times New Roman", "Georgia", "Garamond", serif;
+  color: white;
+  font-weight: 600;
+}
+
 .header {
   padding: 1rem 1rem 0.75rem;
 }

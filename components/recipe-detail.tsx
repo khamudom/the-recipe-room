@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, Clock, Users, Edit, Trash2, ChefHat } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 import type { Recipe } from "@/types/recipe";
 import styles from "./recipe-detail.module.css";
 
@@ -17,6 +18,9 @@ export function RecipeDetail({
   onEdit,
   onDelete,
 }: RecipeDetailProps) {
+  const { user } = useAuth();
+  const isOwner = user && recipe.userId === user.id;
+
   return (
     <div className={styles.container}>
       <div className={styles.textureOverlay}></div>
@@ -28,16 +32,18 @@ export function RecipeDetail({
             <ArrowLeft className={styles.buttonIcon} />
             Back to Recipes
           </button>
-          <div className={styles.actionButtons}>
-            <button onClick={onEdit} className={styles.editButton}>
-              <Edit className={styles.buttonIcon} />
-              Edit
-            </button>
-            <button onClick={onDelete} className={styles.deleteButton}>
-              <Trash2 className={styles.buttonIcon} />
-              Delete
-            </button>
-          </div>
+          {isOwner && (
+            <div className={styles.actionButtons}>
+              <button onClick={onEdit} className={styles.editButton}>
+                <Edit className={styles.buttonIcon} />
+                Edit
+              </button>
+              <button onClick={onDelete} className={styles.deleteButton}>
+                <Trash2 className={styles.buttonIcon} />
+                Delete
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Recipe Image */}
