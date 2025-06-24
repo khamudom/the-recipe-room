@@ -169,15 +169,11 @@ export default function RecipeBook() {
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.titleSection}>
-            <BookOpen className={styles.headerIcon} />
-            <h1 className={styles.mainTitle}>The Recipe Room</h1>
-            <ChefHat className={styles.headerIcon} />
+            <h1 className={styles.mainTitle}>Welcome to the Kitchen</h1>
           </div>
           <div className={styles.decorativeLine}></div>
           <p className={styles.subtitle}>
-            {user
-              ? "Your personal recipe collection"
-              : "Featured recipes from our kitchen"}
+            Where every meal begins and memories are made
           </p>
         </div>
 

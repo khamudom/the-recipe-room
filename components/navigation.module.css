@@ -26,6 +26,12 @@
   color: #f4d03f;
 }
 
+.logo img {
+  width: inherit;
+  height: 30px;
+  margin-right: 10px;
+}
+
 .menu {
   display: flex;
   align-items: center;

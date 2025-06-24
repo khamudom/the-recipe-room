@@ -15,6 +15,7 @@ export default function Navigation() {
     <nav className={styles.nav}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
+          <img src="/recipebox.png" alt="logo" />
           The Recipe Room
         </Link>
 
