@@ -24,15 +24,13 @@ export default function RecipeBook() {
   // Load recipes from database
   useEffect(() => {
     loadRecipes();
-  }, [user]);
+  }, []);
 
   const loadRecipes = async () => {
     try {
       setIsLoading(true);
-      // If user is authenticated, load their recipes, otherwise load featured recipes
-      const data = user
-        ? await database.getRecipes()
-        : await database.getFeaturedRecipes();
+      // Load all recipes for all users
+      const data = await database.getRecipes();
       setRecipes(data);
     } catch (error) {
       console.error("Error loading recipes:", error);
@@ -44,26 +42,27 @@ export default function RecipeBook() {
   };
 
   // Search recipes
-  const searchRecipes = async (query: string) => {
+  const handleSearch = async (query: string) => {
     if (!query.trim()) {
-      await loadRecipes();
+      loadRecipes();
       return;
     }
 
     try {
       setIsLoading(true);
-      const data = await database.searchRecipes(query);
-      setRecipes(data);
+      const results = await database.searchRecipes(query);
+      setRecipes(results);
     } catch (error) {
       console.error("Error searching recipes:", error);
-      // Fallback to client-side filtering
+      // Fallback to client-side search
       const filtered = recipes.filter(
         (recipe) =>
           recipe.title.toLowerCase().includes(query.toLowerCase()) ||
-          recipe.category.toLowerCase().includes(query.toLowerCase()) ||
+          recipe.description.toLowerCase().includes(query.toLowerCase()) ||
           recipe.ingredients.some((ingredient) =>
             ingredient.toLowerCase().includes(query.toLowerCase())
-          )
+          ) ||
+          recipe.category.toLowerCase().includes(query.toLowerCase())
       );
       setRecipes(filtered);
     } finally {
@@ -74,7 +73,7 @@ export default function RecipeBook() {
   // Debounced search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      searchRecipes(searchTerm);
+      handleSearch(searchTerm);
     }, 300);
 
     return () => clearTimeout(timeoutId);
