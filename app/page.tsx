@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Search, BookOpen, ChefHat, Loader2, Star } from "lucide-react";
+import { Plus, Search, ChefHat, Loader2 } from "lucide-react";
 import { RecipeCard } from "@/components/recipe-card";
 import { RecipeForm } from "@/components/recipe-form";
 import { RecipeDetail } from "@/components/recipe-detail";
@@ -19,6 +19,7 @@ export default function RecipeBook() {
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
   const { user } = useAuth();
 
   // Load recipes from database
@@ -41,45 +42,44 @@ export default function RecipeBook() {
     }
   };
 
-  // Search recipes
-  const handleSearch = async (query: string) => {
-    if (!query.trim()) {
-      loadRecipes();
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const results = await database.searchRecipes(query);
-      setRecipes(results);
-    } catch (error) {
-      console.error("Error searching recipes:", error);
-      // Fallback to client-side search
-      const filtered = recipes.filter(
-        (recipe) =>
-          recipe.title.toLowerCase().includes(query.toLowerCase()) ||
-          recipe.description.toLowerCase().includes(query.toLowerCase()) ||
-          recipe.ingredients.some((ingredient) =>
-            ingredient.toLowerCase().includes(query.toLowerCase())
-          ) ||
-          recipe.category.toLowerCase().includes(query.toLowerCase())
-      );
-      setRecipes(filtered);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   // Debounced search
   useEffect(() => {
+    const handleSearch = async (query: string) => {
+      if (!query.trim()) {
+        loadRecipes();
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const results = await database.searchRecipes(query);
+        setRecipes(results);
+      } catch (error) {
+        console.error("Error searching recipes:", error);
+        // Fallback to client-side search
+        const filtered = recipes.filter(
+          (recipe) =>
+            recipe.title.toLowerCase().includes(query.toLowerCase()) ||
+            recipe.description.toLowerCase().includes(query.toLowerCase()) ||
+            recipe.ingredients.some((ingredient) =>
+              ingredient.toLowerCase().includes(query.toLowerCase())
+            ) ||
+            recipe.category.toLowerCase().includes(query.toLowerCase())
+        );
+        setRecipes(filtered);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     const timeoutId = setTimeout(() => {
       handleSearch(searchTerm);
     }, 300);
-
     return () => clearTimeout(timeoutId);
   }, [searchTerm]);
 
-  const handleAddRecipe = async (recipe: Omit<Recipe, "id" | "createdAt">) => {
+  const handleAddRecipe = async (
+    recipe: Omit<Recipe, "id" | "createdAt" | "userId">
+  ) => {
     try {
       setIsSubmitting(true);
       const newRecipe = await database.createRecipe(recipe);
@@ -87,13 +87,15 @@ export default function RecipeBook() {
       setIsFormOpen(false);
     } catch (error) {
       console.error("Error creating recipe:", error);
-      alert("Failed to create recipe. Please try again.");
+      setNotification("Failed to create recipe. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleEditRecipe = async (recipe: Omit<Recipe, "id" | "createdAt">) => {
+  const handleEditRecipe = async (
+    recipe: Omit<Recipe, "id" | "createdAt" | "userId">
+  ) => {
     if (editingRecipe) {
       try {
         setIsSubmitting(true);
@@ -109,7 +111,7 @@ export default function RecipeBook() {
         setSelectedRecipe(updatedRecipe);
       } catch (error) {
         console.error("Error updating recipe:", error);
-        alert("Failed to update recipe. Please try again.");
+        setNotification("Failed to update recipe. Please try again.");
       } finally {
         setIsSubmitting(false);
       }
@@ -123,7 +125,7 @@ export default function RecipeBook() {
       setSelectedRecipe(null);
     } catch (error) {
       console.error("Error deleting recipe:", error);
-      alert("Failed to delete recipe. Please try again.");
+      setNotification("Failed to delete recipe. Please try again.");
     }
   };
 
@@ -246,8 +248,11 @@ export default function RecipeBook() {
         {/* Decorative footer */}
         <div className={styles.footer}>
           <div className={styles.footerLine}></div>
+          {notification && (
+            <div className={styles.notification}>{notification}</div>
+          )}
           <p className={styles.footerText}>
-            "The secret ingredient is always love"
+            &quot;The secret ingredient is always love&quot;
           </p>
         </div>
       </div>

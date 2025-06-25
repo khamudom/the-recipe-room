@@ -5,10 +5,11 @@ import { useState, useRef } from "react";
 import { ArrowLeft, Plus, X, Upload, ImageIcon, Loader2 } from "lucide-react";
 import type { Recipe } from "@/types/recipe";
 import styles from "./recipe-form.module.css";
+import Image from "next/image";
 
 interface RecipeFormProps {
   recipe?: Recipe | null;
-  onSubmit: (recipe: Omit<Recipe, "id" | "createdAt">) => void;
+  onSubmit: (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
 }
@@ -144,11 +145,15 @@ export function RecipeForm({
               <div className={styles.imageUploadSection}>
                 {formData.image ? (
                   <div className={styles.imagePreviewContainer}>
-                    <img
-                      src={formData.image || "/placeholder.svg"}
-                      alt="Recipe preview"
-                      className={styles.imagePreview}
-                    />
+                    <div className={styles.imagePreviewWrapper}>
+                      <Image
+                        src={formData.image || "/placeholder.svg"}
+                        alt="Recipe preview"
+                        fill
+                        className={styles.imagePreview}
+                        sizes="(max-width: 768px) 100vw, 400px"
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={removeImage}

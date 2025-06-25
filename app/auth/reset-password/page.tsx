@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../lib/supabase";
 import styles from "./page.module.css";
@@ -44,8 +44,9 @@ export default function ResetPasswordPage() {
       setTimeout(() => {
         router.push("/auth/signin");
       }, 2000);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) setError(error.message);
+      else setError("An unknown error occurred.");
     } finally {
       setLoading(false);
     }

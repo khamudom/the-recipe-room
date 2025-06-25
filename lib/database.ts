@@ -126,11 +126,19 @@ export const database = {
   },
 };
 
-const normalizeRecipe = (recipe: any): Recipe => ({
-  ...recipe,
-  userId: recipe.user_id,
-  prepTime: recipe.prep_time,
-  cookTime: recipe.cook_time,
-  createdAt: recipe.created_at,
-  updatedAt: recipe.updated_at,
+const normalizeRecipe = (recipe: Record<string, unknown>): Recipe => ({
+  id: recipe.id as string,
+  userId: recipe.user_id as string,
+  title: recipe.title as string,
+  description: recipe.description as string,
+  ingredients: recipe.ingredients as string[],
+  instructions: recipe.instructions as string[],
+  prepTime: recipe.prep_time as string,
+  cookTime: recipe.cook_time as string,
+  servings: recipe.servings as number,
+  category: recipe.category as string,
+  image: recipe.image as string,
+  featured: recipe.featured as boolean,
+  createdAt: recipe.created_at as string,
+  updatedAt: recipe.updated_at as string,
 });

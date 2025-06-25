@@ -1,8 +1,9 @@
 "use client";
 
-import { Clock, Users, Tag, ImageIcon, Star } from "lucide-react";
+import { Clock, Users, Tag, Star } from "lucide-react";
 import type { Recipe } from "@/types/recipe";
 import styles from "./recipe-card.module.css";
+import Image from "next/image";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -15,15 +16,23 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
       {/* Recipe Image */}
       <div className={styles.imageContainer}>
         {recipe.image ? (
-          <img
-            src={recipe.image || "/placeholder.svg"}
+          <Image
+            src={recipe.image}
             alt={recipe.title}
+            fill
             className={styles.recipeImage}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
           <div className={styles.placeholderImage}>
-            <ImageIcon className={styles.placeholderIcon} />
-            <span className={styles.placeholderText}>No Image</span>
+            <Image
+              src="/placeholder.svg"
+              alt="Recipe placeholder"
+              width={48}
+              height={48}
+              className={styles.placeholderIcon}
+            />
+            <p className={styles.placeholderText}>No image</p>
           </div>
         )}
         <div className={styles.categoryTag}>

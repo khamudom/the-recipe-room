@@ -83,7 +83,7 @@ export async function PUT(
     }
 
     const { prepTime, cookTime, ...updates } = await request.json();
-    const dbUpdates: { [key: string]: any } = { ...updates };
+    const dbUpdates: Record<string, unknown> = { ...updates };
     if (prepTime !== undefined) dbUpdates.prep_time = prepTime;
     if (cookTime !== undefined) dbUpdates.cook_time = cookTime;
 

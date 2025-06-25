@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "../lib/auth-context";
 import styles from "./navigation.module.css";
+import Image from "next/image";
 
 export default function Navigation() {
   const { user, signOut } = useAuth();
@@ -15,7 +16,12 @@ export default function Navigation() {
     <nav className={styles.nav}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-          <img src="/recipebox.png" alt="logo" />
+          <Image
+            src="/recipebox.png"
+            alt="Recipe Room Logo"
+            width={40}
+            height={40}
+          />
           The Recipe Room
         </Link>
 

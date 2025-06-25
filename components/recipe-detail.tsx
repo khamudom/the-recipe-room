@@ -4,6 +4,7 @@ import { ArrowLeft, Clock, Users, Edit, Trash2, ChefHat } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { Recipe } from "@/types/recipe";
 import styles from "./recipe-detail.module.css";
+import Image from "next/image";
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -49,9 +50,11 @@ export function RecipeDetail({
         {/* Recipe Image */}
         {recipe.image && (
           <div className={styles.heroImageContainer}>
-            <img
-              src={recipe.image || "/placeholder.svg"}
+            <Image
+              src={recipe.image}
               alt={recipe.title}
+              width={400}
+              height={300}
               className={styles.heroImage}
             />
           </div>
@@ -61,7 +64,9 @@ export function RecipeDetail({
         <div className={styles.recipeHeader}>
           <h1 className={styles.recipeTitle}>{recipe.title}</h1>
           <div className={styles.titleLine}></div>
-          <p className={styles.recipeDescription}>{recipe.description}</p>
+          <p className={styles.recipeDescription}>
+            &quot;{recipe.description}&quot;
+          </p>
         </div>
 
         {/* Recipe Info */}
