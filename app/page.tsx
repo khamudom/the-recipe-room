@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Plus, Search, ChefHat, Loader2 } from "lucide-react";
 import { RecipeCard } from "@/components/recipe-card";
 import { RecipeForm } from "@/components/recipe-form";
@@ -21,6 +21,12 @@ export default function RecipeBook() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const { user } = useAuth();
+  const recipesRef = useRef<Recipe[]>([]);
+
+  // Update ref when recipes change
+  useEffect(() => {
+    recipesRef.current = recipes;
+  }, [recipes]);
 
   // Helper function to get appropriate empty state message
   const getEmptyStateMessage = () => {
@@ -68,7 +74,7 @@ export default function RecipeBook() {
       } catch (error) {
         console.error("Error searching recipes:", error);
         // Fallback to client-side search on current recipes
-        const filtered = recipes.filter(
+        const filtered = recipesRef.current.filter(
           (recipe) =>
             recipe.title.toLowerCase().includes(query.toLowerCase()) ||
             recipe.description.toLowerCase().includes(query.toLowerCase()) ||
