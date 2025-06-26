@@ -3,14 +3,15 @@ import { createClient } from "@/lib/auth-helpers";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("recipes")
       .select("*")
-      .eq("id", params.id)
+      .eq("id", id)
       .single();
 
     if (error) {
@@ -39,7 +40,7 @@ export async function GET(
 
     return NextResponse.json(recipe);
   } catch (error) {
-    console.error(`Error fetching recipe ${params.id}:`, error);
+    console.error(`Error fetching recipe ${(await params).id}:`, error);
     return NextResponse.json(
       { error: "Failed to fetch recipe" },
       { status: 500 }
@@ -49,9 +50,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
 
     // Get current user
@@ -71,7 +73,7 @@ export async function PUT(
     const { data: existingRecipe, error: fetchError } = await supabase
       .from("recipes")
       .select("user_id")
-      .eq("id", params.id)
+      .eq("id", id)
       .single();
 
     if (fetchError || !existingRecipe) {
@@ -90,7 +92,7 @@ export async function PUT(
     const { data, error } = await supabase
       .from("recipes")
       .update(dbUpdates)
-      .eq("id", params.id)
+      .eq("id", id)
       .select()
       .single();
 
@@ -110,7 +112,7 @@ export async function PUT(
 
     return NextResponse.json(updatedRecipe);
   } catch (error) {
-    console.error(`Error updating recipe ${params.id}:`, error);
+    console.error(`Error updating recipe ${(await params).id}:`, error);
     return NextResponse.json(
       { error: "Failed to update recipe" },
       { status: 500 }
@@ -120,9 +122,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
 
     // Get current user
@@ -142,7 +145,7 @@ export async function DELETE(
     const { data: existingRecipe, error: fetchError } = await supabase
       .from("recipes")
       .select("user_id")
-      .eq("id", params.id)
+      .eq("id", id)
       .single();
 
     if (fetchError || !existingRecipe) {
@@ -153,10 +156,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const { error } = await supabase
-      .from("recipes")
-      .delete()
-      .eq("id", params.id);
+    const { error } = await supabase.from("recipes").delete().eq("id", id);
 
     if (error) {
       console.error("Supabase error:", error);
@@ -165,7 +165,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(`Error deleting recipe ${params.id}:`, error);
+    console.error(`Error deleting recipe ${(await params).id}:`, error);
     return NextResponse.json(
       { error: "Failed to delete recipe" },
       { status: 500 }
