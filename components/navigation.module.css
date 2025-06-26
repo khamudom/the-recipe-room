@@ -51,33 +51,6 @@
   color: #f4d03f;
 }
 
-.userSection {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.userEmail {
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-.signOutButton {
-  background: transparent;
-  border: 1px solid white;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.signOutButton:hover {
-  background: white;
-  color: #8b4513;
-}
-
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -88,10 +61,5 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
-  }
-
-  .userSection {
-    flex-direction: column;
-    gap: 0.5rem;
   }
 }

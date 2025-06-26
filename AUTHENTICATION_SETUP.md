@@ -14,6 +14,7 @@ Create a `.env.local` file in your project root with the following variables:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+ADMIN_USER_ID=your_admin_user_uuid
 ```
 
 ## Database Setup

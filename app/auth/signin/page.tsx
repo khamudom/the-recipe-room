@@ -19,7 +19,7 @@ const AUTH_CONTENT = {
   },
   signin: {
     title: "Welcome Back",
-    subtitle: "Sign in to access your recipe collection",
+    subtitle: "Sign in to create and access your recipes",
   },
 } as const;
 

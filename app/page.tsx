@@ -218,7 +218,7 @@ export default function RecipeBook() {
           ) : (
             <a href="/auth/signin" className={styles.addButton}>
               <Plus className={styles.buttonIcon} />
-              Sign In to Add Recipe
+              Add Recipe
             </a>
           )}
         </div>
