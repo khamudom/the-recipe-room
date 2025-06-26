@@ -22,15 +22,26 @@ export default function RecipeBook() {
   const [notification, setNotification] = useState<string | null>(null);
   const { user } = useAuth();
 
+  // Helper function to get appropriate empty state message
+  const getEmptyStateMessage = () => {
+    if (searchTerm) {
+      return "Try adjusting your search terms";
+    }
+    if (user) {
+      return "Start by adding your first recipe! Your recipes will be private to you.";
+    }
+    return "Sign in to create your own private recipes, or check back later for featured recipes!";
+  };
+
   // Load recipes from database
   useEffect(() => {
     loadRecipes();
-  }, []);
+  }, [user]);
 
   const loadRecipes = async () => {
     try {
       setIsLoading(true);
-      // Load all recipes for all users
+      // Load recipes based on user authentication status
       const data = await database.getRecipes();
       setRecipes(data);
     } catch (error) {
@@ -56,7 +67,7 @@ export default function RecipeBook() {
         setRecipes(results);
       } catch (error) {
         console.error("Error searching recipes:", error);
-        // Fallback to client-side search
+        // Fallback to client-side search on current recipes
         const filtered = recipes.filter(
           (recipe) =>
             recipe.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -225,13 +236,7 @@ export default function RecipeBook() {
                 ? "No recipes yet"
                 : "No featured recipes"}
             </h3>
-            <p className={styles.emptyText}>
-              {searchTerm
-                ? "Try adjusting your search terms"
-                : user
-                ? "Start by adding your first recipe!"
-                : "Check back later for featured recipes!"}
-            </p>
+            <p className={styles.emptyText}>{getEmptyStateMessage()}</p>
           </div>
         ) : (
           <div className={styles.recipeGrid}>

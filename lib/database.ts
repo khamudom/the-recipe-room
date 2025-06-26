@@ -2,13 +2,34 @@ import type { Recipe } from "@/types/recipe";
 import { supabase } from "./supabase";
 
 export const database = {
-  // Get all recipes
+  // Get recipes based on user authentication status
   async getRecipes(): Promise<Recipe[]> {
+    // Let RLS policies handle the filtering automatically
+    // Featured recipes are visible to everyone
+    // User recipes are only visible to the owner
     const { data, error } = await supabase
       .from("recipes")
       .select("*")
       .order("created_at", { ascending: false });
+
     if (error) throw new Error("Failed to fetch recipes");
+    return data.map(normalizeRecipe);
+  },
+
+  // Get user's own recipes only
+  async getUserRecipes(): Promise<Recipe[]> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("User not authenticated");
+
+    const { data, error } = await supabase
+      .from("recipes")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) throw new Error("Failed to fetch user recipes");
     return data.map(normalizeRecipe);
   },
 
@@ -48,6 +69,7 @@ export const database = {
 
     const { prepTime, cookTime, ...rest } = recipe;
 
+    const isAdmin = user.id === process.env.ADMIN_USER_ID;
     const { data, error } = await supabase
       .from("recipes")
       .insert([
@@ -56,6 +78,7 @@ export const database = {
           user_id: user.id,
           prep_time: prepTime,
           cook_time: cookTime,
+          featured: isAdmin,
         },
       ])
       .select()
@@ -116,13 +139,48 @@ export const database = {
 
   // Get recipes by category
   async getRecipesByCategory(category: string): Promise<Recipe[]> {
+    // Let RLS policies handle the filtering automatically
     const { data, error } = await supabase
       .from("recipes")
       .select("*")
       .eq("category", category)
       .order("created_at", { ascending: false });
+
     if (error) throw new Error("Failed to fetch recipes by category");
     return data.map(normalizeRecipe);
+  },
+
+  // Admin function: Create a featured recipe (visible to everyone)
+  // This should only be used by developers/admins
+  async createFeaturedRecipe(
+    recipe: Omit<Recipe, "id" | "createdAt" | "userId">
+  ): Promise<Recipe> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("User not authenticated");
+
+    const { prepTime, cookTime, ...rest } = recipe;
+
+    const { data, error } = await supabase
+      .from("recipes")
+      .insert([
+        {
+          ...rest,
+          user_id: user.id,
+          prep_time: prepTime,
+          cook_time: cookTime,
+          featured: true, // Featured recipes are visible to everyone
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Supabase create featured recipe error:", error);
+      throw new Error("Failed to create featured recipe");
+    }
+    return normalizeRecipe(data);
   },
 };
 

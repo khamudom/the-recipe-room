@@ -14,6 +14,9 @@ export async function GET(request: NextRequest) {
       .select("*")
       .order("created_at", { ascending: false });
 
+    // Let RLS policies handle user-specific filtering automatically
+    // Only apply additional filters for search, category, and featured
+
     if (query) {
       supabaseQuery = supabaseQuery.or(
         `title.ilike.%${query}%,description.ilike.%${query}%`
@@ -72,6 +75,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { prepTime, cookTime, ...recipe } = await request.json();
+    const isAdmin = user.id === process.env.ADMIN_USER_ID;
     const { data, error } = await supabase
       .from("recipes")
       .insert([
@@ -80,7 +84,7 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           prep_time: prepTime,
           cook_time: cookTime,
-          featured: false, // User-created recipes are not featured by default
+          featured: isAdmin,
         },
       ])
       .select()

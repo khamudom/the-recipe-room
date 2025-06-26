@@ -1,7 +1,8 @@
 "use client";
 
-import { Clock, Users, Tag, Star } from "lucide-react";
+import { Clock, Users, Tag, Star, User } from "lucide-react";
 import type { Recipe } from "@/types/recipe";
+import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-card.module.css";
 import Image from "next/image";
 
@@ -11,6 +12,9 @@ interface RecipeCardProps {
 }
 
 export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
+  const { user } = useAuth();
+  const isMyRecipe = user && recipe.userId === user.id;
+
   return (
     <div className={styles.card} onClick={onClick}>
       {/* Recipe Image */}
@@ -43,6 +47,12 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
           <div className={styles.featuredBadge}>
             <Star className={styles.featuredIcon} />
             <span className={styles.featuredText}>Featured</span>
+          </div>
+        )}
+        {isMyRecipe && !recipe.featured && (
+          <div className={styles.myRecipeBadge}>
+            <User className={styles.myRecipeIcon} />
+            <span className={styles.myRecipeText}>My Recipe</span>
           </div>
         )}
       </div>
