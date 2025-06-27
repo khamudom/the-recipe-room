@@ -24,12 +24,10 @@ export default function RecipeBook() {
   const [notification, setNotification] = useState<string | null>(null);
 
   const {
-    recipes,
     featuredRecipes,
     isLoading,
     isFeaturedLoading,
     error,
-    featuredError,
     searchRecipes,
     addRecipe,
     updateRecipe,
