@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Clock, Users, Tag, Star, User } from "lucide-react";
 import type { Recipe } from "@/types/recipe";
 import { useAuth } from "@/lib/auth-context";
@@ -11,7 +12,10 @@ interface RecipeCardProps {
   onClick: () => void;
 }
 
-export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
+export const RecipeCard = React.memo(function RecipeCard({
+  recipe,
+  onClick,
+}: RecipeCardProps) {
   const { user } = useAuth();
   const isMyRecipe = user && recipe.userId === user.id;
 
@@ -80,4 +84,4 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
       </div>
     </div>
   );
-}
+});

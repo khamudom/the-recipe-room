@@ -1,290 +1,198 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Plus, Search, Loader2 } from "lucide-react";
-import { RecipeCard } from "@/components/recipe-card";
+import { useState, useCallback, useMemo } from "react";
 import { RecipeForm } from "@/components/recipe-form";
 import { RecipeDetail } from "@/components/recipe-detail";
-import { database } from "@/lib/database";
-import { useAuth } from "@/lib/auth-context";
+import { Header } from "@/components/header";
+import { SearchControls } from "@/components/search-controls";
+import { FeaturedRecipes } from "@/components/featured-recipes";
+import { CategoriesSection } from "@/components/categories-section";
+import { Footer } from "@/components/footer";
+import { ErrorBoundary } from "@/components/error-boundary";
 import ProtectedRoute from "@/components/protected-route";
+import { useRecipes } from "@/hooks/use-recipes";
+import { useDebouncedSearch } from "@/hooks/use-debounced-search";
+import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
-const CATEGORIES = [
-  "Appetizer",
-  "Main Course",
-  "Side Dish",
-  "Dessert",
-  "Beverage",
-  "Breakfast",
-  "Snack",
-];
-
 export default function RecipeBook() {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
-  const { user } = useAuth();
-  const recipesRef = useRef<Recipe[]>([]);
-  const [featuredRecipes, setFeaturedRecipes] = useState<Recipe[]>([]);
 
-  // Update ref when recipes change
-  useEffect(() => {
-    recipesRef.current = recipes;
-  }, [recipes]);
+  const {
+    recipes,
+    featuredRecipes,
+    isLoading,
+    isFeaturedLoading,
+    error,
+    featuredError,
+    searchRecipes,
+    addRecipe,
+    updateRecipe,
+    deleteRecipe,
+  } = useRecipes();
 
-  // Load recipes from database
-  useEffect(() => {
-    loadRecipes();
-  }, [user]);
+  const { searchTerm, handleSearchChange } = useDebouncedSearch({
+    onSearch: searchRecipes,
+  });
 
-  const loadRecipes = async () => {
-    try {
-      setIsLoading(true);
-      // Load recipes based on user authentication status
-      const data = await database.getRecipes();
-      setRecipes(data);
-    } catch (error) {
-      console.error("Error loading recipes:", error);
-      // Fallback to empty array if database is not available
-      setRecipes([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Debounced search
-  useEffect(() => {
-    const handleSearch = async (query: string) => {
-      if (!query.trim()) {
-        loadRecipes();
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        const results = await database.searchRecipes(query);
-        setRecipes(results);
-      } catch (error) {
-        console.error("Error searching recipes:", error);
-        // Fallback to client-side search on current recipes
-        const filtered = recipesRef.current.filter(
-          (recipe) =>
-            recipe.title.toLowerCase().includes(query.toLowerCase()) ||
-            recipe.description.toLowerCase().includes(query.toLowerCase()) ||
-            recipe.ingredients.some((ingredient) =>
-              ingredient.toLowerCase().includes(query.toLowerCase())
-            ) ||
-            recipe.category.toLowerCase().includes(query.toLowerCase())
-        );
-        setRecipes(filtered);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    const timeoutId = setTimeout(() => {
-      handleSearch(searchTerm);
-    }, 300);
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
-
-  const handleAddRecipe = async (
-    recipe: Omit<Recipe, "id" | "createdAt" | "userId">
-  ) => {
-    try {
-      setIsSubmitting(true);
-      const newRecipe = await database.createRecipe(recipe);
-      setRecipes((prev) => [newRecipe, ...prev]);
-      setIsFormOpen(false);
-    } catch (error) {
-      console.error("Error creating recipe:", error);
-      setNotification("Failed to create recipe. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleEditRecipe = async (
-    recipe: Omit<Recipe, "id" | "createdAt" | "userId">
-  ) => {
-    if (editingRecipe) {
+  // Memoized handlers to prevent unnecessary re-renders
+  const handleAddRecipe = useCallback(
+    async (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
       try {
         setIsSubmitting(true);
-        const updatedRecipe = await database.updateRecipe(
-          editingRecipe.id,
-          recipe
-        );
-        setRecipes((prev) =>
-          prev.map((r) => (r.id === editingRecipe.id ? updatedRecipe : r))
-        );
-        setEditingRecipe(null);
+        await addRecipe(recipe);
         setIsFormOpen(false);
-        setSelectedRecipe(updatedRecipe);
+        setNotification("Recipe created successfully!");
       } catch (error) {
-        console.error("Error updating recipe:", error);
-        setNotification("Failed to update recipe. Please try again.");
+        console.error("Error creating recipe:", error);
+        setNotification(ERROR_MESSAGES.CREATE_RECIPE);
       } finally {
         setIsSubmitting(false);
       }
-    }
-  };
+    },
+    [addRecipe]
+  );
 
-  const handleDeleteRecipe = async (id: string) => {
-    try {
-      await database.deleteRecipe(id);
-      setRecipes((prev) => prev.filter((r) => r.id !== id));
-      setSelectedRecipe(null);
-    } catch (error) {
-      console.error("Error deleting recipe:", error);
-      setNotification("Failed to delete recipe. Please try again.");
-    }
-  };
+  const handleEditRecipe = useCallback(
+    async (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
+      if (editingRecipe) {
+        try {
+          setIsSubmitting(true);
+          const updatedRecipe = await updateRecipe(editingRecipe.id, recipe);
+          setEditingRecipe(null);
+          setIsFormOpen(false);
+          setSelectedRecipe(updatedRecipe);
+          setNotification("Recipe updated successfully!");
+        } catch (error) {
+          console.error("Error updating recipe:", error);
+          setNotification(ERROR_MESSAGES.UPDATE_RECIPE);
+        } finally {
+          setIsSubmitting(false);
+        }
+      }
+    },
+    [editingRecipe, updateRecipe]
+  );
 
-  const openEditForm = (recipe: Recipe) => {
+  const handleDeleteRecipe = useCallback(
+    async (id: string) => {
+      try {
+        await deleteRecipe(id);
+        setSelectedRecipe(null);
+        setNotification("Recipe deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting recipe:", error);
+        setNotification(ERROR_MESSAGES.DELETE_RECIPE);
+      }
+    },
+    [deleteRecipe]
+  );
+
+  const openEditForm = useCallback((recipe: Recipe) => {
     setEditingRecipe(recipe);
     setIsFormOpen(true);
     setSelectedRecipe(null);
-  };
-
-  // Fetch featured recipes
-  useEffect(() => {
-    const fetchFeatured = async () => {
-      try {
-        const data = await database.getFeaturedRecipes();
-        setFeaturedRecipes(data);
-      } catch {
-        setFeaturedRecipes([]);
-      }
-    };
-    fetchFeatured();
   }, []);
 
+  const handleRecipeClick = useCallback((recipe: Recipe) => {
+    setSelectedRecipe(recipe);
+  }, []);
+
+  const handleAddRecipeClick = useCallback(() => {
+    setIsFormOpen(true);
+  }, []);
+
+  const handleBackToRecipes = useCallback(() => {
+    setSelectedRecipe(null);
+    setEditingRecipe(null);
+    setIsFormOpen(false);
+  }, []);
+
+  // Clear notification after 5 seconds
+  useMemo(() => {
+    if (notification) {
+      const timer = setTimeout(() => setNotification(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
+  // Show form if open
   if (isFormOpen) {
     return (
       <ProtectedRoute>
-        <RecipeForm
-          recipe={editingRecipe}
-          onSubmit={editingRecipe ? handleEditRecipe : handleAddRecipe}
-          onCancel={() => {
-            setIsFormOpen(false);
-            setEditingRecipe(null);
-          }}
-          isSubmitting={isSubmitting}
-        />
+        <ErrorBoundary>
+          <RecipeForm
+            recipe={editingRecipe}
+            onSubmit={editingRecipe ? handleEditRecipe : handleAddRecipe}
+            onCancel={handleBackToRecipes}
+            isSubmitting={isSubmitting}
+          />
+        </ErrorBoundary>
       </ProtectedRoute>
     );
   }
 
+  // Show recipe detail if selected
   if (selectedRecipe) {
     return (
-      <RecipeDetail
-        recipe={selectedRecipe}
-        onBack={() => setSelectedRecipe(null)}
-        onEdit={() => openEditForm(selectedRecipe)}
-        onDelete={() => handleDeleteRecipe(selectedRecipe.id)}
-      />
+      <ErrorBoundary>
+        <RecipeDetail
+          recipe={selectedRecipe}
+          onBack={handleBackToRecipes}
+          onEdit={() => openEditForm(selectedRecipe)}
+          onDelete={() => handleDeleteRecipe(selectedRecipe.id)}
+        />
+      </ErrorBoundary>
     );
   }
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.textureOverlay}></div>
-
-      <div className={styles.content}>
-        {/* Header */}
-        <div className={styles.header}>
-          <div className={styles.titleSection}>
-            <h1 className={styles.mainTitle}>Welcome to the Kitchen</h1>
+  // Show error state if there's a critical error
+  if (error && !isLoading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.textureOverlay}></div>
+        <div className={styles.content}>
+          <Header />
+          <div className={styles.errorState}>
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()}>Try Again</button>
           </div>
-          <div className={styles.decorativeLine}></div>
-          <p className={styles.subtitle}>
-            Where every meal begins and memories are made
-          </p>
-        </div>
-
-        {/* Search and Add Recipe */}
-        <div className={styles.controls}>
-          <div className={styles.searchContainer}>
-            <Search className={styles.searchIcon} />
-            <input
-              placeholder="Search recipes, ingredients, or categories..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className={styles.searchInput}
-            />
-          </div>
-          {user ? (
-            <button
-              onClick={() => setIsFormOpen(true)}
-              className={styles.addButton}
-              disabled={isSubmitting}
-            >
-              <Plus className={styles.buttonIcon} />
-              Add New Recipe
-            </button>
-          ) : (
-            <a href="/auth/signin" className={styles.addButton}>
-              <Plus className={styles.buttonIcon} />
-              Add Recipe
-            </a>
-          )}
-        </div>
-
-        {/* Featured Recipes Section */}
-        <section className={styles.featuredSection}>
-          <h2 className={styles.sectionTitle}>Featured Recipes</h2>
-          {featuredRecipes.length === 0 && isLoading ? (
-            <div className={styles.featuredLoader}>
-              <Loader2 className={styles.spinning} />
-            </div>
-          ) : featuredRecipes.length > 0 ? (
-            <div className={styles.recipeGrid}>
-              {featuredRecipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={recipe}
-                  onClick={() => setSelectedRecipe(recipe)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div style={{ minHeight: "64px" }}></div> // invisible space if no featured recipes
-          )}
-        </section>
-
-        {/* Categories Section */}
-        <section className={styles.categoriesSection}>
-          <h2 className={styles.sectionTitle}>Recipe Categories</h2>
-          <div className={styles.categoriesGrid}>
-            {CATEGORIES.map((cat) => (
-              <a
-                key={cat}
-                href={`/category/${encodeURIComponent(cat)}`}
-                className={styles.categoryCard}
-              >
-                {cat}
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* Decorative footer */}
-        <div className={styles.footer}>
-          <div className={styles.footerLine}></div>
-          {notification && (
-            <div className={styles.notification}>{notification}</div>
-          )}
-          <p className={styles.footerText}>
-            &quot;The secret ingredient is always love&quot;
-          </p>
         </div>
       </div>
-    </div>
+    );
+  }
+
+  // Main page layout
+  return (
+    <ErrorBoundary>
+      <div className={styles.container}>
+        <div className={styles.textureOverlay}></div>
+        <div className={styles.content}>
+          <Header />
+
+          <SearchControls
+            searchTerm={searchTerm}
+            onSearchChange={handleSearchChange}
+            onAddRecipe={handleAddRecipeClick}
+            isSubmitting={isSubmitting}
+          />
+
+          <FeaturedRecipes
+            recipes={featuredRecipes}
+            isLoading={isFeaturedLoading}
+            onRecipeClick={handleRecipeClick}
+          />
+
+          <CategoriesSection />
+
+          <Footer notification={notification} />
+        </div>
+      </div>
+    </ErrorBoundary>
   );
 }

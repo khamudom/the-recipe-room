@@ -1,0 +1,29 @@
+.featuredSection {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-family: "Times New Roman", "Georgia", "Garamond", serif;
+  color: #78350f;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.recipeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .recipeGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .recipeGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

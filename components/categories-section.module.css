@@ -1,0 +1,39 @@
+.categoriesSection {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-family: "Times New Roman", "Georgia", "Garamond", serif;
+  color: #78350f;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.categoryCard {
+  background-color: #fefcf3;
+  border: 2px solid #fbbf24;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  color: #78350f;
+  font-family: "Times New Roman", "Georgia", "Garamond", serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.categoryCard:hover {
+  background-color: #fef3c7;
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
