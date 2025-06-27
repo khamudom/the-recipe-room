@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { RecipeCard } from "@/components/recipe-card";
+import { RecipeCard } from "@/components/recipe-card/recipe-card";
 import { database } from "@/lib/database";
 import type { Recipe } from "@/types/recipe";
 import styles from "../../page.module.css";

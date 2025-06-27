@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useAuth } from "../lib/auth-context";
+import { useAuth } from "../../lib/auth-context";
 import styles from "./avatar-dropdown.module.css";
 
 export default function AvatarDropdown() {

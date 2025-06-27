@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { RecipeForm } from "@/components/recipe-form";
-import { RecipeDetail } from "@/components/recipe-detail";
-import { Header } from "@/components/header";
-import { SearchControls } from "@/components/search-controls";
-import { FeaturedRecipes } from "@/components/featured-recipes";
-import { CategoriesSection } from "@/components/categories-section";
-import { Footer } from "@/components/footer";
-import { ErrorBoundary } from "@/components/error-boundary";
-import ProtectedRoute from "@/components/protected-route";
+import { RecipeForm } from "@/components/recipe-form/recipe-form";
+import { RecipeDetail } from "@/components/recipe-detail/recipe-detail";
+import { Header } from "@/components/header/header";
+import { SearchControls } from "@/components/search-controls/search-controls";
+import { FeaturedRecipes } from "@/components/featured-recipes/featured-recipes";
+import { CategoriesSection } from "@/components/categories-section/categories-section";
+import { Footer } from "@/components/footer/footer";
+import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
+import ProtectedRoute from "@/components/protected-route/protected-route";
 import { useRecipes } from "@/hooks/use-recipes";
 import { useDebouncedSearch } from "@/hooks/use-debounced-search";
 import { ERROR_MESSAGES } from "@/lib/constants";

@@ -2,7 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "../lib/auth-context";
-import Navigation from "../components/navigation";
+import Navigation from "../components/navigation/navigation";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",
