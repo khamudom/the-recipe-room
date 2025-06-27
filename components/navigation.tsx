@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useAuth } from "../lib/auth-context";
 import styles from "./navigation.module.css";
 import Image from "next/image";
 import AvatarDropdown from "./avatar-dropdown";
