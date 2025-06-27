@@ -199,15 +199,59 @@
   margin: 0;
 }
 
+.featuredLoader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 64px;
+}
+
 .spinning {
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
+  100% {
     transform: rotate(360deg);
   }
+}
+
+.featuredSection {
+  margin: 2rem 0 1.5rem 0;
+}
+.sectionTitle {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #7c4d1e;
+  letter-spacing: 0.02em;
+}
+.categoriesSection {
+  margin: 2rem 0 1.5rem 0;
+}
+.categoriesGrid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-block: 2rem;
+}
+.categoryCard {
+  background: #fff7ed;
+  border: 1px solid #f3e1c7;
+  border-radius: 0.75rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #7c4d1e;
+  text-decoration: none;
+  box-shadow: 0 1px 4px rgba(124, 77, 30, 0.06);
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  min-width: 150px;
+  text-align: center;
+}
+.categoryCard:hover {
+  background: #ffe3c2;
+  box-shadow: 0 2px 8px rgba(124, 77, 30, 0.12);
 }

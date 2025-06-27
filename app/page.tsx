@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Plus, Search, ChefHat, Loader2 } from "lucide-react";
+import { Plus, Search, Loader2 } from "lucide-react";
 import { RecipeCard } from "@/components/recipe-card";
 import { RecipeForm } from "@/components/recipe-form";
 import { RecipeDetail } from "@/components/recipe-detail";
@@ -10,6 +10,16 @@ import { useAuth } from "@/lib/auth-context";
 import ProtectedRoute from "@/components/protected-route";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
+
+const CATEGORIES = [
+  "Appetizer",
+  "Main Course",
+  "Side Dish",
+  "Dessert",
+  "Beverage",
+  "Breakfast",
+  "Snack",
+];
 
 export default function RecipeBook() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -22,6 +32,7 @@ export default function RecipeBook() {
   const [notification, setNotification] = useState<string | null>(null);
   const { user } = useAuth();
   const recipesRef = useRef<Recipe[]>([]);
+  const [featuredRecipes, setFeaturedRecipes] = useState<Recipe[]>([]);
 
   // Update ref when recipes change
   useEffect(() => {
@@ -152,6 +163,19 @@ export default function RecipeBook() {
     setSelectedRecipe(null);
   };
 
+  // Fetch featured recipes
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const data = await database.getFeaturedRecipes();
+        setFeaturedRecipes(data);
+      } catch (error) {
+        setFeaturedRecipes([]);
+      }
+    };
+    fetchFeatured();
+  }, []);
+
   if (isFormOpen) {
     return (
       <ProtectedRoute>
@@ -223,38 +247,43 @@ export default function RecipeBook() {
           )}
         </div>
 
-        {/* Recipe Grid */}
-        {isLoading ? (
-          <div className={styles.emptyState}>
-            <Loader2 className={`${styles.emptyIcon} ${styles.spinning}`} />
-            <h3 className={styles.emptyTitle}>Loading recipes...</h3>
-            <p className={styles.emptyText}>
-              Please wait while we fetch your recipes
-            </p>
-          </div>
-        ) : recipes.length === 0 ? (
-          <div className={styles.emptyState}>
-            <ChefHat className={styles.emptyIcon} />
-            <h3 className={styles.emptyTitle}>
-              {searchTerm
-                ? "No recipes found"
-                : user
-                ? "No recipes yet"
-                : "No featured recipes"}
-            </h3>
-            <p className={styles.emptyText}>{getEmptyStateMessage()}</p>
-          </div>
-        ) : (
-          <div className={styles.recipeGrid}>
-            {recipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                recipe={recipe}
-                onClick={() => setSelectedRecipe(recipe)}
-              />
+        {/* Featured Recipes Section */}
+        <section className={styles.featuredSection}>
+          <h2 className={styles.sectionTitle}>Featured Recipes</h2>
+          {featuredRecipes.length === 0 && isLoading ? (
+            <div className={styles.featuredLoader}>
+              <Loader2 className={styles.spinning} />
+            </div>
+          ) : featuredRecipes.length > 0 ? (
+            <div className={styles.recipeGrid}>
+              {featuredRecipes.map((recipe) => (
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  onClick={() => setSelectedRecipe(recipe)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div style={{ minHeight: "64px" }}></div> // invisible space if no featured recipes
+          )}
+        </section>
+
+        {/* Categories Section */}
+        <section className={styles.categoriesSection}>
+          <h2 className={styles.sectionTitle}>Recipe Categories</h2>
+          <div className={styles.categoriesGrid}>
+            {CATEGORIES.map((cat) => (
+              <a
+                key={cat}
+                href={`/category/${encodeURIComponent(cat)}`}
+                className={styles.categoryCard}
+              >
+                {cat}
+              </a>
             ))}
           </div>
-        )}
+        </section>
 
         {/* Decorative footer */}
         <div className={styles.footer}>
