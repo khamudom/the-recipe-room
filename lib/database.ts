@@ -69,18 +69,7 @@ export const database = {
 
     const { prepTime, cookTime, ...rest } = recipe;
 
-    const isAdmin = user.id === process.env.ADMIN_USER_ID;
-    // Debug log for admin/featured logic
-    console.log(
-      "[database.createRecipe] user.id:",
-      user.id,
-      "ADMIN_USER_ID:",
-      process.env.ADMIN_USER_ID,
-      "isAdmin:",
-      isAdmin,
-      "featured will be:",
-      isAdmin
-    );
+    const isAdmin = user.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
     const { data, error } = await supabase
       .from("recipes")
       .insert([

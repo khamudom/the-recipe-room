@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/auth-helpers";
+import { database } from "@/lib/database";
 
 export async function GET(request: NextRequest) {
   try {
@@ -74,35 +75,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { prepTime, cookTime, ...recipe } = await request.json();
-    const isAdmin = user.id === process.env.ADMIN_USER_ID;
-    const { data, error } = await supabase
-      .from("recipes")
-      .insert([
-        {
-          ...recipe,
-          user_id: user.id,
-          prep_time: prepTime,
-          cook_time: cookTime,
-          featured: isAdmin,
-        },
-      ])
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Supabase error:", error);
-      throw error;
-    }
-
-    const newRecipe = {
-      ...data,
-      userId: data.user_id,
-      prepTime: data.prep_time,
-      cookTime: data.cook_time,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
-    };
+    const recipe = await request.json();
+    const newRecipe = await database.createRecipe(recipe);
 
     return NextResponse.json(newRecipe, { status: 201 });
   } catch (error) {
