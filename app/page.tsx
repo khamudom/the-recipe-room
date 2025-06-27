@@ -39,17 +39,6 @@ export default function RecipeBook() {
     recipesRef.current = recipes;
   }, [recipes]);
 
-  // Helper function to get appropriate empty state message
-  const getEmptyStateMessage = () => {
-    if (searchTerm) {
-      return "Try adjusting your search terms";
-    }
-    if (user) {
-      return "Start by adding your first recipe! Your recipes will be private to you.";
-    }
-    return "Sign in to create your own private recipes, or check back later for featured recipes!";
-  };
-
   // Load recipes from database
   useEffect(() => {
     loadRecipes();
@@ -169,7 +158,7 @@ export default function RecipeBook() {
       try {
         const data = await database.getFeaturedRecipes();
         setFeaturedRecipes(data);
-      } catch (error) {
+      } catch {
         setFeaturedRecipes([]);
       }
     };

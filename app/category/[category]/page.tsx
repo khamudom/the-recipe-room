@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { RecipeCard } from "@/components/recipe-card";
 import { database } from "@/lib/database";
 import type { Recipe } from "@/types/recipe";
 import styles from "../../page.module.css";
 
 export default function CategoryPage() {
-  const router = useRouter();
   const params = useParams();
   const category = decodeURIComponent(params.category as string);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -21,6 +20,7 @@ export default function CategoryPage() {
         const data = await database.getRecipesByCategory(category);
         setRecipes(data);
       } catch (error) {
+        console.error("Error fetching recipes by category:", error);
         setRecipes([]);
       } finally {
         setIsLoading(false);
