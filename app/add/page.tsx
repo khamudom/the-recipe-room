@@ -6,13 +6,11 @@ import { RecipeForm } from "@/components/recipe-form/recipe-form";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import ProtectedRoute from "@/components/protected-route/protected-route";
 import { useRecipes } from "@/hooks/use-recipes";
-import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
 
 export default function AddRecipePage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [notification, setNotification] = useState<string | null>(null);
 
   const { addRecipe } = useRecipes();
 
@@ -24,7 +22,6 @@ export default function AddRecipePage() {
         router.push("/");
       } catch (error) {
         console.error("Error creating recipe:", error);
-        setNotification(ERROR_MESSAGES.CREATE_RECIPE);
       } finally {
         setIsSubmitting(false);
       }

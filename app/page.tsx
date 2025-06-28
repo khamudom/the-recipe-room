@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/header/header";
 import { SearchControls } from "@/components/search-controls/search-controls";
@@ -15,7 +15,6 @@ import styles from "./page.module.css";
 
 export default function RecipeBook() {
   const router = useRouter();
-  const [notification, setNotification] = useState<string | null>(null);
 
   const {
     featuredRecipes,
@@ -78,7 +77,7 @@ export default function RecipeBook() {
 
           <CategoriesSection />
 
-          <Footer notification={notification} />
+          <Footer />
         </div>
       </div>
     </ErrorBoundary>
