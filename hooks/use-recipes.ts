@@ -13,6 +13,7 @@ interface UseRecipesReturn {
   error: string | null;
   featuredError: string | null;
   searchRecipes: (query: string) => Promise<void>;
+  getRecipe: (id: string) => Promise<Recipe | null>;
   addRecipe: (
     recipe: Omit<Recipe, "id" | "createdAt" | "userId">
   ) => Promise<void>;
@@ -140,6 +141,15 @@ export function useRecipes(): UseRecipesReturn {
     }
   }, []);
 
+  const getRecipe = useCallback(async (id: string) => {
+    try {
+      return await database.getRecipe(id);
+    } catch (err) {
+      console.error("Error getting recipe:", err);
+      return null;
+    }
+  }, []);
+
   const refreshRecipes = useCallback(() => loadRecipes(), [loadRecipes]);
   const refreshFeatured = useCallback(
     () => loadFeaturedRecipes(),
@@ -160,6 +170,7 @@ export function useRecipes(): UseRecipesReturn {
     error,
     featuredError,
     searchRecipes,
+    getRecipe,
     addRecipe,
     updateRecipe,
     deleteRecipe,

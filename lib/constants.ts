@@ -22,6 +22,7 @@ export const ERROR_MESSAGES = {
   LOAD_RECIPES: "Failed to load recipes",
   LOAD_FEATURED: "Failed to load featured recipes",
   SEARCH_RECIPES: "Failed to search recipes",
+  FETCH_RECIPE: "Failed to fetch recipe. Please try again.",
 } as const;
 
 export const SUCCESS_MESSAGES = {

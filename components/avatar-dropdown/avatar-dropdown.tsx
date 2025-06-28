@@ -10,15 +10,20 @@ export default function AvatarDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const avatarButtonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
+      setTimeout(() => {
+        if (
+          dropdownMenuRef.current &&
+          !dropdownMenuRef.current.contains(event.target as Node) &&
+          avatarButtonRef.current &&
+          !avatarButtonRef.current.contains(event.target as Node)
+        ) {
+          setIsOpen(false);
+        }
+      }, 0);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -32,14 +37,14 @@ export default function AvatarDropdown() {
     if (!isOpen) return;
     const handleFocus = (event: FocusEvent) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.relatedTarget as Node)
+        dropdownMenuRef.current &&
+        !dropdownMenuRef.current.contains(event.relatedTarget as Node)
       ) {
         setIsOpen(false);
         avatarButtonRef.current?.focus();
       }
     };
-    const dropdown = dropdownRef.current;
+    const dropdown = dropdownMenuRef.current;
     if (dropdown) {
       dropdown.addEventListener("focusout", handleFocus);
     }
@@ -98,7 +103,23 @@ export default function AvatarDropdown() {
       </button>
 
       {isOpen && (
-        <div className={styles.dropdown} ref={dropdownRef} tabIndex={-1}>
+        <div
+          className={styles.dropdown}
+          ref={dropdownMenuRef}
+          tabIndex={-1}
+          onClick={(e) => {
+            // Close dropdown when clicking on any interactive element
+            const target = e.target as HTMLElement;
+            if (
+              target.tagName === "A" ||
+              target.tagName === "BUTTON" ||
+              target.closest("a") ||
+              target.closest("button")
+            ) {
+              setIsOpen(false);
+            }
+          }}
+        >
           {user && (
             <div className={styles.userInfo}>
               <span className={styles.userEmail}>{user.email}</span>

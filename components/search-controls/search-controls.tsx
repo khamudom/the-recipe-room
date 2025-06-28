@@ -8,14 +8,12 @@ interface SearchControlsProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   onAddRecipe: () => void;
-  isSubmitting?: boolean;
 }
 
 export function SearchControls({
   searchTerm,
   onSearchChange,
   onAddRecipe,
-  isSubmitting = false,
 }: SearchControlsProps) {
   const { user } = useAuth();
 
@@ -31,11 +29,7 @@ export function SearchControls({
         />
       </div>
       {user ? (
-        <button
-          onClick={onAddRecipe}
-          className={styles.addButton}
-          disabled={isSubmitting}
-        >
+        <button onClick={onAddRecipe} className={styles.addButton}>
           <Plus className={styles.buttonIcon} />
           Add New Recipe
         </button>

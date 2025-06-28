@@ -1,17 +1,50 @@
+/**
+ * Category Page Component
+ *
+ * This page displays all recipes belonging to a specific category.
+ * It's a dynamic route that accepts a category parameter from the URL.
+ *
+ * Usage:
+ * - Accessed via: /category/[category-name]
+ * - Examples: /category/breakfast, /category/dinner, /category/dessert
+ *
+ * Features:
+ * - Fetches recipes filtered by the specified category from the database
+ * - Displays recipes in a grid layout using RecipeCard components
+ * - Shows loading state while fetching data
+ * - Handles empty states when no recipes are found in the category
+ * - Uses the same styling as the main page for consistency
+ *
+ * This page is part of the recipe browsing experience, allowing users
+ * to explore recipes by category after selecting a category from the
+ * categories section on the main page.
+ */
+
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { RecipeCard } from "@/components/recipe-card/recipe-card";
 import { database } from "@/lib/database";
 import type { Recipe } from "@/types/recipe";
-import styles from "../../page.module.css";
+import styles from "./page.module.css";
 
 export default function CategoryPage() {
   const params = useParams();
+  const router = useRouter();
   const category = decodeURIComponent(params.category as string);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleRecipeClick = useCallback(
+    (recipe: Recipe) => {
+      const currentPath = `/category/${encodeURIComponent(category)}`;
+      router.push(
+        `/recipe/${recipe.id}?from=${encodeURIComponent(currentPath)}`
+      );
+    },
+    [router, category]
+  );
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -53,7 +86,11 @@ export default function CategoryPage() {
         ) : (
           <div className={styles.recipeGrid}>
             {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} onClick={() => {}} />
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                onClick={() => handleRecipeClick(recipe)}
+              />
             ))}
           </div>
         )}
