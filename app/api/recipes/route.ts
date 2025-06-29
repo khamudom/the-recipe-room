@@ -1,58 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/auth-helpers";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { database } from "@/lib/database";
+import { ERROR_MESSAGES } from "@/lib/constants";
+import type { Recipe } from "@/types/recipe";
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createRouteHandlerClient({ cookies });
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("q");
     const category = searchParams.get("category");
     const featured = searchParams.get("featured");
 
-    let supabaseQuery = supabase
-      .from("recipes")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    // Let RLS policies handle user-specific filtering automatically
-    // Only apply additional filters for search, category, and featured
+    let recipes: Recipe[];
 
     if (query) {
-      supabaseQuery = supabaseQuery.or(
-        `title.ilike.%${query}%,description.ilike.%${query}%`
-      );
+      recipes = await database.searchRecipes(supabase, query);
+    } else if (category) {
+      recipes = await database.getRecipesByCategory(supabase, category);
+    } else if (featured === "true") {
+      recipes = await database.getFeaturedRecipes(supabase);
+    } else {
+      recipes = await database.getRecipes(supabase);
     }
-
-    if (category) {
-      supabaseQuery = supabaseQuery.eq("category", category);
-    }
-
-    if (featured === "true") {
-      supabaseQuery = supabaseQuery.eq("featured", true);
-    }
-
-    const { data, error } = await supabaseQuery;
-
-    if (error) {
-      console.error("Supabase error:", error);
-      throw error;
-    }
-
-    const recipes = (data || []).map((r) => ({
-      ...r,
-      userId: r.user_id,
-      prepTime: r.prep_time,
-      cookTime: r.cook_time,
-      createdAt: r.created_at,
-      updatedAt: r.updated_at,
-    }));
 
     return NextResponse.json(recipes);
   } catch (error) {
     console.error("Error in GET /api/recipes:", error);
     return NextResponse.json(
-      { error: "Failed to fetch recipes" },
+      { error: ERROR_MESSAGES.LOAD_RECIPES },
       { status: 500 }
     );
   }
@@ -60,7 +37,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createRouteHandlerClient({ cookies });
 
     // Get current user
     const {
@@ -75,14 +52,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const recipe = await request.json();
-    const newRecipe = await database.createRecipe(recipe);
+    const recipeData = await request.json();
 
+    // Basic validation
+    if (
+      !recipeData.title ||
+      !recipeData.ingredients ||
+      !recipeData.instructions
+    ) {
+      return NextResponse.json(
+        { error: "Missing required recipe fields" },
+        { status: 400 }
+      );
+    }
+
+    const newRecipe = await database.createRecipe(supabase, recipeData);
     return NextResponse.json(newRecipe, { status: 201 });
   } catch (error) {
     console.error("Error in POST /api/recipes:", error);
     return NextResponse.json(
-      { error: "Failed to create recipe" },
+      { error: ERROR_MESSAGES.CREATE_RECIPE },
       { status: 500 }
     );
   }

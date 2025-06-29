@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/header/header";
 import { SearchControls } from "@/components/search-controls/search-controls";
@@ -8,25 +8,17 @@ import { FeaturedRecipes } from "@/components/featured-recipes/featured-recipes"
 import { CategoriesSection } from "@/components/categories-section/categories-section";
 import { Footer } from "@/components/footer/footer";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
+import { LoadingSkeleton } from "@/components/loading-skeleton/loading-skeleton";
 import { useRecipes } from "@/hooks/use-recipes";
-import { useDebouncedSearch } from "@/hooks/use-debounced-search";
+import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
 export default function RecipeBook() {
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const {
-    featuredRecipes,
-    isLoading,
-    isFeaturedLoading,
-    error,
-    searchRecipes,
-  } = useRecipes();
-
-  const { searchTerm, handleSearchChange } = useDebouncedSearch({
-    onSearch: searchRecipes,
-  });
+  const { featuredRecipes, isLoading, isFeaturedLoading, error } = useRecipes();
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
@@ -39,8 +31,31 @@ export default function RecipeBook() {
     router.push("/add");
   }, [router]);
 
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchTerm(value);
+  }, []);
+
+  const handleRetry = useCallback(() => {
+    window.location.reload();
+  }, []);
+
+  // Show loading state for initial page load
+  if (isLoading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.textureOverlay}></div>
+        <div className={styles.content}>
+          <Header />
+          <div className={styles.loadingContainer}>
+            <LoadingSkeleton count={6} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Show error state if there's a critical error
-  if (error && !isLoading) {
+  if (error) {
     return (
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
@@ -48,7 +63,7 @@ export default function RecipeBook() {
           <Header />
           <div className={styles.errorState}>
             <p>{error}</p>
-            <button onClick={() => window.location.reload()}>Try Again</button>
+            <button onClick={handleRetry}>Try Again</button>
           </div>
         </div>
       </div>

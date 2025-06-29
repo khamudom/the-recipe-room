@@ -36,3 +36,13 @@ select {
     color-scheme: dark;
   }
 }
+
+/* Hide the native clear button in Chrome, Safari, Edge */
+input[type="search"]::-webkit-search-clear-button {
+  display: none;
+}
+
+/* Hide the native clear button in IE/Edge */
+input[type="search"]::-ms-clear {
+  display: none;
+}

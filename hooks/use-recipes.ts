@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { database } from "@/lib/database";
+import { supabase } from "@/lib/supabase";
 import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
 
@@ -34,14 +35,11 @@ export function useRecipes(): UseRecipesReturn {
   const [error, setError] = useState<string | null>(null);
   const [featuredError, setFeaturedError] = useState<string | null>(null);
 
-  // Memoized recipe ref for search fallback
-  const recipesRef = useMemo(() => recipes, [recipes]);
-
   const loadRecipes = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const data = await database.getRecipes();
+      const data = await database.getRecipes(supabase);
       setRecipes(data);
     } catch (err) {
       console.error("Error loading recipes:", err);
@@ -56,7 +54,7 @@ export function useRecipes(): UseRecipesReturn {
     try {
       setIsFeaturedLoading(true);
       setFeaturedError(null);
-      const data = await database.getFeaturedRecipes();
+      const data = await database.getFeaturedRecipes(supabase);
       setFeaturedRecipes(data);
     } catch (err) {
       console.error("Error loading featured recipes:", err);
@@ -77,12 +75,13 @@ export function useRecipes(): UseRecipesReturn {
       try {
         setIsLoading(true);
         setError(null);
-        const results = await database.searchRecipes(query);
+        const results = await database.searchRecipes(supabase, query);
         setRecipes(results);
       } catch (err) {
         console.error("Error searching recipes:", err);
-        // Fallback to client-side search
-        const filtered = recipesRef.filter(
+        setError(ERROR_MESSAGES.SEARCH_RECIPES);
+        // Fallback to client-side search using current recipes
+        const filtered = recipes.filter(
           (recipe) =>
             recipe.title.toLowerCase().includes(query.toLowerCase()) ||
             recipe.description.toLowerCase().includes(query.toLowerCase()) ||
@@ -96,13 +95,13 @@ export function useRecipes(): UseRecipesReturn {
         setIsLoading(false);
       }
     },
-    [loadRecipes, recipesRef]
+    [loadRecipes, recipes]
   );
 
   const addRecipe = useCallback(
     async (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
       try {
-        const newRecipe = await database.createRecipe(recipe);
+        const newRecipe = await database.createRecipe(supabase, recipe);
         setRecipes((prev) => [newRecipe, ...prev]);
       } catch (err) {
         console.error("Error creating recipe:", err);
@@ -118,7 +117,7 @@ export function useRecipes(): UseRecipesReturn {
       recipe: Omit<Recipe, "id" | "createdAt" | "userId">
     ): Promise<Recipe> => {
       try {
-        const updatedRecipe = await database.updateRecipe(id, recipe);
+        const updatedRecipe = await database.updateRecipe(supabase, id, recipe);
         setRecipes((prev) =>
           prev.map((r) => (r.id === id ? updatedRecipe : r))
         );
@@ -133,7 +132,7 @@ export function useRecipes(): UseRecipesReturn {
 
   const deleteRecipe = useCallback(async (id: string) => {
     try {
-      await database.deleteRecipe(id);
+      await database.deleteRecipe(supabase, id);
       setRecipes((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
       console.error("Error deleting recipe:", err);
@@ -143,10 +142,10 @@ export function useRecipes(): UseRecipesReturn {
 
   const getRecipe = useCallback(async (id: string) => {
     try {
-      return await database.getRecipe(id);
+      return await database.getRecipe(supabase, id);
     } catch (err) {
       console.error("Error getting recipe:", err);
-      return null;
+      throw new Error(ERROR_MESSAGES.FETCH_RECIPE);
     }
   }, []);
 

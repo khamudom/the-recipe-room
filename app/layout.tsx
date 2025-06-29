@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "../lib/auth-context";
 import Navigation from "../components/navigation/navigation";
+import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",
@@ -21,6 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <AuthProvider>
+          {/* Only expose Supabase in development */}
+          {process.env.NODE_ENV === "development" && <ExposeSupabase />}
           <Navigation />
           <main>{children}</main>
         </AuthProvider>

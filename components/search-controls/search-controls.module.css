@@ -27,6 +27,7 @@
   color: #d97706;
   width: 1rem;
   height: 1rem;
+  pointer-events: none;
 }
 
 .searchInput {
@@ -36,7 +37,6 @@
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  display: flex;
   height: 2.5rem;
   width: 100%;
   font-size: 0.875rem;
@@ -44,7 +44,8 @@
   color: #78350f;
 }
 
-.searchInput:focus {
+.searchInput:focus,
+.searchInput:focus-visible {
   border-color: #f59e0b;
   outline: none;
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
@@ -64,18 +65,61 @@
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
+  font-size: 0.875rem;
 }
 
 .addButton:hover {
   background-color: #78350f;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.addButton:active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.addButton:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
 }
 
 .addButton:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .buttonIcon {
   width: 1rem;
   height: 1rem;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.clearButton {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  z-index: 2;
+  transition: color 0.2s ease;
+}
+
+.clearButton:hover {
+  color: #e53e3e;
+}
+
+.clearButton:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+  border-radius: 0.25rem;
 }

@@ -24,8 +24,14 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { Header } from "@/components/header/header";
+import { Footer } from "@/components/footer/footer";
+import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/recipe-card/recipe-card";
+import { LoadingSkeleton } from "@/components/loading-skeleton/loading-skeleton";
 import { database } from "@/lib/database";
+import { supabase } from "@/lib/supabase";
+import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
@@ -35,6 +41,7 @@ export default function CategoryPage() {
   const category = decodeURIComponent(params.category as string);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
@@ -50,10 +57,12 @@ export default function CategoryPage() {
     const fetchRecipes = async () => {
       try {
         setIsLoading(true);
-        const data = await database.getRecipesByCategory(category);
+        setError(null);
+        const data = await database.getRecipesByCategory(supabase, category);
         setRecipes(data);
       } catch (error) {
         console.error("Error fetching recipes by category:", error);
+        setError(ERROR_MESSAGES.LOAD_RECIPES);
         setRecipes([]);
       } finally {
         setIsLoading(false);
@@ -63,38 +72,49 @@ export default function CategoryPage() {
   }, [category]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.textureOverlay}></div>
-      <div className={styles.content}>
-        <div className={styles.header}>
-          <h1 className={styles.mainTitle}>{category} Recipes</h1>
+    <ErrorBoundary>
+      <div className={styles.container}>
+        <div className={styles.textureOverlay}></div>
+        <div className={styles.content}>
+          <Header />
+
+          <main className={styles.main}>
+            <div className={styles.header}>
+              <h1 className={styles.mainTitle}>{category} Recipes</h1>
+            </div>
+
+            {isLoading ? (
+              <div className={styles.loadingContainer}>
+                <LoadingSkeleton count={6} />
+              </div>
+            ) : error ? (
+              <div className={styles.emptyState}>
+                <h3 className={styles.emptyTitle}>Error Loading Recipes</h3>
+                <p className={styles.emptyText}>{error}</p>
+              </div>
+            ) : recipes.length === 0 ? (
+              <div className={styles.emptyState}>
+                <h3 className={styles.emptyTitle}>No recipes found</h3>
+                <p className={styles.emptyText}>
+                  There are no recipes in this category yet.
+                </p>
+              </div>
+            ) : (
+              <div className={styles.recipeGrid}>
+                {recipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    onClick={() => handleRecipeClick(recipe)}
+                  />
+                ))}
+              </div>
+            )}
+          </main>
+
+          <Footer />
         </div>
-        {isLoading ? (
-          <div className={styles.emptyState}>
-            <h3 className={styles.emptyTitle}>Loading recipes...</h3>
-            <p className={styles.emptyText}>
-              Please wait while we fetch recipes for this category.
-            </p>
-          </div>
-        ) : recipes.length === 0 ? (
-          <div className={styles.emptyState}>
-            <h3 className={styles.emptyTitle}>No recipes found</h3>
-            <p className={styles.emptyText}>
-              There are no recipes in this category yet.
-            </p>
-          </div>
-        ) : (
-          <div className={styles.recipeGrid}>
-            {recipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                recipe={recipe}
-                onClick={() => handleRecipeClick(recipe)}
-              />
-            ))}
-          </div>
-        )}
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }

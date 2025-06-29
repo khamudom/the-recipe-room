@@ -1,0 +1,148 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.textureOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(
+      circle at 25% 25%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.main {
+  padding: 2rem 0;
+}
+
+.searchHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.searchHeader h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.searchQuery {
+  font-size: 1.1rem;
+  color: #718096;
+  font-style: italic;
+}
+
+/* Shared grid styles for loading and results */
+.loadingContainer,
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.noResults {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.noResults h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.noResults p {
+  font-size: 1.1rem;
+  color: #718096;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.errorState {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.errorState p {
+  font-size: 1.1rem;
+  color: #e53e3e;
+  margin-bottom: 1.5rem;
+}
+
+.errorState button {
+  background: #4299e1;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.errorState button:hover {
+  background: #3182ce;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 0 0.5rem;
+  }
+
+  .searchHeader h1 {
+    font-size: 2rem;
+  }
+
+  .loadingContainer,
+  .resultsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .noResults {
+    padding: 3rem 1rem;
+  }
+
+  .noResults h2 {
+    font-size: 1.5rem;
+  }
+}
