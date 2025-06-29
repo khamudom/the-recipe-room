@@ -2,8 +2,17 @@
 
 import type React from "react";
 import { useState, useRef } from "react";
-import { ArrowLeft, Plus, X, Upload, ImageIcon, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Plus,
+  X,
+  Upload,
+  ImageIcon,
+  Loader2,
+  Sparkles,
+} from "lucide-react";
 import type { Recipe } from "@/types/recipe";
+import { AIRecipeAnalyzer } from "@/components/ai-recipe-analyzer/ai-recipe-analyzer";
 import styles from "./recipe-form.module.css";
 import Image from "next/image";
 
@@ -32,6 +41,7 @@ export function RecipeForm({
     image: recipe?.image || "",
   });
 
+  const [showAIAnalyzer, setShowAIAnalyzer] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -117,6 +127,35 @@ export function RecipeForm({
     }));
   };
 
+  const handleAIAnalysisComplete = (recipeData: any) => {
+    setFormData({
+      title: recipeData.title || "",
+      description: recipeData.description || "",
+      ingredients: recipeData.ingredients || [""],
+      instructions: recipeData.instructions || [""],
+      prepTime: recipeData.prepTime || "",
+      cookTime: recipeData.cookTime || "",
+      servings: recipeData.servings || 1,
+      category: recipeData.category || "",
+      image: recipeData.image || formData.image,
+    });
+    setShowAIAnalyzer(false);
+  };
+
+  const handleAIAnalyzerCancel = () => {
+    setShowAIAnalyzer(false);
+  };
+
+  // Show AI analyzer if enabled
+  if (showAIAnalyzer) {
+    return (
+      <AIRecipeAnalyzer
+        onAnalysisComplete={handleAIAnalysisComplete}
+        onCancel={handleAIAnalyzerCancel}
+      />
+    );
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.textureOverlay}></div>
@@ -188,6 +227,38 @@ export function RecipeForm({
               </div>
             </div>
           </div>
+
+          {/* AI Analysis Option */}
+          {!recipe && (
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.cardTitle}>AI Recipe Analysis</h3>
+                <div className={styles.cardLine}></div>
+              </div>
+              <div className={styles.cardContent}>
+                <div className={styles.aiSection}>
+                  <div className={styles.aiDescription}>
+                    <Sparkles className={styles.aiIcon} />
+                    <div>
+                      <h4>Extract Recipe from Image</h4>
+                      <p>
+                        Upload a photo of a recipe and our AI will automatically
+                        extract all the details for you.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowAIAnalyzer(true)}
+                    className={styles.aiButton}
+                  >
+                    <Sparkles className={styles.buttonIcon} />
+                    Analyze Recipe Image
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Basic Info */}
           <div className={styles.card}>

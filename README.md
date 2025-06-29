@@ -5,6 +5,7 @@ A beautiful, modern recipe management application built with Next.js and React. 
 ## ✨ Features
 
 - **Recipe Management**: Create, edit, and delete recipes with detailed information
+- **AI Recipe Analysis**: Upload a photo of a recipe and let AI extract all the details automatically
 - **Rich Recipe Details**: Include ingredients, instructions, prep time, cook time, and servings
 - **Category Organization**: Organize recipes by categories (Dessert, Main Course, Salad, etc.)
 - **Search Functionality**: Search recipes by title, category, or ingredients
@@ -13,9 +14,44 @@ A beautiful, modern recipe management application built with Next.js and React. 
 - **Image Support**: Add images to your recipes (with placeholder support)
 - **Modern UI**: Clean, intuitive interface with smooth animations and transitions
 
+## 🤖 AI Recipe Analysis
+
+The Recipe Room now includes an AI-powered feature that can automatically extract recipe information from images!
+
+### How It Works
+
+1. **Upload Recipe Image**: Take a photo of a recipe from a cookbook, handwritten note, or any recipe image
+2. **AI Analysis**: Our AI analyzes the image and extracts:
+   - Recipe title
+   - Description
+   - Ingredients list
+   - Step-by-step instructions
+   - Prep and cook times
+   - Number of servings
+   - Recipe category
+3. **Review & Edit**: Review the extracted information and make any adjustments
+4. **Save Recipe**: Save the recipe to your collection
+
+### Supported Image Types
+
+- 📖 Cookbook pages
+- 📝 Handwritten recipe cards
+- 💻 Screenshots from websites
+- 📱 Photos of recipe cards
+- 🖨️ Printed recipes
+
+### Tips for Best Results
+
+- Ensure the recipe text is clearly visible and well-lit
+- Try to capture the entire recipe in one image
+- Handwritten recipes work best when written clearly
+- Printed recipes from books or websites work great
+
 ## 📖 How to Use
 
 ### Adding a Recipe
+
+#### Manual Entry
 
 1. Click the "+" button in the top right corner
 2. Fill in the recipe details:
@@ -27,6 +63,15 @@ A beautiful, modern recipe management application built with Next.js and React. 
    - Category
    - Optional image
 3. Click "Save Recipe" to add it to your collection
+
+#### AI-Powered Entry
+
+1. Click the "+" button in the top right corner
+2. Click "Analyze Recipe Image" in the AI Recipe Analysis section
+3. Upload a photo of your recipe
+4. Click "Analyze Recipe" and wait for AI processing
+5. Review the extracted information and make any adjustments
+6. Click "Save Recipe" to add it to your collection
 
 ### Managing Recipes
 
@@ -50,17 +95,21 @@ The app comes with three sample recipes to get you started:
 - **Styling**: CSS Modules - Scoped styling
 - **Icons**: [Lucide React](https://lucide.dev/) - Beautiful icons
 - **Storage**: Local Storage - Client-side data persistence
+- **AI Integration**: Mock AI service (easily replaceable with real AI services)
 
 ## 📁 Project Structure
 
 ```
 the-recipe-room/
 ├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   │   └── analyze-recipe/ # AI recipe analysis endpoint
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout component
 │   ├── page.module.css    # Main page styles
 │   └── page.tsx           # Main application page
 ├── components/            # Reusable components
+│   ├── ai-recipe-analyzer/ # AI recipe analysis component
 │   ├── recipe-card.tsx    # Recipe card component
 │   ├── recipe-detail.tsx  # Recipe detail view
 │   ├── recipe-form.tsx    # Recipe creation/editing form
@@ -73,6 +122,16 @@ the-recipe-room/
 └── package.json           # Dependencies and scripts
 ```
 
+## 🤖 AI Integration
+
+The current implementation uses a mock AI service that simulates recipe analysis. To integrate with real AI services, see the [AI Integration Guide](AI_INTEGRATION_GUIDE.md) for detailed instructions on:
+
+- OpenAI GPT-4 Vision API
+- Google Cloud Vision API
+- Azure Computer Vision
+- AWS Textract
+- Cost considerations and security best practices
+
 ## 🎨 Design Features
 
 - **Responsive Layout**: Adapts to different screen sizes
@@ -81,6 +140,7 @@ the-recipe-room/
 - **Color Scheme**: Warm, food-friendly color palette
 - **Animations**: Smooth transitions and micro-interactions
 - **Accessibility**: Proper semantic HTML and keyboard navigation
+- **AI Interface**: Beautiful gradient design for AI analysis feature
 
 ## 📝 Recipe Data Structure
 
@@ -102,6 +162,44 @@ interface Recipe {
 }
 ```
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/the-recipe-room.git
+cd the-recipe-room
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Run the development server:
+
+```bash
+npm run dev
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+### Testing the AI Feature
+
+1. Start the development server
+2. Navigate to the "Add Recipe" page
+3. Click "Analyze Recipe Image"
+4. Upload any image (the mock AI will return a sample recipe)
+5. Review and save the extracted recipe
+
 ## 🚀 Deployment
 
 ### Vercel (Recommended)
@@ -109,23 +207,6 @@ interface Recipe {
 1. Push your code to GitHub
 2. Connect your repository to [Vercel](https://vercel.com)
 3. Deploy automatically on every push
-
-### Other Platforms
-
-The app can be deployed to any platform that supports Next.js:
-
-- Netlify
-- Railway
-- DigitalOcean App Platform
-- AWS Amplify
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📄 License
 
@@ -136,6 +217,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built with [Next.js](https://nextjs.org/)
 - Icons from [Lucide](https://lucide.dev/)
 - Inspired by the joy of cooking and sharing recipes
+- AI integration inspired by modern recipe management needs
 
 ---
 
