@@ -269,8 +269,8 @@ export function AIRecipeAnalyzer({
         <div className={styles.pricing}>
           <h3>AI Analysis Cost:</h3>
           <p>
-            Each analysis uses OpenAI's GPT-4 Vision API and costs approximately
-            $0.01-0.03 per image.
+            Each analysis uses OpenAI&apos;s GPT-4 Vision API and costs
+            approximately $0.01-0.03 per image.
           </p>
         </div>
       </div>

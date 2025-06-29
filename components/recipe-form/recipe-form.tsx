@@ -11,7 +11,7 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react";
-import type { Recipe } from "@/types/recipe";
+import type { Recipe, AIRecipeAnalysisResult } from "@/types/recipe";
 import { AIRecipeAnalyzer } from "@/components/ai-recipe-analyzer/ai-recipe-analyzer";
 import styles from "./recipe-form.module.css";
 import Image from "next/image";
@@ -127,7 +127,7 @@ export function RecipeForm({
     }));
   };
 
-  const handleAIAnalysisComplete = (recipeData: any) => {
+  const handleAIAnalysisComplete = (recipeData: AIRecipeAnalysisResult) => {
     setFormData({
       title: recipeData.title || "",
       description: recipeData.description || "",

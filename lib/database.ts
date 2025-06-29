@@ -1,9 +1,9 @@
 import type { Recipe } from "@/types/recipe";
-// import { SupabaseClient } from '@supabase/supabase-js'; // Uncomment and use if available
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export const database = {
   // Get recipes based on user authentication status
-  async getRecipes(supabase: any): Promise<Recipe[]> {
+  async getRecipes(supabase: SupabaseClient): Promise<Recipe[]> {
     // Let RLS policies handle the filtering automatically
     // Featured recipes are visible to everyone
     // User recipes are only visible to the owner
@@ -17,7 +17,7 @@ export const database = {
   },
 
   // Get user's own recipes only
-  async getUserRecipes(supabase: any): Promise<Recipe[]> {
+  async getUserRecipes(supabase: SupabaseClient): Promise<Recipe[]> {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -34,7 +34,7 @@ export const database = {
   },
 
   // Get featured recipes
-  async getFeaturedRecipes(supabase: any): Promise<Recipe[]> {
+  async getFeaturedRecipes(supabase: SupabaseClient): Promise<Recipe[]> {
     const { data, error } = await supabase
       .from("recipes")
       .select("*")
@@ -45,7 +45,10 @@ export const database = {
   },
 
   // Get a single recipe by ID
-  async getRecipe(supabase: any, id: string): Promise<Recipe | null> {
+  async getRecipe(
+    supabase: SupabaseClient,
+    id: string
+  ): Promise<Recipe | null> {
     const { data, error } = await supabase
       .from("recipes")
       .select("*")
@@ -60,7 +63,7 @@ export const database = {
 
   // Create a new recipe
   async createRecipe(
-    supabase: any,
+    supabase: SupabaseClient,
     recipe: Omit<Recipe, "id" | "createdAt" | "userId">
   ): Promise<Recipe> {
     const {
@@ -94,7 +97,7 @@ export const database = {
 
   // Update a recipe
   async updateRecipe(
-    supabase: any,
+    supabase: SupabaseClient,
     id: string,
     updates: Partial<Omit<Recipe, "id" | "createdAt" | "userId">>
   ): Promise<Recipe> {
@@ -119,7 +122,7 @@ export const database = {
   },
 
   // Delete a recipe
-  async deleteRecipe(supabase: any, id: string): Promise<void> {
+  async deleteRecipe(supabase: SupabaseClient, id: string): Promise<void> {
     const { error } = await supabase.from("recipes").delete().eq("id", id);
     if (error) {
       console.error("Supabase delete recipe error:", error);
@@ -128,7 +131,10 @@ export const database = {
   },
 
   // Search recipes by title or description
-  async searchRecipes(supabase: any, query: string): Promise<Recipe[]> {
+  async searchRecipes(
+    supabase: SupabaseClient,
+    query: string
+  ): Promise<Recipe[]> {
     const { data, error } = await supabase.rpc("search_recipes", {
       search_term: query,
     });
@@ -142,7 +148,7 @@ export const database = {
 
   // Get recipes by category
   async getRecipesByCategory(
-    supabase: any,
+    supabase: SupabaseClient,
     category: string
   ): Promise<Recipe[]> {
     // Let RLS policies handle the filtering automatically
@@ -159,7 +165,7 @@ export const database = {
   // Admin function: Create a featured recipe (visible to everyone)
   // This should only be used by developers/admins
   async createFeaturedRecipe(
-    supabase: any,
+    supabase: SupabaseClient,
     recipe: Omit<Recipe, "id" | "createdAt" | "userId">
   ): Promise<Recipe> {
     const {

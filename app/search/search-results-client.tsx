@@ -14,13 +14,7 @@ import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
-interface SearchResultsClientProps {
-  initialQuery: string;
-}
-
-export function SearchResultsClient({
-  initialQuery,
-}: SearchResultsClientProps) {
+export function SearchResultsClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";

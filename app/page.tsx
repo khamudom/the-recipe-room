@@ -10,7 +10,6 @@ import { Footer } from "@/components/footer/footer";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { LoadingSkeleton } from "@/components/loading-skeleton/loading-skeleton";
 import { useRecipes } from "@/hooks/use-recipes";
-import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 

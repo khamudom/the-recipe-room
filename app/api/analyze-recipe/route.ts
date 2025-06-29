@@ -104,12 +104,17 @@ Important guidelines:
       // Try to parse the response as JSON
       recipeData = JSON.parse(content);
     } catch (parseError) {
+      console.error("Failed to parse AI response as JSON:", parseError);
       // If direct parsing fails, try to extract JSON from the response
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         try {
           recipeData = JSON.parse(jsonMatch[0]);
         } catch (secondParseError) {
+          console.error(
+            "Failed to parse extracted JSON from AI response:",
+            secondParseError
+          );
           console.error("Failed to parse AI response as JSON:", content);
           return NextResponse.json(
             { error: "Failed to parse recipe data from AI response" },
@@ -140,11 +145,13 @@ Important guidelines:
 
     // Ensure arrays are properly formatted
     if (!Array.isArray(recipeData.ingredients)) {
-      recipeData.ingredients = [recipeData.ingredients as any].filter(Boolean);
+      recipeData.ingredients = [recipeData.ingredients as string].filter(
+        Boolean
+      );
     }
 
     if (!Array.isArray(recipeData.instructions)) {
-      recipeData.instructions = [recipeData.instructions as any].filter(
+      recipeData.instructions = [recipeData.instructions as string].filter(
         Boolean
       );
     }
