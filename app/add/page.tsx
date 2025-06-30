@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { RecipeForm } from "@/components/recipe-form/recipe-form";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import ProtectedRoute from "@/components/protected-route/protected-route";
+import { ProtectedRoute } from "@/components/protected-route/protected-route";
 import { useRecipes } from "@/hooks/use-recipes";
 import type { Recipe } from "@/types/recipe";
 

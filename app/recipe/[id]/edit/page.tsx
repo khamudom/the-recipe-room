@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { RecipeForm } from "@/components/recipe-form/recipe-form";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import ProtectedRoute from "@/components/protected-route/protected-route";
+import { ProtectedRoute } from "@/components/protected-route/protected-route";
 import { useRecipes } from "@/hooks/use-recipes";
 import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";

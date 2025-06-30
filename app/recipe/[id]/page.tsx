@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { RecipeDetail } from "@/components/recipe-detail/recipe-detail";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
+import { LoadingAnimation } from "@/components/loading-animation/loading-animation";
 import { useRecipes } from "@/hooks/use-recipes";
 import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
@@ -67,31 +68,7 @@ export default function RecipeDetailPage() {
   }, [router, from]);
 
   if (isLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline
-            style={{
-              background: 'transparent',
-              mixBlendMode: 'multiply'
-            }}
-          >
-            <source src="/lottie-stirbowl.webm" type="video/webm" />
-          </video>
-        </div>
-      </div>
-    );
+    return <LoadingAnimation text="Loading recipe..." />;
   }
 
   if (error || !recipe) {

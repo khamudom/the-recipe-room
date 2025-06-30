@@ -62,7 +62,7 @@ const AUTH_LINKS = {
   ],
 } as const;
 
-export default function AuthForm({
+export function AuthForm({
   mode,
   onSuccess,
   onModeChange,

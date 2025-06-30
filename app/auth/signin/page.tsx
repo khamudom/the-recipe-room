@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import AuthForm from "../../../components/auth-form/auth-form";
+import { AuthForm } from "../../../components/auth-form/auth-form";
 import styles from "./page.module.css";
 
 type AuthMode = "signin" | "signup" | "forgot-password";

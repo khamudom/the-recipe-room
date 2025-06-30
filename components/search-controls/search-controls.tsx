@@ -75,7 +75,7 @@ export function SearchControls({
           aria-label="Add new recipe"
         >
           <Plus className={styles.buttonIcon} aria-hidden="true" />
-          Add New Recipe
+          Add Recipe
         </button>
       ) : (
         <a
@@ -84,7 +84,7 @@ export function SearchControls({
           aria-label="Sign in to add recipe"
         >
           <Plus className={styles.buttonIcon} aria-hidden="true" />
-          Add Recipe
+          Sign In to Add Recipe
         </a>
       )}
     </div>

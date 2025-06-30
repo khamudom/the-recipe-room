@@ -3,9 +3,9 @@
 import Link from "next/link";
 import styles from "./navigation.module.css";
 import Image from "next/image";
-import AvatarDropdown from "../avatar-dropdown/avatar-dropdown";
+import { AvatarDropdown } from "../avatar-dropdown/avatar-dropdown";
 
-export default function Navigation() {
+export function Navigation() {
   return (
     <nav className={styles.nav}>
       <div className={styles.container}>

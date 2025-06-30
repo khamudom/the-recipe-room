@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAuth } from "../../lib/auth-context";
 import styles from "./avatar-dropdown.module.css";
 
-export default function AvatarDropdown() {
+export function AvatarDropdown() {
   const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const avatarButtonRef = useRef<HTMLButtonElement>(null);

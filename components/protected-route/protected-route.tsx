@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
   fallback?: React.ReactNode;
 }
 
-export default function ProtectedRoute({
+export function ProtectedRoute({
   children,
   fallback,
 }: ProtectedRouteProps) {

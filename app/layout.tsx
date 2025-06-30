@@ -2,7 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "../lib/auth-context";
-import Navigation from "../components/navigation/navigation";
+import { Navigation } from "../components/navigation/navigation";
 import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
 
 export const metadata: Metadata = {
