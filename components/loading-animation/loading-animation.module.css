@@ -16,6 +16,7 @@
   justify-content: center;
   border-radius: 0.5rem;
   overflow: hidden;
+  background-color: transparent;
 }
 
 .video {
@@ -23,6 +24,10 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  background-color: transparent;
+  mix-blend-mode: multiply;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }
 
 /* Size variants */
@@ -92,5 +97,17 @@
   .large {
     width: 120px;
     height: 120px;
+  }
+
+  /* Ensure video transparency on mobile */
+  .video {
+    background-color: transparent !important;
+    mix-blend-mode: multiply;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+  }
+
+  .videoContainer {
+    background-color: transparent !important;
   }
 }

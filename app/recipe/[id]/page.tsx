@@ -77,7 +77,16 @@ export default function RecipeDetailPage() {
         }}
       >
         <div style={{ textAlign: "center" }}>
-          <video autoPlay loop muted playsInline>
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            style={{
+              background: 'transparent',
+              mixBlendMode: 'multiply'
+            }}
+          >
             <source src="/lottie-stirbowl.webm" type="video/webm" />
           </video>
         </div>

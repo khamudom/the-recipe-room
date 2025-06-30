@@ -132,7 +132,7 @@ export default function AvatarDropdown() {
             Shopping List - Coming Soon
           </Link>
           <Link href="/" className={styles.dropdownItem}>
-            AI Chef - Coming Soon
+            Virtual Chef - Coming Soon
           </Link>
           <div className={styles.divider} />
           {user ? (
