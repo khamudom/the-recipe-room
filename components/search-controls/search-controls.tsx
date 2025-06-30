@@ -59,6 +59,13 @@ export function SearchControls({
               ×
             </button>
           )}
+          <button
+            type="submit"
+            className={styles.searchButton}
+            aria-label="Search recipes"
+          >
+            <Search className={styles.buttonIcon} aria-hidden="true" />
+          </button>
         </div>
       </form>
       {user ? (

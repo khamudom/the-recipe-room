@@ -2,9 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Header } from "@/components/header/header";
 import { SearchControls } from "@/components/search-controls/search-controls";
-import { Footer } from "@/components/footer/footer";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/recipe-card/recipe-card";
 import { LoadingSkeleton } from "@/components/loading-skeleton/loading-skeleton";
@@ -17,7 +15,8 @@ import styles from "./page.module.css";
 export function SearchResultsClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const query = searchParams.get("q") || "";
+  const rawQuery = searchParams.get("q") || "";
+  const query = rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
   const [searchTerm, setSearchTerm] = useState(query);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +68,9 @@ export function SearchResultsClient() {
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
-          <Header />
+          <div className={styles.searchHeader}>
+            <h1>Search Results for {query}</h1>
+          </div>
 
           <SearchControls
             searchTerm={searchTerm}
@@ -77,48 +78,35 @@ export function SearchResultsClient() {
             onAddRecipe={handleAddRecipeClick}
           />
 
-          <main className={styles.main}>
-            <div className={styles.searchHeader}>
-              <h1>Search Results</h1>
-              {query && (
-                <p className={styles.searchQuery}>
-                  Results for &ldquo;{query}&rdquo;
-                </p>
-              )}
+          {isLoading ? (
+            <div className={styles.loadingContainer}>
+              <LoadingSkeleton count={1} />
             </div>
-
-            {isLoading ? (
-              <div className={styles.loadingContainer}>
-                <LoadingSkeleton count={1} />
-              </div>
-            ) : error ? (
-              <div className={styles.noResults}>
-                <h2>Search Error</h2>
-                <p>{error}</p>
-              </div>
-            ) : recipes.length > 0 ? (
-              <div className={styles.resultsGrid}>
-                {recipes.map((recipe) => (
-                  <RecipeCard
-                    key={recipe.id}
-                    recipe={recipe}
-                    onClick={() => handleRecipeClick(recipe)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className={styles.noResults}>
-                <h2>No recipes found</h2>
-                <p>
-                  {query
-                    ? `No recipes found for "${query}". Try searching for different keywords.`
-                    : "Enter a search term to find recipes."}
-                </p>
-              </div>
-            )}
-          </main>
-
-          <Footer />
+          ) : error ? (
+            <div className={styles.noResults}>
+              <h2>Search Error</h2>
+              <p>{error}</p>
+            </div>
+          ) : recipes.length > 0 ? (
+            <div className={styles.resultsGrid}>
+              {recipes.map((recipe) => (
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  onClick={() => handleRecipeClick(recipe)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className={styles.noResults}>
+              <h2>No recipes found</h2>
+              <p>
+                {query
+                  ? `No recipes found for "${query}". Try searching for different keywords.`
+                  : "Enter a search term to find recipes."}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </ErrorBoundary>

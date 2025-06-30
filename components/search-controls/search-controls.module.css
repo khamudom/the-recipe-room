@@ -123,3 +123,39 @@
   outline-offset: 2px;
   border-radius: 0.25rem;
 }
+
+.searchButton {
+  position: absolute;
+  right: 0.75rem;
+  background: #92400e;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.375rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.searchButton:hover {
+  background: #78350f;
+  transform: scale(1.05);
+}
+
+.searchButton:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.searchButton .buttonIcon {
+  color: #fefcf3;
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* Adjust clear button position when search button is present */
+.inputWrapper:has(.searchButton) .clearButton {
+  right: 3rem;
+}

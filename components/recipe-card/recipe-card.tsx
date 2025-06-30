@@ -77,10 +77,6 @@ export const RecipeCard = React.memo(function RecipeCard({
             <span>{recipe.servings} servings</span>
           </div>
         </div>
-
-        <div className={styles.decorativeBorder}>
-          <div className={styles.decorativeLine}></div>
-        </div>
       </div>
     </div>
   );

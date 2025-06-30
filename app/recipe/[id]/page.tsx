@@ -68,8 +68,19 @@ export default function RecipeDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading recipe...</div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <video autoPlay loop muted playsInline>
+            <source src="/lottie-stirbowl.webm" type="video/webm" />
+          </video>
+        </div>
       </div>
     );
   }

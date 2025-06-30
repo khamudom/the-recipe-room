@@ -31,7 +31,6 @@ export function RecipeDetail({
         <div className={styles.headerControls}>
           <button onClick={onBack} className={styles.backButton}>
             <ArrowLeft className={styles.buttonIcon} />
-            Back to Recipes
           </button>
           {isOwner && (
             <div className={styles.actionButtons}>

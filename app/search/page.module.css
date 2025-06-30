@@ -39,12 +39,13 @@
 .searchHeader {
   text-align: center;
   margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .searchHeader h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #92400e;
   margin-bottom: 0.5rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
