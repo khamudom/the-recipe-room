@@ -133,14 +133,6 @@ export function RecipeDetail({
             </div>
           </div>
         </div>
-
-        {/* Decorative footer */}
-        <div className={styles.footer}>
-          <div className={styles.footerLine}></div>
-          <p className={styles.footerText}>
-            &quot;Made with love in our kitchen&quot;
-          </p>
-        </div>
       </div>
     </div>
   );

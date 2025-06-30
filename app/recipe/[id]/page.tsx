@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { RecipeDetail } from "@/components/recipe-detail/recipe-detail";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import { LoadingAnimation } from "@/components/loading-animation/loading-animation";
+import { LoadingSpinner } from "@/components/loading-spinner/loading-spinner";
 import { useRecipes } from "@/hooks/use-recipes";
 import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
@@ -68,19 +68,18 @@ export default function RecipeDetailPage() {
   }, [router, from]);
 
   if (isLoading) {
-    return <LoadingAnimation text="Loading recipe..." />;
+    return <LoadingSpinner />;
   }
 
   if (error || !recipe) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-lg text-red-600 mb-4">
+      <div>
+        <div>
+          <p>
             {error || "Recipe not found"}
           </p>
           <button
             onClick={handleBack}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Back to Recipes
           </button>

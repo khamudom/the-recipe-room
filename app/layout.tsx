@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "../lib/auth-context";
 import { Navigation } from "../components/navigation/navigation";
 import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
+import { LottiePreloader } from "@/components/lottie-preloader/lottie-preloader";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",
@@ -24,6 +25,7 @@ export default function RootLayout({
         <AuthProvider>
           {/* Only expose Supabase in development */}
           {process.env.NODE_ENV === "development" && <ExposeSupabase />}
+          <LottiePreloader />
           <Navigation />
           <main>{children}</main>
         </AuthProvider>

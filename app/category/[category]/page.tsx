@@ -26,7 +26,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/recipe-card/recipe-card";
-import { LoadingAnimation } from "@/components/loading-animation/loading-animation";
+import { LoadingSpinner } from "@/components/loading-spinner/loading-spinner";
+import { ArrowLeft } from "lucide-react";
 import { database } from "@/lib/database";
 import { supabase } from "@/lib/supabase";
 import { ERROR_MESSAGES } from "@/lib/constants";
@@ -69,18 +70,25 @@ export default function CategoryPage() {
     fetchRecipes();
   }, [category]);
 
+  const handleBack = useCallback(() => {
+    router.push("/");
+  }, [router]);
+
   return (
     <ErrorBoundary>
+      
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <div className={styles.header}>
+            <button onClick={handleBack} className={styles.backButton}>
+              <ArrowLeft className={styles.buttonIcon} />
+            </button>
             <h1 className={styles.mainTitle}>{category} Recipes</h1>
           </div>
-
           {isLoading ? (
             <div className={styles.loadingContainer}>
-              <LoadingAnimation />
+              <LoadingSpinner />
             </div>
           ) : error ? (
             <div className={styles.emptyState}>

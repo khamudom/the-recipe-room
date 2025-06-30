@@ -24,17 +24,20 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1300px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
 .header {
+  display: flex;
+  align-items: center;
   margin-bottom: 2rem;
-  text-align: center;
 }
 
 .mainTitle {
+  flex: 1;
+  text-align: center;
   font-size: 2.5rem;
   font-weight: 700;
   color: #6b3200;
@@ -70,4 +73,28 @@
 .emptyText {
   color: #a67c52;
   font-size: 1rem;
+}
+
+.backButton {
+  color: #92400e;
+  background: transparent;
+  border: 1px solid #92400e;
+  font-family: "Times New Roman", "Georgia", "Garamond", serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+.backButton:hover {
+  background-color: #78350f;
+  color: #fef3c7;
+}
+
+.buttonIcon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
