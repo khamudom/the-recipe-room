@@ -10,9 +10,9 @@ export const CATEGORIES = [
 
 export const SEARCH_DEBOUNCE_DELAY = 300;
 
-export const DEFAULT_PAGE_TITLE = "Welcome to the Kitchen";
+export const DEFAULT_PAGE_TITLE = "Your Personal Recipe Collection";
 export const DEFAULT_PAGE_SUBTITLE =
-  "Where every meal begins and memories are made";
+  "Save your favorites, discover new ones, and build your own recipe room to cook from anytime.";
 export const DEFAULT_FOOTER_QUOTE = '"The secret ingredient is always love"';
 
 export const ERROR_MESSAGES = {

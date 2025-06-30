@@ -128,6 +128,12 @@ export default function AvatarDropdown() {
           <Link href="/" className={styles.dropdownItem}>
             Recipes
           </Link>
+          <Link href="/" className={styles.dropdownItem}>
+            Shopping List - Coming Soon
+          </Link>
+          <Link href="/" className={styles.dropdownItem}>
+            AI Chef - Coming Soon
+          </Link>
           <div className={styles.divider} />
           {user ? (
             <button onClick={handleSignOut} className={styles.dropdownItem}>

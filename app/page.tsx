@@ -46,7 +46,7 @@ export default function RecipeBook() {
         <div className={styles.content}>
           <Header />
           <div className={styles.loadingContainer}>
-            <LoadingSkeleton count={6} />
+            <LoadingSkeleton count={3} />
           </div>
         </div>
       </div>
