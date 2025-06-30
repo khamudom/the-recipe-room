@@ -2,7 +2,7 @@
 
 import Lottie from "lottie-react";
 import React, { useEffect, useState } from "react";
-import { lottieCache } from "@/lib/lottie-cache";
+import { lottieCache, LottieAnimationData } from "@/lib/lottie-cache";
 import styles from "./loading-spinner.module.css";
 
 interface LoadingSpinnerProps {
@@ -18,7 +18,7 @@ export function LoadingSpinner({
   centered = true,
   animationPath = "/assets/lottie/Animation - 1751255045745.json",
 }: LoadingSpinnerProps) {
-  const [animationData, setAnimationData] = useState<any>(null);
+  const [animationData, setAnimationData] = useState<LottieAnimationData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

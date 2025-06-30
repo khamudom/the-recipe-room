@@ -1,17 +1,59 @@
+// Lottie animation data types
+export interface LottieAsset {
+  id: string;
+  w?: number;
+  h?: number;
+  u?: string;
+  p?: string;
+  e?: number;
+  layers?: LottieLayer[];
+  [key: string]: unknown;
+}
+
+export interface LottieLayer {
+  ddd?: number;
+  ind: number;
+  ty: number;
+  nm: string;
+  sr: number;
+  ks: Record<string, unknown>;
+  ao: number;
+  sw: number;
+  sh: number;
+  sc: string;
+  pf: string;
+  t: number;
+  [key: string]: unknown;
+}
+
+export interface LottieAnimationData {
+  v: string;
+  fr: number;
+  ip: number;
+  op: number;
+  w: number;
+  h: number;
+  nm: string;
+  ddd: number;
+  assets: LottieAsset[];
+  layers: LottieLayer[];
+  [key: string]: unknown; // Allow additional properties that might be in Lottie files
+}
+
 // Lottie animation cache for instant loading
 class LottieCache {
-  private cache = new Map<string, any>();
-  private loadingPromises = new Map<string, Promise<any>>();
+  private cache = new Map<string, LottieAnimationData>();
+  private loadingPromises = new Map<string, Promise<LottieAnimationData>>();
 
-  async preloadAnimation(path: string): Promise<any> {
+  async preloadAnimation(path: string): Promise<LottieAnimationData> {
     // If already cached, return immediately
     if (this.cache.has(path)) {
-      return this.cache.get(path);
+      return this.cache.get(path)!;
     }
 
     // If already loading, wait for that promise
     if (this.loadingPromises.has(path)) {
-      return this.loadingPromises.get(path);
+      return this.loadingPromises.get(path)!;
     }
 
     // Start loading
@@ -29,7 +71,7 @@ class LottieCache {
     }
   }
 
-  private async loadAnimation(path: string): Promise<any> {
+  private async loadAnimation(path: string): Promise<LottieAnimationData> {
     const response = await fetch(path);
     if (!response.ok) {
       throw new Error(`Failed to load animation: ${response.statusText}`);
@@ -37,7 +79,7 @@ class LottieCache {
     return response.json();
   }
 
-  getCachedAnimation(path: string): any | null {
+  getCachedAnimation(path: string): LottieAnimationData | null {
     return this.cache.get(path) || null;
   }
 
