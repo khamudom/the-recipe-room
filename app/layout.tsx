@@ -5,7 +5,7 @@ import { AuthProvider } from "../lib/auth-context";
 import { Navigation } from "../components/navigation/navigation";
 import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
 import { LottiePreloader } from "@/components/lottie-preloader/lottie-preloader";
-import { GlobalAIChef } from "@/components/ai-chef/global-ai-chef";
+import { AIChefWidget } from "@/components/ai-chef/ai-chef-widget";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",
@@ -29,7 +29,7 @@ export default function RootLayout({
           <LottiePreloader />
           <Navigation />
           <main>{children}</main>
-          <GlobalAIChef />
+          <AIChefWidget />
         </AuthProvider>
       </body>
     </html>

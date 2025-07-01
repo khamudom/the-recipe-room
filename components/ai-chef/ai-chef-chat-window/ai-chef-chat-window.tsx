@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, RefObject } from "react";
 import { AIChefMessage } from "../ai-chef-message/ai-chef-message";
 import { sendMessageToAI } from "../utils/openai";
 import styles from "./ai-chef-chat-window.module.css";
@@ -8,9 +8,12 @@ type Message = {
   text: string;
 };
 
-type Props = { onClose: () => void };
+type Props = {
+  onClose: () => void;
+  buttonRef: RefObject<HTMLButtonElement | null>;
+};
 
-export function AIChefChatWindow({ onClose }: Props) {
+export function AIChefChatWindow({ onClose, buttonRef }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,7 +23,9 @@ export function AIChefChatWindow({ onClose }: Props) {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         chatWindowRef.current &&
-        !chatWindowRef.current.contains(event.target as Node)
+        !chatWindowRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
       ) {
         onClose();
       }
@@ -63,7 +68,7 @@ export function AIChefChatWindow({ onClose }: Props) {
   return (
     <div className={styles.chatWindow} ref={chatWindowRef}>
       <div className={styles.header}>
-        <h3>Ask Chef</h3>
+        <h3>Chef's Kitchen Chat</h3>
         <button onClick={onClose} className={styles.closeButton}>
           ✕
         </button>
