@@ -71,11 +71,13 @@
   padding: 0.75rem;
   border: 2px solid #d2b48c;
   border-radius: 8px;
-  background: white;
+  background: #ffffff;
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1rem;
   color: #78350f;
   transition: border-color 0.2s ease;
+  resize: vertical;
+  min-height: 60px;
 }
 
 .input:focus {
@@ -92,7 +94,7 @@
 .sendButton {
   padding: 0.75rem 1rem;
   background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
-  color: white;
+  color: #ffffff;
   border: 2px solid #78350f;
   border-radius: 8px;
   cursor: pointer;
@@ -169,7 +171,7 @@
 
   .input {
     padding: 0.5rem;
-    font-size: 0.85rem;
+    font-size: 16px; /* Prevent iOS zoom by using 16px minimum */
     min-height: 50px;
   }
 

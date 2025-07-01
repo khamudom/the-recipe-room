@@ -104,7 +104,6 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
           placeholder="Ask me anything about food..."
           className={styles.input}
           rows={3}
-          style={{ resize: "vertical", minHeight: "60px" }}
         />
         <button
           onClick={handleSend}
