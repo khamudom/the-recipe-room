@@ -35,7 +35,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
+  }, [onClose, buttonRef]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -68,7 +68,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
   return (
     <div className={styles.chatWindow} ref={chatWindowRef}>
       <div className={styles.header}>
-        <h3>Chef's Kitchen Chat</h3>
+        <h3>Chef&apos;s Kitchen Chat</h3>
         <button onClick={onClose} className={styles.closeButton}>
           ✕
         </button>

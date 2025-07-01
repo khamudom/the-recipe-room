@@ -29,3 +29,5 @@ export const AIChefButton = forwardRef<HTMLButtonElement, Props>(
     );
   }
 );
+
+AIChefButton.displayName = "AIChefButton";
