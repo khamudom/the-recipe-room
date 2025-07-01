@@ -13,4 +13,4 @@ export function LottiePreloader() {
 
   // This component doesn't render anything
   return null;
-} 
+}

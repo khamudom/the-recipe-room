@@ -20,7 +20,24 @@ export function AIChefWidget() {
     <>
       <AIChefButton ref={buttonRef} onClick={handleAIChefClick} />
       {isChatOpen && (
-        <AIChefChatWindow onClose={handleCloseChat} buttonRef={buttonRef} />
+        <>
+          <div
+            className="ai-chef-overlay"
+            onClick={handleCloseChat}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              backdropFilter: "blur(2px)",
+              zIndex: 999,
+              animation: "fadeIn 0.2s ease-out",
+            }}
+          />
+          <AIChefChatWindow onClose={handleCloseChat} buttonRef={buttonRef} />
+        </>
       )}
     </>
   );

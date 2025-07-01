@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, RefObject } from "react";
 import { AIChefMessage } from "../ai-chef-message/ai-chef-message";
+import { LoadingSpinner } from "../../loading-spinner/loading-spinner";
 import { sendMessageToAI } from "../utils/openai";
 import styles from "./ai-chef-chat-window.module.css";
 
@@ -18,6 +19,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -36,6 +38,11 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose, buttonRef]);
+
+  // Auto-scroll to bottom when messages change or loading state changes
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -77,7 +84,17 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
         {messages.map((msg, index) => (
           <AIChefMessage key={index} sender={msg.sender} text={msg.text} />
         ))}
-        {loading && <AIChefMessage sender="ai" text="Chef is thinking..." />}
+        {loading && (
+          <div className={styles.loadingContainer}>
+            <LoadingSpinner
+              size="medium"
+              text="Chef is thinking..."
+              centered={false}
+              animationPath="/assets/lottie/chat-bubble/Animation - 1751394047556.json"
+            />
+          </div>
+        )}
+        <div ref={messagesEndRef} />
       </div>
       <div className={styles.inputArea}>
         <textarea
