@@ -9,15 +9,13 @@ interface ProtectedRouteProps {
   fallback?: React.ReactNode;
 }
 
-export function ProtectedRoute({
-  children,
-  fallback,
-}: ProtectedRouteProps) {
+export function ProtectedRoute({ children, fallback }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!loading && !user) {
+      // Use push to allow users to return to their intended page after signing in
       router.push("/auth/signin");
     }
   }, [user, loading, router]);

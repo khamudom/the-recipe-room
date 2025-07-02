@@ -146,7 +146,7 @@
     width: calc(100vw - 20px);
     right: 10px;
     left: 10px;
-    bottom: 70px;
+    bottom: 100px;
     height: calc(100vh - 180px);
     max-height: 500px;
   }

@@ -2,11 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "../../lib/auth-context";
 import styles from "./avatar-dropdown.module.css";
 
 export function AvatarDropdown() {
   const { user, signOut } = useAuth();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const avatarButtonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -56,9 +58,15 @@ export function AvatarDropdown() {
   }, [isOpen]);
 
   const handleSignOut = async () => {
-    await signOut();
-    setIsOpen(false);
-    avatarButtonRef.current?.focus();
+    try {
+      await signOut();
+      setIsOpen(false);
+      avatarButtonRef.current?.focus();
+      // Simple redirect to home page after sign out
+      router.push("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   const toggleDropdown = () => {
