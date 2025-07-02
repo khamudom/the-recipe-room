@@ -4,6 +4,12 @@ import styles from "./ai-chef-message.module.css";
 
 type Props = { sender: "user" | "ai"; text: string };
 
+interface CodeComponentProps {
+  className?: string;
+  children?: React.ReactNode;
+  inline?: boolean;
+}
+
 export function AIChefMessage({ sender, text }: Props) {
   const isUser = sender === "user";
   return (
@@ -19,8 +25,7 @@ export function AIChefMessage({ sender, text }: Props) {
           <ReactMarkdown
             components={{
               // Style code blocks
-              code: ({ className, children, ...props }: any) => {
-                const match = /language-(\w+)/.exec(className || "");
+              code: ({ className, children, ...props }: CodeComponentProps) => {
                 return !props.inline ? (
                   <pre className={styles.codeBlock}>
                     <code className={className} {...props}>
