@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { RecipeDetail } from "@/components/recipe-detail/recipe-detail";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { LoadingSpinner } from "@/components/loading-spinner/loading-spinner";
-import { useRecipes } from "@/hooks/use-recipes";
-import { ERROR_MESSAGES } from "@/lib/constants";
-import type { Recipe } from "@/types/recipe";
+import { useRecipe, useDeleteRecipe } from "@/hooks/use-recipes-query";
 
 export default function RecipeDetailPage() {
   const router = useRouter();
@@ -16,30 +14,13 @@ export default function RecipeDetailPage() {
   const recipeId = params.id as string;
   const from = searchParams.get("from");
 
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { 
+    data: recipe, 
+    isLoading, 
+    error 
+  } = useRecipe(recipeId);
 
-  const { getRecipe, deleteRecipe } = useRecipes();
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        setIsLoading(true);
-        const fetchedRecipe = await getRecipe(recipeId);
-        setRecipe(fetchedRecipe);
-      } catch (err) {
-        console.error("Error fetching recipe:", err);
-        setError(ERROR_MESSAGES.FETCH_RECIPE);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (recipeId) {
-      fetchRecipe();
-    }
-  }, [recipeId, getRecipe]);
+  const deleteRecipeMutation = useDeleteRecipe();
 
   const handleEdit = useCallback(() => {
     if (recipe) {
@@ -50,14 +31,14 @@ export default function RecipeDetailPage() {
   const handleDelete = useCallback(async () => {
     if (recipe && confirm("Are you sure you want to delete this recipe?")) {
       try {
-        await deleteRecipe(recipe.id);
+        await deleteRecipeMutation.mutateAsync(recipe.id);
         router.push("/");
       } catch (err) {
         console.error("Error deleting recipe:", err);
-        setError(ERROR_MESSAGES.DELETE_RECIPE);
+        // Error is handled by the mutation hook
       }
     }
-  }, [recipe, deleteRecipe, router]);
+  }, [recipe, deleteRecipeMutation, router]);
 
   const handleBack = useCallback(() => {
     if (from) {
@@ -76,7 +57,7 @@ export default function RecipeDetailPage() {
       <div>
         <div>
           <p>
-            {error || "Recipe not found"}
+            {error?.message || "Recipe not found"}
           </p>
           <button
             onClick={handleBack}

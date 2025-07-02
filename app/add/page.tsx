@@ -1,32 +1,28 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { RecipeForm } from "@/components/recipe-form/recipe-form";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { ProtectedRoute } from "@/components/protected-route/protected-route";
-import { useRecipes } from "@/hooks/use-recipes";
+import { useCreateRecipe } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 
 export default function AddRecipePage() {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const { addRecipe } = useRecipes();
+  const createRecipeMutation = useCreateRecipe();
 
   const handleAddRecipe = useCallback(
     async (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
       try {
-        setIsSubmitting(true);
-        await addRecipe(recipe);
+        await createRecipeMutation.mutateAsync(recipe);
         router.push("/");
       } catch (error) {
         console.error("Error creating recipe:", error);
-      } finally {
-        setIsSubmitting(false);
+        // Error is handled by the mutation hook
       }
     },
-    [addRecipe, router]
+    [createRecipeMutation, router]
   );
 
   const handleCancel = useCallback(() => {
@@ -40,7 +36,7 @@ export default function AddRecipePage() {
           recipe={null}
           onSubmit={handleAddRecipe}
           onCancel={handleCancel}
-          isSubmitting={isSubmitting}
+          isSubmitting={createRecipeMutation.isPending}
         />
       </ErrorBoundary>
     </ProtectedRoute>

@@ -46,6 +46,11 @@ class LottieCache {
   private loadingPromises = new Map<string, Promise<LottieAnimationData>>();
 
   async preloadAnimation(path: string): Promise<LottieAnimationData> {
+    // Don't preload on server side
+    if (typeof window === 'undefined') {
+      return Promise.reject(new Error('Lottie animations can only be preloaded on the client side'));
+    }
+
     // If already cached, return immediately
     if (this.cache.has(path)) {
       return this.cache.get(path)!;
@@ -72,6 +77,11 @@ class LottieCache {
   }
 
   private async loadAnimation(path: string): Promise<LottieAnimationData> {
+    // Only load animations on the client side
+    if (typeof window === 'undefined') {
+      throw new Error('Lottie animations can only be loaded on the client side');
+    }
+
     const response = await fetch(path);
     if (!response.ok) {
       throw new Error(`Failed to load animation: ${response.statusText}`);
@@ -96,6 +106,8 @@ class LottieCache {
 // Global instance
 export const lottieCache = new LottieCache();
 
-// Preload default animation on module load
-const DEFAULT_ANIMATION_PATH = "/assets/lottie/Animation - 1751255045745.json";
-lottieCache.preloadAnimation(DEFAULT_ANIMATION_PATH).catch(console.error);
+// Preload default animation on module load (only on client side)
+if (typeof window !== 'undefined') {
+  const DEFAULT_ANIMATION_PATH = "/assets/lottie/Animation - 1751255045745.json";
+  lottieCache.preloadAnimation(DEFAULT_ANIMATION_PATH).catch(console.error);
+}

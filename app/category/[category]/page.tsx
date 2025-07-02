@@ -22,15 +22,13 @@
 
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/recipe-card/recipe-card";
 import { LoadingSpinner } from "@/components/loading-spinner/loading-spinner";
 import { ArrowLeft } from "lucide-react";
-import { database } from "@/lib/database";
-import { supabase } from "@/lib/supabase";
-import { ERROR_MESSAGES } from "@/lib/constants";
+import { useRecipesByCategory } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
@@ -38,9 +36,12 @@ export default function CategoryPage() {
   const params = useParams();
   const router = useRouter();
   const category = decodeURIComponent(params.category as string);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const { 
+    data: recipes = [], 
+    isLoading, 
+    error 
+  } = useRecipesByCategory(category);
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
@@ -51,24 +52,6 @@ export default function CategoryPage() {
     },
     [router, category]
   );
-
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await database.getRecipesByCategory(supabase, category);
-        setRecipes(data);
-      } catch (error) {
-        console.error("Error fetching recipes by category:", error);
-        setError(ERROR_MESSAGES.LOAD_RECIPES);
-        setRecipes([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchRecipes();
-  }, [category]);
 
   const handleBack = useCallback(() => {
     router.push("/");
@@ -93,7 +76,7 @@ export default function CategoryPage() {
           ) : error ? (
             <div className={styles.emptyState}>
               <h3 className={styles.emptyTitle}>Error Loading Recipes</h3>
-              <p className={styles.emptyText}>{error}</p>
+              <p className={styles.emptyText}>{error.message}</p>
             </div>
           ) : recipes.length === 0 ? (
             <div className={styles.emptyState}>

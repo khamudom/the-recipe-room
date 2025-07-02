@@ -6,6 +6,7 @@ import { Navigation } from "../components/navigation/navigation";
 import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
 import { LottiePreloader } from "@/components/lottie-preloader/lottie-preloader";
 import { AIChefWidget } from "@/components/ai-chef/ai-chef-widget";
+import { ReactQueryProvider } from "@/components/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",
@@ -23,14 +24,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <AuthProvider>
-          {/* Only expose Supabase in development */}
-          {process.env.NODE_ENV === "development" && <ExposeSupabase />}
-          <LottiePreloader />
-          <Navigation />
-          <main>{children}</main>
-          <AIChefWidget />
-        </AuthProvider>
+        <ReactQueryProvider>
+          <AuthProvider>
+            {/* Only expose Supabase in development */}
+            {process.env.NODE_ENV === "development" && <ExposeSupabase />}
+            <LottiePreloader />
+            <Navigation />
+            <main>{children}</main>
+            <AIChefWidget />
+          </AuthProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

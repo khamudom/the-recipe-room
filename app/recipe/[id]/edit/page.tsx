@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { RecipeForm } from "@/components/recipe-form/recipe-form";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { ProtectedRoute } from "@/components/protected-route/protected-route";
-import { useRecipes } from "@/hooks/use-recipes";
-import { ERROR_MESSAGES } from "@/lib/constants";
+import { useRecipe, useUpdateRecipe } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 
 export default function EditRecipePage() {
@@ -14,50 +13,25 @@ export default function EditRecipePage() {
   const params = useParams();
   const recipeId = params.id as string;
 
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { 
+    data: recipe, 
+    isLoading, 
+    error 
+  } = useRecipe(recipeId);
 
-  const { getRecipe, updateRecipe } = useRecipes();
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        setIsLoading(true);
-        const fetchedRecipe = await getRecipe(recipeId);
-        if (!fetchedRecipe) {
-          setError("Recipe not found");
-          return;
-        }
-        setRecipe(fetchedRecipe);
-      } catch (err) {
-        console.error("Error fetching recipe:", err);
-        setError(ERROR_MESSAGES.FETCH_RECIPE);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (recipeId) {
-      fetchRecipe();
-    }
-  }, [recipeId, getRecipe]);
+  const updateRecipeMutation = useUpdateRecipe();
 
   const handleUpdateRecipe = useCallback(
     async (updatedRecipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
       try {
-        setIsSubmitting(true);
-        await updateRecipe(recipeId, updatedRecipe);
+        await updateRecipeMutation.mutateAsync({ id: recipeId, recipe: updatedRecipe });
         router.push(`/recipe/${recipeId}`);
       } catch (error) {
         console.error("Error updating recipe:", error);
-        setError(ERROR_MESSAGES.UPDATE_RECIPE);
-      } finally {
-        setIsSubmitting(false);
+        // Error is handled by the mutation hook
       }
     },
-    [recipeId, updateRecipe, router]
+    [recipeId, updateRecipeMutation, router]
   );
 
   const handleCancel = useCallback(() => {
@@ -77,7 +51,7 @@ export default function EditRecipePage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <p className="text-lg text-red-600 mb-4">
-            {error || "Recipe not found"}
+            {error?.message || "Recipe not found"}
           </p>
           <button
             onClick={() => router.push("/")}
@@ -97,7 +71,7 @@ export default function EditRecipePage() {
           recipe={recipe}
           onSubmit={handleUpdateRecipe}
           onCancel={handleCancel}
-          isSubmitting={isSubmitting}
+          isSubmitting={updateRecipeMutation.isPending}
         />
       </ErrorBoundary>
     </ProtectedRoute>

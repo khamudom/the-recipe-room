@@ -9,7 +9,7 @@ import { CategoriesSection } from "@/components/categories-section/categories-se
 import { Footer } from "@/components/footer/footer";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { LoadingSkeleton } from "@/components/loading-skeleton/loading-skeleton";
-import { useRecipes } from "@/hooks/use-recipes";
+import { useFeaturedRecipes } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
@@ -17,7 +17,11 @@ export default function RecipeBook() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { featuredRecipes, isLoading, isFeaturedLoading, error } = useRecipes();
+  const { 
+    data: featuredRecipes = [], 
+    isLoading: isFeaturedLoading, 
+    error: featuredError 
+  } = useFeaturedRecipes();
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
@@ -39,7 +43,7 @@ export default function RecipeBook() {
   }, []);
 
   // Show loading state for initial page load
-  if (isLoading) {
+  if (isFeaturedLoading) {
     return (
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
@@ -54,14 +58,14 @@ export default function RecipeBook() {
   }
 
   // Show error state if there's a critical error
-  if (error) {
+  if (featuredError) {
     return (
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <Header />
           <div className={styles.errorState}>
-            <p>{error}</p>
+            <p>Failed to load featured recipes. Please try again.</p>
             <button onClick={handleRetry}>Try Again</button>
           </div>
         </div>

@@ -31,3 +31,73 @@
   border: 2px solid #fbbf24;
   box-shadow: 0 2px 8px rgba(251, 191, 36, 0.2);
 }
+
+/* Markdown Styles */
+.paragraph {
+  margin: 0.5rem 0;
+}
+
+.paragraph:first-child {
+  margin-top: 0;
+}
+
+.paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.heading {
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.heading:first-child {
+  margin-top: 0;
+}
+
+.list {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.listItem {
+  margin: 0.25rem 0;
+}
+
+.codeBlock {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+}
+
+.inlineCode {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 0.125rem 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #dc2626;
+}
+
+.blockquote {
+  border-left: 4px solid #fbbf24;
+  margin: 0.5rem 0;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.strong {
+  font-weight: 600;
+  color: #92400e;
+}
+
+.emphasis {
+  font-style: italic;
+}

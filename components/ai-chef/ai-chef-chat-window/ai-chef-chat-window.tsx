@@ -103,7 +103,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
           onKeyDown={handleKeyDown}
           placeholder="Ask me anything about food..."
           className={styles.input}
-          rows={3}
+          rows={1}
         />
         <button
           onClick={handleSend}

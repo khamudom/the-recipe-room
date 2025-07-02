@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SearchControls } from "@/components/search-controls/search-controls";
 import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/recipe-card/recipe-card";
 import { LoadingSkeleton } from "@/components/loading-skeleton/loading-skeleton";
-import { database } from "@/lib/database";
-import { supabase } from "@/lib/supabase";
-import { ERROR_MESSAGES } from "@/lib/constants";
+import { useSearchRecipes } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
@@ -18,35 +16,12 @@ export function SearchResultsClient() {
   const rawQuery = searchParams.get("q") || "";
   const query = rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
   const [searchTerm, setSearchTerm] = useState(query);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  // Fetch search results when query changes
-  useEffect(() => {
-    if (!query) {
-      setRecipes([]);
-      return;
-    }
-
-    const fetchSearchResults = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const results = await database.searchRecipes(supabase, query);
-        setRecipes(results);
-      } catch (err) {
-        console.error("Search error:", err);
-        setError(ERROR_MESSAGES.SEARCH_RECIPES);
-        setRecipes([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSearchResults();
-  }, [query]);
+  const { 
+    data: recipes = [], 
+    isLoading, 
+    error 
+  } = useSearchRecipes(query);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
@@ -85,7 +60,7 @@ export function SearchResultsClient() {
           ) : error ? (
             <div className={styles.noResults}>
               <h2>Search Error</h2>
-              <p>{error}</p>
+              <p>{error.message}</p>
             </div>
           ) : recipes.length > 0 ? (
             <div className={styles.resultsGrid}>
