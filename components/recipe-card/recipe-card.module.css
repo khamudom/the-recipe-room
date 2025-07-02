@@ -71,13 +71,13 @@
 .tagIcon {
   width: 0.75rem;
   height: 0.75rem;
-  color: #92400e;
+  color: var(--primary-color);
 }
 
 .categoryText {
   font-size: 0.75rem;
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
-  color: #92400e;
+  color: var(--primary-color);
   font-weight: 600;
 }
 
@@ -151,11 +151,11 @@
 }
 
 .card:hover .title {
-  color: #92400e;
+  color: var(--primary-color);
 }
 
 .description {
-  color: #92400e;
+  color: var(--primary-color);
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 0.875rem;
   font-style: italic;

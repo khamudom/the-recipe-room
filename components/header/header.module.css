@@ -14,13 +14,13 @@
 .headerIcon {
   width: 2rem;
   height: 2rem;
-  color: #92400e;
+  color: var(--primary-color);
 }
 
 .mainTitle {
   font-size: 3rem;
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
-  color: #78350f;
+  color: var(--color-heading);
   letter-spacing: 0.05em;
   margin: 0;
   font-weight: 400;
@@ -34,7 +34,7 @@
 }
 
 .subtitle {
-  color: #92400e;
+  color: var(--primary-color);
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-style: italic;
   font-size: 1.125rem;

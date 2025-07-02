@@ -29,7 +29,7 @@ export function ProtectedRoute({ children, fallback }: ProtectedRouteProps) {
           alignItems: "center",
           minHeight: "50vh",
           fontSize: "1.2rem",
-          color: "#8b4513",
+          color: "var(--primary-color)",
         }}
       >
         Loading...

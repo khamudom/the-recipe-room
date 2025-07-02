@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #fef7ed 0%, #fed7aa 50%, #fecaca 100%);
+  background: var(--color-background-gradient);
   position: relative;
 }
 

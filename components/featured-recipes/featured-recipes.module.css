@@ -5,7 +5,7 @@
 .sectionTitle {
   font-size: 2rem;
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
-  color: #78350f;
+  color: var(--color-heading);
   margin-bottom: 1.5rem;
   text-align: center;
   font-weight: 400;

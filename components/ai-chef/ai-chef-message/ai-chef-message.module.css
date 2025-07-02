@@ -48,7 +48,7 @@
 .heading {
   margin: 1rem 0 0.5rem 0;
   font-weight: 600;
-  color: #92400e;
+  color: var(--primary-color);
 }
 
 .heading:first-child {
@@ -71,7 +71,7 @@
   padding: 0.75rem;
   margin: 0.5rem 0;
   overflow-x: auto;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.85rem;
 }
 
@@ -80,7 +80,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 4px;
   padding: 0.125rem 0.25rem;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.85rem;
   color: #dc2626;
 }
@@ -95,7 +95,7 @@
 
 .strong {
   font-weight: 600;
-  color: #92400e;
+  color: var(--primary-color);
 }
 
 .emphasis {

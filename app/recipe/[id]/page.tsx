@@ -14,11 +14,7 @@ export default function RecipeDetailPage() {
   const recipeId = params.id as string;
   const from = searchParams.get("from");
 
-  const { 
-    data: recipe, 
-    isLoading, 
-    error 
-  } = useRecipe(recipeId);
+  const { data: recipe, isLoading, error } = useRecipe(recipeId);
 
   const deleteRecipeMutation = useDeleteRecipe();
 
@@ -49,21 +45,27 @@ export default function RecipeDetailPage() {
   }, [router, from]);
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "50vh",
+          width: "100%",
+        }}
+      >
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   if (error || !recipe) {
     return (
       <div>
         <div>
-          <p>
-            {error?.message || "Recipe not found"}
-          </p>
-          <button
-            onClick={handleBack}
-          >
-            Back to Recipes
-          </button>
+          <p>{error?.message || "Recipe not found"}</p>
+          <button onClick={handleBack}>Back to Recipes</button>
         </div>
       </div>
     );

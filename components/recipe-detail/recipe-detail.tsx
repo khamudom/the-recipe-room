@@ -32,19 +32,20 @@ export function RecipeDetail({
           <button onClick={onBack} className={styles.backButton}>
             <ArrowLeft className={styles.buttonIcon} />
           </button>
-          {isOwner && (
-            <div className={styles.actionButtons}>
-              <button onClick={onEdit} className={styles.editButton}>
-                <Edit className={styles.buttonIcon} />
-                Edit
-              </button>
-              <button onClick={onDelete} className={styles.deleteButton}>
-                <Trash2 className={styles.buttonIcon} />
-                Delete
-              </button>
-            </div>
-          )}
+          <h1 className={styles.recipeTitle}>{recipe.title}</h1>
         </div>
+
+        {/* Action Buttons */}
+        {isOwner && (
+          <div className={styles.actionButtons}>
+            <button onClick={onEdit} className={styles.editButton}>
+              <Edit className={styles.buttonIcon} />
+            </button>
+            <button onClick={onDelete} className={styles.deleteButton}>
+              <Trash2 className={styles.buttonIcon} />
+            </button>
+          </div>
+        )}
 
         {/* Recipe Image */}
         {recipe.image && (
@@ -61,7 +62,6 @@ export function RecipeDetail({
 
         {/* Recipe Header */}
         <div className={styles.recipeHeader}>
-          <h1 className={styles.recipeTitle}>{recipe.title}</h1>
           <div className={styles.titleLine}></div>
           <p className={styles.recipeDescription}>
             &quot;{recipe.description}&quot;

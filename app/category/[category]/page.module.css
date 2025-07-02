@@ -76,7 +76,7 @@
 }
 
 .backButton {
-  color: #92400e;
+  color: var(--primary-color);
   background: transparent;
   border: 1px solid #92400e;
   font-family: "Times New Roman", "Georgia", "Garamond", serif;
@@ -90,7 +90,7 @@
 }
 
 .backButton:hover {
-  background-color: #78350f;
+  background-color: var(--primary-color);
   color: #fef3c7;
 }
 

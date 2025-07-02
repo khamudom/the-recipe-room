@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--color-background-gradient);
   position: relative;
   overflow-x: hidden;
 }
@@ -45,7 +45,7 @@
 .searchHeader h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #92400e;
+  color: var(--primary-color);
   margin-bottom: 0.5rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

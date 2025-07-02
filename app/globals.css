@@ -1,3 +1,24 @@
+:root {
+  /*Colors*/
+  /* --primary-color: #a97142; */
+  --primary-color: #7c021d;
+  --secondary-color: #fbbf24;
+  --secondary-light-color: #fef3c7;
+  --secondary-dark-color: #92400e;
+
+  --color-linear-gradient: linear-gradient(135deg, #fef7ed 0%, #fed7aa 100%);
+
+  /* Text */
+  --color-heading: var(--primary-color);
+  --color-text: var(--secondary-dark-color);
+
+  /* Backgrounds */
+  --color-background-light: var(--secondary-light-color);
+  --color-background-gradient: var(--color-linear-gradient);
+
+  /* Borders */
+  --color-border: var(--secondary-color);
+}
 * {
   box-sizing: border-box;
   padding: 0;

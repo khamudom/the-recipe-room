@@ -1,4 +1,5 @@
 import React, { forwardRef } from "react";
+import Image from "next/image";
 import styles from "./ai-chef-button.module.css";
 
 type Props = { onClick: () => void };
@@ -23,7 +24,9 @@ export const AIChefButton = forwardRef<HTMLButtonElement, Props>(
         tabIndex={0}
         role="button"
       >
-        <span aria-hidden="true">👨‍🍳</span>
+        <span aria-hidden="true">
+          <Image src="assets/lechef.png" alt="AI Chef" width={24} height={24} />
+        </span>
         <span className="sr-only">Chat with AI Chef</span>
       </button>
     );

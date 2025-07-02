@@ -1,5 +1,5 @@
 .nav {
-  background: #8b4513;
+  background: var(--primary-color);
   color: white;
   padding: 1rem 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

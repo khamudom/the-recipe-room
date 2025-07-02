@@ -37,10 +37,10 @@ export default function CategoryPage() {
   const router = useRouter();
   const category = decodeURIComponent(params.category as string);
 
-  const { 
-    data: recipes = [], 
-    isLoading, 
-    error 
+  const {
+    data: recipes = [],
+    isLoading,
+    error,
   } = useRecipesByCategory(category);
 
   const handleRecipeClick = useCallback(
@@ -59,7 +59,6 @@ export default function CategoryPage() {
 
   return (
     <ErrorBoundary>
-      
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>

@@ -1,0 +1,194 @@
+/* Color Tokens for The Recipe Room Design System */
+
+:root {
+  /* Primary Colors - Based on your existing colors */
+  --color-primary: #8b0000; /* Deep red - your main brand color */
+  --color-primary-light: #dc2626; /* Lighter red for accents */
+  --color-primary-dark: #7f1d1d; /* Darker red for emphasis */
+
+  /* Secondary Colors - Orange/Amber family */
+  --color-secondary: #d97706; /* Warm orange - your accent color */
+  --color-secondary-light: #f59e0b; /* Lighter orange */
+  --color-secondary-dark: #92400e; /* Darker orange */
+
+  /* Tertiary Colors - Yellow/Gold family */
+  --color-tertiary: #fbbf24; /* Golden yellow - your highlight color */
+  --color-tertiary-light: #fef3c7; /* Light yellow */
+  --color-tertiary-dark: #78350f; /* Dark brown */
+
+  /* Neutral Colors - Creams and Browns */
+  --color-neutral-50: #fefcf3; /* Lightest cream */
+  --color-neutral-100: #fef7ed; /* Light cream - your main background */
+  --color-neutral-200: #fed7aa; /* Medium cream */
+  --color-neutral-300: #f3f4f6; /* Light gray */
+  --color-neutral-400: #e5e7eb; /* Medium gray */
+  --color-neutral-500: #9ca3af; /* Gray */
+  --color-neutral-600: #6b7280; /* Dark gray */
+  --color-neutral-700: #374151; /* Darker gray */
+  --color-neutral-800: #2d3748; /* Very dark gray */
+
+  /* Semantic Colors - Based on your existing usage */
+  --color-success: #16a34a; /* Green for success states */
+  --color-success-light: #22c55e; /* Light green */
+  --color-success-dark: #15803d; /* Dark green */
+
+  --color-error: #dc2626; /* Red for errors */
+  --color-error-light: #ef4444; /* Light red */
+  --color-error-dark: #b91c1c; /* Dark red */
+
+  --color-warning: #f59e0b; /* Amber for warnings */
+  --color-warning-light: #fbbf24; /* Light amber */
+  --color-warning-dark: #d97706; /* Dark amber */
+
+  --color-info: #3b82f6; /* Blue for info */
+  --color-info-light: #60a5fa; /* Light blue */
+  --color-info-dark: #2563eb; /* Dark blue */
+
+  /* Legacy Color Variables (for backward compatibility) */
+  --primary-color: var(--color-primary);
+  --foreground-color: var(--color-secondary-dark);
+  --color-background-linear-gradient: linear-gradient(
+    135deg,
+    var(--color-neutral-100) 0%,
+    var(--color-neutral-200) 100%
+  );
+
+  /* Semantic Color Aliases */
+  --color-text-primary: var(--color-tertiary-dark);
+  --color-text-secondary: var(--color-secondary-dark);
+  --color-text-muted: var(--color-neutral-600);
+  --color-text-inverse: var(--color-neutral-50);
+
+  --color-background-primary: var(--color-neutral-100);
+  --color-background-secondary: var(--color-neutral-50);
+  --color-background-tertiary: var(--color-neutral-200);
+
+  --color-border-primary: var(--color-tertiary);
+  --color-border-secondary: var(--color-secondary);
+  --color-border-muted: var(--color-neutral-400);
+
+  /* Shadow Colors - Based on your brown theme */
+  --color-shadow-light: rgba(139, 69, 19, 0.1);
+  --color-shadow-medium: rgba(139, 69, 19, 0.2);
+  --color-shadow-heavy: rgba(139, 69, 19, 0.3);
+
+  /* Gradient Definitions - Based on your existing gradients */
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--color-secondary) 0%,
+    var(--color-secondary-dark) 100%
+  );
+  --gradient-secondary: linear-gradient(
+    135deg,
+    var(--color-tertiary) 0%,
+    var(--color-secondary) 100%
+  );
+  --gradient-tertiary: linear-gradient(
+    135deg,
+    var(--color-neutral-50) 0%,
+    var(--color-neutral-100) 100%
+  );
+  --gradient-background: linear-gradient(
+    135deg,
+    var(--color-neutral-100) 0%,
+    var(--color-neutral-200) 100%
+  );
+  --gradient-surface: linear-gradient(
+    135deg,
+    var(--color-neutral-50) 0%,
+    var(--color-neutral-100) 100%
+  );
+  --gradient-decorative: linear-gradient(
+    to right,
+    transparent,
+    var(--color-secondary),
+    transparent
+  );
+
+  /* Additional Colors Found in Your App */
+  --color-accent-purple: #667eea; /* Purple from AI analyzer */
+  --color-accent-purple-dark: #764ba2; /* Dark purple */
+  --color-accent-gold: #ffd700; /* Gold accent */
+  --color-accent-yellow: #f4d03f; /* Yellow accent */
+  --color-accent-brown: #a0522d; /* Brown accent */
+  --color-accent-tan: #d2b48c; /* Tan accent */
+  --color-accent-red-light: #fee; /* Light red background */
+  --color-accent-red-border: #fcc; /* Light red border */
+  --color-accent-green-light: #efe; /* Light green background */
+  --color-accent-green-border: #cfc; /* Light green border */
+}
+
+/* Dark Mode Support (Future Enhancement) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode color overrides would go here */
+    /* For now, keeping the warm theme consistent */
+  }
+}
+
+/* Color Utility Classes */
+.color-primary {
+  color: var(--color-primary);
+}
+.color-secondary {
+  color: var(--color-secondary);
+}
+.color-tertiary {
+  color: var(--color-tertiary);
+}
+.color-success {
+  color: var(--color-success);
+}
+.color-error {
+  color: var(--color-error);
+}
+.color-warning {
+  color: var(--color-warning);
+}
+.color-info {
+  color: var(--color-info);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-tertiary {
+  background-color: var(--color-tertiary);
+}
+.bg-success {
+  background-color: var(--color-success);
+}
+.bg-error {
+  background-color: var(--color-error);
+}
+.bg-warning {
+  background-color: var(--color-warning);
+}
+.bg-info {
+  background-color: var(--color-info);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+.border-secondary {
+  border-color: var(--color-secondary);
+}
+.border-tertiary {
+  border-color: var(--color-tertiary);
+}
+.border-success {
+  border-color: var(--color-success);
+}
+.border-error {
+  border-color: var(--color-error);
+}
+.border-warning {
+  border-color: var(--color-warning);
+}
+.border-info {
+  border-color: var(--color-info);
+}

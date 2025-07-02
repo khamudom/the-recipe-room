@@ -17,10 +17,10 @@ export default function RecipeBook() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { 
-    data: featuredRecipes = [], 
-    isLoading: isFeaturedLoading, 
-    error: featuredError 
+  const {
+    data: featuredRecipes = [],
+    isLoading: isFeaturedLoading,
+    error: featuredError,
   } = useFeaturedRecipes();
 
   const handleRecipeClick = useCallback(

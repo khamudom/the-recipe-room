@@ -19,7 +19,7 @@
 
 .avatarButton:hover {
   background-color: #fbeedc;
-  color: #8b4513;
+  color: var(--primary-color);
 }
 
 .avatar {
@@ -32,7 +32,7 @@
   justify-content: center;
   border: 2px solid #d2b48c;
   transition: border-color 0.2s;
-  color: #8b4513;
+  color: var(--primary-color);
 }
 
 .avatar:hover {
@@ -42,12 +42,16 @@
 .initials {
   font-weight: bold;
   font-size: 1.1rem;
-  color: #8b4513;
+  color: var(--primary-color);
+}
+
+.avatarButton:hover .chevron {
+  color: #7c4a1e;
 }
 
 .chevron {
   transition: transform 0.2s;
-  color: #b97a2a;
+  color: #ffe4ba;
 }
 
 .chevronUp {
@@ -89,7 +93,7 @@
 
 .userEmail {
   font-size: 1rem;
-  color: #8b4513;
+  color: var(--primary-color);
   font-weight: 600;
   letter-spacing: 0.01em;
 }

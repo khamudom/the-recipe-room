@@ -17,11 +17,7 @@ export function SearchResultsClient() {
   const query = rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
   const [searchTerm, setSearchTerm] = useState(query);
 
-  const { 
-    data: recipes = [], 
-    isLoading, 
-    error 
-  } = useSearchRecipes(query);
+  const { data: recipes = [], isLoading, error } = useSearchRecipes(query);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
