@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS recipes (
   category TEXT NOT NULL,
   image TEXT,
   featured BOOLEAN DEFAULT FALSE,
+  by_admin BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -35,6 +36,9 @@ DROP POLICY IF EXISTS "Users can delete their own recipes" ON recipes;
 -- Create policies for recipes
 CREATE POLICY "Allow all users to view featured recipes" ON recipes
   FOR SELECT USING (featured = true);
+
+CREATE POLICY "Allow all users to view admin-created recipes" ON recipes
+  FOR SELECT USING (by_admin = true);
 
 CREATE POLICY "Allow authenticated users to view their own recipes" ON recipes
   FOR SELECT USING (auth.uid() = user_id);
@@ -78,6 +82,7 @@ RETURNS TABLE (
   category TEXT,
   image TEXT,
   featured BOOLEAN,
+  by_admin BOOLEAN,
   created_at TIMESTAMPTZ,
   updated_at TIMESTAMPTZ
 ) AS $$
@@ -94,8 +99,8 @@ BEGIN
         recipes.category ILIKE '%' || search_term || '%'
       )
     ) OR (
-      -- For anonymous users, search only featured recipes
-      auth.uid() IS NULL AND recipes.featured = TRUE AND (
+      -- For anonymous users, search featured recipes and admin-created recipes
+      auth.uid() IS NULL AND (recipes.featured = TRUE OR recipes.by_admin = TRUE) AND (
         to_tsvector('english', recipes.title || ' ' || recipes.description || ' ' || array_to_string(recipes.ingredients, ' ')) @@ websearch_to_tsquery('english', search_term)
         OR
         recipes.category ILIKE '%' || search_term || '%'

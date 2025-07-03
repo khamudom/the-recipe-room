@@ -71,7 +71,7 @@ export const database = {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("User not authenticated");
 
-    const { prepTime, cookTime, ...rest } = recipe;
+    const { prepTime, cookTime, featured, ...rest } = recipe;
 
     const isAdmin = user.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
     const { data, error } = await supabase
@@ -82,7 +82,8 @@ export const database = {
           user_id: user.id,
           prep_time: prepTime,
           cook_time: cookTime,
-          featured: isAdmin,
+          featured: isAdmin && featured ? true : false,
+          by_admin: isAdmin, // Mark if created by admin
         },
       ])
       .select()
@@ -101,13 +102,21 @@ export const database = {
     id: string,
     updates: Partial<Omit<Recipe, "id" | "createdAt" | "userId">>
   ): Promise<Recipe> {
-    const { prepTime, cookTime, ...rest } = updates;
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("User not authenticated");
+
+    const { prepTime, cookTime, featured, ...rest } = updates;
+    const isAdmin = user.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
+
     const { data, error } = await supabase
       .from("recipes")
       .update({
         ...rest,
         ...(prepTime !== undefined && { prep_time: prepTime }),
         ...(cookTime !== undefined && { cook_time: cookTime }),
+        ...(featured !== undefined && isAdmin && { featured }),
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)
@@ -135,15 +144,50 @@ export const database = {
     supabase: SupabaseClient,
     query: string
   ): Promise<Recipe[]> {
+    // Try the RPC function first
     const { data, error } = await supabase.rpc("search_recipes", {
       search_term: query,
     });
 
-    if (error) {
-      console.error("Supabase search recipes error:", error);
-      throw new Error("Failed to search recipes");
+    if (!error && data) {
+      return data.map(normalizeRecipe);
     }
-    return data.map(normalizeRecipe);
+
+    // Log the error for debugging
+    console.error(
+      "Supabase search recipes RPC error:",
+      error,
+      "Falling back to ilike search.",
+      { query }
+    );
+
+    // Fallback: Perform a performant ilike/or query
+    // Only show public/featured/admin recipes to anonymous users
+    let fallbackQuery = supabase
+      .from("recipes")
+      .select("*")
+      .or(
+        [
+          `title.ilike.%${query}%`,
+          `description.ilike.%${query}%`,
+          `category.ilike.%${query}%`,
+          `ingredients.cs.{${query}}`, // Try to match ingredients array
+        ].join(",")
+      )
+      .order("created_at", { ascending: false });
+
+    // If not authenticated, only show featured/admin recipes
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData?.user) {
+      fallbackQuery = fallbackQuery.or("featured.eq.true,by_admin.eq.true");
+    }
+
+    const { data: fallbackData, error: fallbackError } = await fallbackQuery;
+    if (fallbackError) {
+      console.error("Supabase search recipes fallback error:", fallbackError);
+      throw new Error("Failed to search recipes (fallback)");
+    }
+    return fallbackData.map(normalizeRecipe);
   },
 
   // Get recipes by category
@@ -184,6 +228,7 @@ export const database = {
           prep_time: prepTime,
           cook_time: cookTime,
           featured: true, // Featured recipes are visible to everyone
+          by_admin: true, // Admin-created recipes are visible to everyone
         },
       ])
       .select()
@@ -210,6 +255,7 @@ const normalizeRecipe = (recipe: Record<string, unknown>): Recipe => ({
   category: recipe.category as string,
   image: recipe.image as string,
   featured: recipe.featured as boolean,
+  byAdmin: recipe.by_admin as boolean,
   createdAt: recipe.created_at as string,
   updatedAt: recipe.updated_at as string,
 });

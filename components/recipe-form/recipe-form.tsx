@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import type { Recipe, AIRecipeAnalysisResult } from "@/types/recipe";
 import { AIRecipeAnalyzer } from "@/components/ai-recipe-analyzer/ai-recipe-analyzer";
+import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-form.module.css";
 import Image from "next/image";
 
@@ -29,6 +30,9 @@ export function RecipeForm({
   onCancel,
   isSubmitting = false,
 }: RecipeFormProps) {
+  const { user } = useAuth();
+  const isAdmin = user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
+
   const [formData, setFormData] = useState({
     title: recipe?.title || "",
     description: recipe?.description || "",
@@ -39,6 +43,7 @@ export function RecipeForm({
     servings: recipe?.servings || "",
     category: recipe?.category || "",
     image: recipe?.image || "",
+    featured: recipe?.featured || false,
   });
 
   const [showAIAnalyzer, setShowAIAnalyzer] = useState(false);
@@ -138,6 +143,7 @@ export function RecipeForm({
       servings: recipeData.servings || "",
       category: recipeData.category || "",
       image: recipeData.image || formData.image,
+      featured: formData.featured, // Preserve the featured setting
     });
     setShowAIAnalyzer(false);
   };
@@ -331,6 +337,34 @@ export function RecipeForm({
                   className={styles.textarea}
                 />
               </div>
+
+              {isAdmin && (
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>Featured Recipe</label>
+                  <div className={styles.toggleContainer}>
+                    <input
+                      type="checkbox"
+                      id="featured"
+                      checked={formData.featured}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          featured: e.target.checked,
+                        }))
+                      }
+                      className={styles.toggleInput}
+                    />
+                    <label htmlFor="featured" className={styles.toggleLabel}>
+                      <span className={styles.toggleText}>
+                        {formData.featured ? "⭐ Featured" : "Mark as featured"}
+                      </span>
+                      <span className={styles.toggleDescription}>
+                        Featured recipes appear on the homepage
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              )}
 
               <div className={styles.metaGrid}>
                 <div className={styles.inputGroup}>

@@ -15,7 +15,8 @@ export const recipeKeys = {
   detail: (id: string) => [...recipeKeys.details(), id] as const,
   featured: () => [...recipeKeys.all, "featured"] as const,
   search: (query: string) => [...recipeKeys.all, "search", query] as const,
-  category: (category: string) => [...recipeKeys.all, "category", category] as const,
+  category: (category: string) =>
+    [...recipeKeys.all, "category", category] as const,
 };
 
 // Hook to get all recipes
@@ -31,10 +32,8 @@ export function useRecipes() {
 // Hook to get featured recipes
 export function useFeaturedRecipes() {
   return useQuery({
-    queryKey: recipeKeys.featured(),
+    queryKey: ["featured-recipes"],
     queryFn: () => database.getFeaturedRecipes(supabase),
-    staleTime: 10 * 60 * 1000, // 10 minutes (featured recipes change less often)
-    gcTime: 15 * 60 * 1000, // 15 minutes
   });
 }
 
@@ -82,7 +81,7 @@ export function useCreateRecipe() {
       // Invalidate and refetch recipes lists
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
-      
+
       // Add the new recipe to the cache
       queryClient.setQueryData(recipeKeys.detail(newRecipe.id), newRecipe);
     },
@@ -98,15 +97,23 @@ export function useUpdateRecipe() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, recipe }: { id: string; recipe: Partial<Omit<Recipe, "id" | "createdAt" | "userId">> }) =>
-      database.updateRecipe(supabase, id, recipe),
+    mutationFn: ({
+      id,
+      recipe,
+    }: {
+      id: string;
+      recipe: Partial<Omit<Recipe, "id" | "createdAt" | "userId">>;
+    }) => database.updateRecipe(supabase, id, recipe),
     onSuccess: (updatedRecipe) => {
       // Invalidate and refetch recipes lists
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
-      
+
       // Update the recipe in cache
-      queryClient.setQueryData(recipeKeys.detail(updatedRecipe.id), updatedRecipe);
+      queryClient.setQueryData(
+        recipeKeys.detail(updatedRecipe.id),
+        updatedRecipe
+      );
     },
     onError: (error) => {
       console.error("Error updating recipe:", error);
@@ -125,7 +132,7 @@ export function useDeleteRecipe() {
       // Invalidate and refetch recipes lists
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
-      
+
       // Remove the recipe from cache
       queryClient.removeQueries({ queryKey: recipeKeys.detail(deletedId) });
     },
@@ -134,4 +141,4 @@ export function useDeleteRecipe() {
       throw new Error(ERROR_MESSAGES.DELETE_RECIPE);
     },
   });
-} 
+}

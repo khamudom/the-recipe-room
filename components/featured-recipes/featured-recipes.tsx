@@ -9,21 +9,32 @@ interface FeaturedRecipesProps {
   recipes: Recipe[];
   isLoading: boolean;
   onRecipeClick: (recipe: Recipe) => void;
+  /**
+   * Option to set maximum number of featured recipes to display.
+   * Defaults to 3 if not provided.
+   */
+  maxRecipes?: number;
 }
 
 export function FeaturedRecipes({
   recipes,
   isLoading,
   onRecipeClick,
+  maxRecipes = 3,
 }: FeaturedRecipesProps) {
+  // Filter recipes that have featured=true and limit by maxRecipes
+  const featuredRecipes = recipes
+    .filter((recipe) => recipe.featured)
+    .slice(0, maxRecipes);
+
   return (
     <section className={styles.featuredSection}>
       <h2 className={styles.sectionTitle}>Featured Recipes</h2>
       {isLoading ? (
-        <LoadingSkeleton count={3} type="recipe" />
-      ) : recipes.length > 0 ? (
+        <LoadingSkeleton count={maxRecipes} type="recipe" />
+      ) : featuredRecipes.length > 0 ? (
         <div className={styles.recipeGrid}>
-          {recipes.map((recipe) => (
+          {featuredRecipes.map((recipe) => (
             <RecipeCard
               key={recipe.id}
               recipe={recipe}

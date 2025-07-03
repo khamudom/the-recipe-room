@@ -11,6 +11,7 @@ export interface Recipe {
   category: string;
   image?: string; // Base64 encoded image or URL
   featured?: boolean;
+  byAdmin?: boolean;
   createdAt: string;
   updatedAt?: string;
 }
