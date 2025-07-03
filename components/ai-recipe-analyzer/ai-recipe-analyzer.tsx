@@ -19,7 +19,7 @@ interface RecipeAnalysis {
   instructions: string[];
   prepTime: string;
   cookTime: string;
-  servings: number;
+  servings: string;
   category: string;
 }
 

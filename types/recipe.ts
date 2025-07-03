@@ -7,7 +7,7 @@ export interface Recipe {
   instructions: string[];
   prepTime?: string;
   cookTime?: string;
-  servings: number;
+  servings: string;
   category: string;
   image?: string; // Base64 encoded image or URL
   featured?: boolean;
@@ -22,7 +22,7 @@ export interface AIRecipeAnalysisResult {
   instructions?: string[];
   prepTime?: string;
   cookTime?: string;
-  servings?: number;
+  servings?: string;
   category?: string;
   image?: string;
 }

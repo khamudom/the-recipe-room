@@ -451,10 +451,15 @@
   box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
 }
 
-.aiButton:hover {
+/* .aiButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(217, 119, 6, 0.4);
   background: linear-gradient(135deg, #92400e 0%, #78350f 100%);
+} */
+
+.aiButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

@@ -36,7 +36,7 @@ export function RecipeForm({
     instructions: recipe?.instructions || [""],
     prepTime: recipe?.prepTime || "",
     cookTime: recipe?.cookTime || "",
-    servings: recipe?.servings || 1,
+    servings: recipe?.servings || "",
     category: recipe?.category || "",
     image: recipe?.image || "",
   });
@@ -135,7 +135,7 @@ export function RecipeForm({
       instructions: recipeData.instructions || [""],
       prepTime: recipeData.prepTime || "",
       cookTime: recipeData.cookTime || "",
-      servings: recipeData.servings || 1,
+      servings: recipeData.servings || "",
       category: recipeData.category || "",
       image: recipeData.image || formData.image,
     });
@@ -248,6 +248,7 @@ export function RecipeForm({
                     </div>
                   </div>
                   <button
+                    disabled
                     type="button"
                     onClick={() => setShowAIAnalyzer(true)}
                     className={styles.aiButton}
@@ -372,15 +373,15 @@ export function RecipeForm({
                   </label>
                   <input
                     id="servings"
-                    type="number"
-                    min="1"
+                    type="text"
                     value={formData.servings}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        servings: Number.parseInt(e.target.value) || 1,
+                        servings: e.target.value,
                       }))
                     }
+                    placeholder="e.g., 4-6 people"
                     className={styles.input}
                   />
                 </div>

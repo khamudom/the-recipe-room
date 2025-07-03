@@ -206,7 +206,7 @@ const normalizeRecipe = (recipe: Record<string, unknown>): Recipe => ({
   instructions: recipe.instructions as string[],
   prepTime: recipe.prep_time as string,
   cookTime: recipe.cook_time as string,
-  servings: recipe.servings as number,
+  servings: recipe.servings as string,
   category: recipe.category as string,
   image: recipe.image as string,
   featured: recipe.featured as boolean,
