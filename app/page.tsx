@@ -42,8 +42,8 @@ export default function RecipeBook() {
     window.location.reload();
   }, []);
 
-  // Show loading state for initial page load
-  if (isFeaturedLoading) {
+  // Show loading state only if we have no cached data and are loading
+  if (isFeaturedLoading && featuredRecipes.length === 0) {
     return (
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>

@@ -24,10 +24,6 @@
   font-family: "Georgia", serif;
 }
 
-.logo:hover {
-  color: #f4d03f;
-}
-
 .logo img {
   width: inherit;
   height: 30px;

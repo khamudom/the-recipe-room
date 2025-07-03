@@ -32,8 +32,10 @@ export function useRecipes() {
 // Hook to get featured recipes
 export function useFeaturedRecipes() {
   return useQuery({
-    queryKey: ["featured-recipes"],
+    queryKey: recipeKeys.featured(),
     queryFn: () => database.getFeaturedRecipes(supabase),
+    staleTime: 10 * 60 * 1000, // 10 minutes - featured recipes don't change often
+    gcTime: 30 * 60 * 1000, // 30 minutes - keep in cache longer
   });
 }
 
