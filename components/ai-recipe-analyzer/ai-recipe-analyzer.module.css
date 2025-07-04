@@ -387,6 +387,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  margin: 0 auto;
 }
 
 .analyzeButton:hover:not(:disabled) {

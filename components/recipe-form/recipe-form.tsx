@@ -1,3 +1,15 @@
+/**
+ * RecipeForm Component
+ *
+ * A comprehensive form component for creating and editing recipes. Features include:
+ * - Manual recipe entry with all standard fields (title, ingredients, instructions, etc.)
+ * - AI-powered recipe extraction from images
+ * - Image upload and preview functionality
+ * - Dynamic ingredient and instruction management (add/remove fields)
+ * - Admin-only featured recipe toggle
+ * - Form validation and submission handling
+ */
+
 "use client";
 
 import type React from "react";
@@ -137,10 +149,31 @@ export function RecipeForm({
   };
 
   const handleAIAnalysisComplete = (recipeData: AIRecipeAnalysisResult) => {
+    // Deduplicate ingredients (case-insensitive, preserves first occurrence's original casing)
+    const seen = new Map<string, string>();
+    (recipeData.ingredients || [""]).forEach((ing) => {
+      const key = ing.trim().toLowerCase();
+      if (key && !seen.has(key)) {
+        seen.set(key, ing.trim());
+      }
+    });
+    let dedupedIngredients = Array.from(seen.values());
+
+    // Remove ingredients that are substrings of other ingredients (case-insensitive, with a small length buffer)
+    dedupedIngredients = dedupedIngredients.filter((ing, idx, arr) => {
+      const ingLower = ing.toLowerCase();
+      return !arr.some(
+        (other, otherIdx) =>
+          otherIdx !== idx &&
+          other.toLowerCase().includes(ingLower) &&
+          other.length > ing.length + 3 // allow for "olive oil" vs "4 tablespoons olive oil"
+      );
+    });
+
     setFormData({
       title: recipeData.title || "",
       description: recipeData.description || "",
-      ingredients: recipeData.ingredients || [""],
+      ingredients: dedupedIngredients.length > 0 ? dedupedIngredients : [""],
       instructions: recipeData.instructions || [""],
       prepTime: recipeData.prepTime || "",
       cookTime: recipeData.cookTime || "",
@@ -268,7 +301,7 @@ export function RecipeForm({
             </div>
           </div>
 
-          {/* AI Analysis Option */}
+          {/* AI Analysis Option - Only show for new recipes */}
           {!recipe && (
             <div className={styles.card}>
               <div className={styles.cardHeader}>
@@ -296,7 +329,7 @@ export function RecipeForm({
                     Analyze Recipe Image
                   </button>
                 </div>
-                
+
                 {/* <div className={styles.aiDivider}></div>
                 
                 <div className={styles.aiSection}>
@@ -395,6 +428,7 @@ export function RecipeForm({
                 />
               </div>
 
+              {/* Admin-only featured recipe toggle */}
               {isAdmin && (
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>Featured Recipe</label>
@@ -480,7 +514,7 @@ export function RecipeForm({
             </div>
           </div>
 
-          {/* Ingredients */}
+          {/* Ingredients - Dynamic list with add/remove functionality */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>Ingredients</h3>
@@ -517,7 +551,7 @@ export function RecipeForm({
             </div>
           </div>
 
-          {/* Instructions */}
+          {/* Instructions - Dynamic list with step numbers and add/remove functionality */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>Instructions</h3>

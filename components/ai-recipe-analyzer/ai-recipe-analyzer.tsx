@@ -73,7 +73,7 @@ export function AIRecipeAnalyzer({
         processedCount++;
 
         if (processedCount === files.length) {
-          setImageData(prev => [...prev, ...newImages]);
+          setImageData((prev) => [...prev, ...newImages]);
         }
       };
       reader.readAsDataURL(file);
@@ -81,7 +81,7 @@ export function AIRecipeAnalyzer({
   };
 
   const removeImage = (index: number) => {
-    setImageData(prev => prev.filter((_, i) => i !== index));
+    setImageData((prev) => prev.filter((_, i) => i !== index));
     setError("");
     setAnalysisProgress("");
   };
@@ -107,7 +107,7 @@ export function AIRecipeAnalyzer({
     setIsDragOver(false);
 
     const files = Array.from(e.dataTransfer.files);
-    const imageFiles = files.filter(file => file.type.startsWith("image/"));
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
     if (imageFiles.length === 0) {
       setError("Please drop valid image files only");
@@ -137,7 +137,7 @@ export function AIRecipeAnalyzer({
         processedCount++;
 
         if (processedCount === imageFiles.length) {
-          setImageData(prev => [...prev, ...newImages]);
+          setImageData((prev) => [...prev, ...newImages]);
         }
       };
       reader.readAsDataURL(file);
@@ -172,13 +172,16 @@ export function AIRecipeAnalyzer({
         if (progressIndex < progressUpdates.length - 1) {
           progressIndex++;
           setAnalysisProgress(progressUpdates[progressIndex]);
-          
+
           // Update current image index for multi-image analysis
           if (imageData.length > 1 && progressIndex === 1) {
             setCurrentImageIndex(0);
           } else if (imageData.length > 1 && progressIndex > 1) {
             const imageProgress = Math.min(
-              Math.floor((progressIndex - 1) / (progressUpdates.length - 2) * imageData.length),
+              Math.floor(
+                ((progressIndex - 1) / (progressUpdates.length - 2)) *
+                  imageData.length
+              ),
               imageData.length - 1
             );
             setCurrentImageIndex(imageProgress);
@@ -200,6 +203,14 @@ export function AIRecipeAnalyzer({
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+
+        // Handle specific HTTP status codes with user-friendly messages
+        if (response.status === 413) {
+          throw new Error(
+            "Image file(s) are too large. Please reduce the image size or try uploading fewer images. Each image should be under 20MB."
+          );
+        }
+
         throw new Error(
           errorData.error || `HTTP error! status: ${response.status}`
         );
@@ -247,16 +258,19 @@ export function AIRecipeAnalyzer({
       <div className={styles.content}>
         <div className={styles.description}>
           <p>
-            Upload one or more photos of a recipe (from a cookbook, handwritten note, or
-            any recipe image) and our AI will automatically extract the recipe
-            details for you. Multiple images will be combined intelligently.
+            Upload one or more photos of a recipe (from a cookbook, handwritten
+            note, or any recipe image) and our AI will automatically extract the
+            recipe details for you. Multiple images will be combined
+            intelligently.
           </p>
         </div>
 
         <div className={styles.uploadSection}>
           {/* Drag and Drop Area */}
-          <div 
-            className={`${styles.dragDropArea} ${isDragOver ? styles.dragOver : ''}`}
+          <div
+            className={`${styles.dragDropArea} ${
+              isDragOver ? styles.dragOver : ""
+            }`}
             onDragOver={handleDragOver}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={handleDrop}
@@ -375,9 +389,13 @@ export function AIRecipeAnalyzer({
             <div className={styles.analyzingInfo}>
               <p>{analysisProgress}</p>
               {imageData.length > 1 && (
-                <p>Processing image {currentImageIndex + 1} of {imageData.length}</p>
+                <p>
+                  Processing image {currentImageIndex + 1} of {imageData.length}
+                </p>
               )}
-              <p>This may take 10-30 seconds per image depending on complexity.</p>
+              <p>
+                This may take 10-30 seconds per image depending on complexity.
+              </p>
             </div>
           )}
         </div>
@@ -387,7 +405,9 @@ export function AIRecipeAnalyzer({
           <ul>
             <li>Ensure the recipe text is clearly visible and well-lit</li>
             <li>You can upload multiple images of the same recipe</li>
-            <li>Try to capture the entire recipe across multiple images if needed</li>
+            <li>
+              Try to capture the entire recipe across multiple images if needed
+            </li>
             <li>Handwritten recipes work best when written clearly</li>
             <li>Printed recipes from books or websites work great</li>
             <li>Make sure ingredients and instructions are readable</li>
@@ -402,7 +422,11 @@ export function AIRecipeAnalyzer({
             Each image analysis uses OpenAI&apos;s GPT-4 Vision API and costs
             approximately $0.01-0.03 per image.
             {imageData.length > 1 && (
-              <span> Total cost for {imageData.length} images: ~${(imageData.length * 0.02).toFixed(2)}</span>
+              <span>
+                {" "}
+                Total cost for {imageData.length} images: ~$
+                {(imageData.length * 0.02).toFixed(2)}
+              </span>
             )}
           </p>
         </div>

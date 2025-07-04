@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { AuthForm } from "../../../components/auth-form/auth-form";
-import styles from "./page.module.css";
+import styles from "./signup.module.css";
 
 export default function SignUpPage() {
   const router = useRouter();
