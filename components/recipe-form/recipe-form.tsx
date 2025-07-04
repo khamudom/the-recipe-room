@@ -254,7 +254,6 @@ export function RecipeForm({
                     </div>
                   </div>
                   <button
-                    disabled
                     type="button"
                     onClick={() => setShowAIAnalyzer(true)}
                     className={styles.aiButton}

@@ -8,7 +8,7 @@ interface RecipeAnalysis {
   instructions: string[];
   prepTime: string;
   cookTime: string;
-  servings: number;
+  servings: string;
   category: string;
 }
 
@@ -45,16 +45,20 @@ export async function POST(request: NextRequest) {
 
     console.log("Starting AI recipe analysis...");
 
-    // Call OpenAI GPT-4 Vision API
+    // Call OpenAI GPT-4o Vision API
     const response = await openai.chat.completions.create({
-      model: "gpt-4-vision-preview",
+      model: "gpt-4o",
       messages: [
+        {
+          role: "system",
+          content: `You are an expert recipe analyzer. Your task is to extract recipe information from images and return it in a specific JSON format. Be precise and thorough in your analysis.`
+        },
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: `Analyze this recipe image and extract the recipe information. Return a valid JSON object with the following structure:
+              text: `Please analyze this recipe image and extract all available recipe information. Return ONLY a valid JSON object with this exact structure:
 
 {
   "title": "Recipe title",
@@ -67,14 +71,14 @@ export async function POST(request: NextRequest) {
   "category": "one of: Appetizer, Main Course, Side Dish, Dessert, Beverage, Breakfast, Snack"
 }
 
-Important guidelines:
+Guidelines:
 - Extract ingredients as individual strings in an array
 - Extract instructions as numbered steps in an array
 - For time fields, use descriptive text like "30 minutes" or "1 hour"
-- For servings, use a number
+- For servings, use a string that is a number
 - Choose the most appropriate category from the list above
 - If any information is not clearly visible, make a reasonable estimate
-- Ensure the JSON is valid and properly formatted`,
+- Return ONLY the JSON object, no additional text or explanations`
             },
             {
               type: "image_url",
@@ -85,8 +89,8 @@ Important guidelines:
           ],
         },
       ],
-      max_tokens: 1500,
-      temperature: 0.1, // Low temperature for more consistent results
+      max_tokens: 2000,
+      temperature: 0.1,
     });
 
     const content = response.choices[0]?.message?.content;
@@ -101,8 +105,18 @@ Important guidelines:
     let recipeData: RecipeAnalysis;
 
     try {
-      // Try to parse the response as JSON
-      recipeData = JSON.parse(content);
+      // Clean the content to remove markdown formatting
+      let cleanedContent = content.trim();
+      
+      // Remove markdown code blocks if present
+      if (cleanedContent.startsWith('```json')) {
+        cleanedContent = cleanedContent.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (cleanedContent.startsWith('```')) {
+        cleanedContent = cleanedContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
+      
+      // Try to parse the cleaned response as JSON
+      recipeData = JSON.parse(cleanedContent);
     } catch (parseError) {
       console.error("Failed to parse AI response as JSON:", parseError);
       // If direct parsing fails, try to extract JSON from the response
@@ -164,8 +178,7 @@ Important guidelines:
       instructions: recipeData.instructions || [],
       prepTime: recipeData.prepTime || "",
       cookTime: recipeData.cookTime || "",
-      servings:
-        typeof recipeData.servings === "number" ? recipeData.servings : 4,
+      servings: recipeData.servings || "4",
       category: recipeData.category || "Main Course",
     };
 
@@ -173,7 +186,7 @@ Important guidelines:
 
     return NextResponse.json({
       recipe: analysis,
-      confidence: 0.9, // High confidence for GPT-4 Vision
+      confidence: 0.9,
       processingTime: response.usage?.total_tokens || 0,
     });
   } catch (error) {
