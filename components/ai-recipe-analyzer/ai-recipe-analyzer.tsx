@@ -8,6 +8,7 @@ import {
   Sparkles,
   X,
   AlertCircle,
+  Plus,
 } from "lucide-react";
 import Image from "next/image";
 import styles from "./ai-recipe-analyzer.module.css";
@@ -32,40 +33,61 @@ export function AIRecipeAnalyzer({
   onAnalysisComplete,
   onCancel,
 }: AIRecipeAnalyzerProps) {
-  const [imageData, setImageData] = useState<string>("");
+  const [imageData, setImageData] = useState<string[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string>("");
   const [analysisProgress, setAnalysisProgress] = useState<string>("");
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate file type
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    // Validate all files
+    for (const file of files) {
       if (!file.type.startsWith("image/")) {
-        setError("Please select a valid image file");
+        setError("Please select valid image files only");
         return;
       }
 
-      // Validate file size (max 20MB for OpenAI)
       if (file.size > 20 * 1024 * 1024) {
         setError("Image file size must be less than 20MB");
         return;
       }
+    }
 
-      setError("");
-      setAnalysisProgress("");
+    setError("");
+    setAnalysisProgress("");
+
+    // Convert files to base64
+    const newImages: string[] = [];
+    let processedCount = 0;
+
+    files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (event) => {
         const result = event.target?.result as string;
-        setImageData(result);
+        newImages.push(result);
+        processedCount++;
+
+        if (processedCount === files.length) {
+          setImageData(prev => [...prev, ...newImages]);
+        }
       };
       reader.readAsDataURL(file);
-    }
+    });
   };
 
-  const removeImage = () => {
-    setImageData("");
+  const removeImage = (index: number) => {
+    setImageData(prev => prev.filter((_, i) => i !== index));
+    setError("");
+    setAnalysisProgress("");
+  };
+
+  const removeAllImages = () => {
+    setImageData([]);
     setError("");
     setAnalysisProgress("");
     if (fileInputRef.current) {
@@ -73,25 +95,75 @@ export function AIRecipeAnalyzer({
     }
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    const imageFiles = files.filter(file => file.type.startsWith("image/"));
+
+    if (imageFiles.length === 0) {
+      setError("Please drop valid image files only");
+      return;
+    }
+
+    // Validate file sizes
+    for (const file of imageFiles) {
+      if (file.size > 20 * 1024 * 1024) {
+        setError("Image file size must be less than 20MB");
+        return;
+      }
+    }
+
+    setError("");
+    setAnalysisProgress("");
+
+    // Convert files to base64
+    const newImages: string[] = [];
+    let processedCount = 0;
+
+    imageFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        newImages.push(result);
+        processedCount++;
+
+        if (processedCount === imageFiles.length) {
+          setImageData(prev => [...prev, ...newImages]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const analyzeRecipe = async () => {
-    if (!imageData) {
-      setError("Please upload an image first");
+    if (imageData.length === 0) {
+      setError("Please upload at least one image first");
       return;
     }
 
     setIsAnalyzing(true);
     setError("");
-    setAnalysisProgress("Uploading image...");
+    setCurrentImageIndex(0);
 
     let progressInterval: NodeJS.Timeout | null = null;
 
     try {
       // Simulate progress updates
       const progressUpdates = [
-        "Uploading image...",
+        "Uploading images...",
         "Analyzing recipe content...",
         "Extracting ingredients...",
         "Processing instructions...",
+        "Combining results...",
         "Finalizing recipe data...",
       ];
 
@@ -100,6 +172,17 @@ export function AIRecipeAnalyzer({
         if (progressIndex < progressUpdates.length - 1) {
           progressIndex++;
           setAnalysisProgress(progressUpdates[progressIndex]);
+          
+          // Update current image index for multi-image analysis
+          if (imageData.length > 1 && progressIndex === 1) {
+            setCurrentImageIndex(0);
+          } else if (imageData.length > 1 && progressIndex > 1) {
+            const imageProgress = Math.min(
+              Math.floor((progressIndex - 1) / (progressUpdates.length - 2) * imageData.length),
+              imageData.length - 1
+            );
+            setCurrentImageIndex(imageProgress);
+          }
         }
       }, 1000);
 
@@ -164,36 +247,66 @@ export function AIRecipeAnalyzer({
       <div className={styles.content}>
         <div className={styles.description}>
           <p>
-            Upload a photo of a recipe (from a cookbook, handwritten note, or
+            Upload one or more photos of a recipe (from a cookbook, handwritten note, or
             any recipe image) and our AI will automatically extract the recipe
-            details for you.
+            details for you. Multiple images will be combined intelligently.
           </p>
         </div>
 
         <div className={styles.uploadSection}>
-          <div className={styles.imagePreview}>
-            {imageData ? (
-              <div className={styles.imageContainer}>
-                <Image
-                  src={imageData}
-                  alt="Recipe image"
-                  fill
-                  className={styles.previewImage}
-                  sizes="(max-width: 768px) 100vw, 400px"
-                />
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className={styles.removeButton}
-                >
-                  <X className={styles.buttonIcon} />
-                </button>
-              </div>
-            ) : (
+          {/* Drag and Drop Area */}
+          <div 
+            className={`${styles.dragDropArea} ${isDragOver ? styles.dragOver : ''}`}
+            onDragOver={handleDragOver}
+            onDragLeave={() => setIsDragOver(false)}
+            onDrop={handleDrop}
+          >
+            {imageData.length === 0 ? (
               <div className={styles.uploadPlaceholder}>
                 <ImageIcon className={styles.uploadIcon} />
-                <p>Upload a recipe image</p>
-                <span>Supports JPG, PNG, GIF up to 20MB</span>
+                <p>Drag & drop images here or click to browse</p>
+                <span>Supports JPG, PNG, GIF up to 20MB each</span>
+                <span>You can upload multiple images</span>
+              </div>
+            ) : (
+              <div className={styles.imageGrid}>
+                {imageData.map((image, index) => (
+                  <div key={index} className={styles.imageContainer}>
+                    <div className={styles.imageWrapper}>
+                      <Image
+                        src={image}
+                        alt={`Recipe image ${index + 1}`}
+                        fill
+                        className={styles.previewImage}
+                        sizes="(max-width: 768px) 50vw, 200px"
+                      />
+                      {isAnalyzing && currentImageIndex === index && (
+                        <div className={styles.analyzingOverlay}>
+                          <Loader2 className={styles.spinning} />
+                          <span>Analyzing...</span>
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className={styles.removeButton}
+                      disabled={isAnalyzing}
+                    >
+                      <X className={styles.buttonIcon} />
+                    </button>
+                    <div className={styles.imageNumber}>{index + 1}</div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className={styles.addMoreButton}
+                  disabled={isAnalyzing}
+                >
+                  <Plus className={styles.buttonIcon} />
+                  Add More
+                </button>
               </div>
             )}
           </div>
@@ -203,6 +316,7 @@ export function AIRecipeAnalyzer({
               ref={fileInputRef}
               type="file"
               accept="image/*"
+              multiple
               onChange={handleImageUpload}
               className={styles.hiddenInput}
             />
@@ -213,8 +327,19 @@ export function AIRecipeAnalyzer({
               disabled={isAnalyzing}
             >
               <Upload className={styles.buttonIcon} />
-              {imageData ? "Change Image" : "Choose Image"}
+              {imageData.length > 0 ? "Add More Images" : "Choose Images"}
             </button>
+            {imageData.length > 0 && (
+              <button
+                type="button"
+                onClick={removeAllImages}
+                className={styles.clearButton}
+                disabled={isAnalyzing}
+              >
+                <X className={styles.buttonIcon} />
+                Clear All
+              </button>
+            )}
           </div>
 
           {error && (
@@ -228,7 +353,7 @@ export function AIRecipeAnalyzer({
         <div className={styles.analyzeSection}>
           <button
             onClick={analyzeRecipe}
-            disabled={!imageData || isAnalyzing}
+            disabled={imageData.length === 0 || isAnalyzing}
             className={styles.analyzeButton}
           >
             {isAnalyzing ? (
@@ -249,7 +374,10 @@ export function AIRecipeAnalyzer({
           {isAnalyzing && (
             <div className={styles.analyzingInfo}>
               <p>{analysisProgress}</p>
-              <p>This may take 10-30 seconds depending on image complexity.</p>
+              {imageData.length > 1 && (
+                <p>Processing image {currentImageIndex + 1} of {imageData.length}</p>
+              )}
+              <p>This may take 10-30 seconds per image depending on complexity.</p>
             </div>
           )}
         </div>
@@ -258,19 +386,24 @@ export function AIRecipeAnalyzer({
           <h3>Tips for best results:</h3>
           <ul>
             <li>Ensure the recipe text is clearly visible and well-lit</li>
-            <li>Try to capture the entire recipe in one image</li>
+            <li>You can upload multiple images of the same recipe</li>
+            <li>Try to capture the entire recipe across multiple images if needed</li>
             <li>Handwritten recipes work best when written clearly</li>
             <li>Printed recipes from books or websites work great</li>
             <li>Make sure ingredients and instructions are readable</li>
             <li>Include the recipe title if possible</li>
+            <li>Multiple images will be combined intelligently</li>
           </ul>
         </div>
 
         <div className={styles.pricing}>
           <h3>AI Analysis Cost:</h3>
           <p>
-            Each analysis uses OpenAI&apos;s GPT-4 Vision API and costs
+            Each image analysis uses OpenAI&apos;s GPT-4 Vision API and costs
             approximately $0.01-0.03 per image.
+            {imageData.length > 1 && (
+              <span> Total cost for {imageData.length} images: ~${(imageData.length * 0.02).toFixed(2)}</span>
+            )}
           </p>
         </div>
       </div>

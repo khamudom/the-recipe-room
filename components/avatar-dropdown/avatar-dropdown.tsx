@@ -69,6 +69,10 @@ export function AvatarDropdown() {
     }
   };
 
+  const onAddRecipe = () => {
+    router.push("/add");
+  };
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -136,6 +140,23 @@ export function AvatarDropdown() {
           <Link href="/" className={styles.dropdownItem}>
             Recipes
           </Link>
+          {user ? (
+            <button
+              onClick={onAddRecipe}
+              className={styles.dropdownItem}
+              aria-label="Add new recipe"
+            >
+              Add Recipe
+            </button>
+          ) : (
+            <Link
+              href="/auth/signin"
+              className={styles.dropdownItem}
+              aria-label="Sign in to add recipe"
+            >
+              Sign In to Add Recipe
+            </Link>
+          )}
           <Link href="/" className={styles.dropdownItem}>
             Shopping List - Coming Soon
           </Link>

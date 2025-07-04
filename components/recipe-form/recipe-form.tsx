@@ -10,9 +10,12 @@ import {
   ImageIcon,
   Loader2,
   Sparkles,
+  //Globe,
 } from "lucide-react";
+// TODO: Import MultiImageAnalysisResponse when we add URL extraction
 import type { Recipe, AIRecipeAnalysisResult } from "@/types/recipe";
 import { AIRecipeAnalyzer } from "@/components/ai-recipe-analyzer/ai-recipe-analyzer";
+// import { URLRecipeExtractor } from "@/components/url-recipe-extractor/url-recipe-extractor";
 import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-form.module.css";
 import Image from "next/image";
@@ -47,6 +50,7 @@ export function RecipeForm({
   });
 
   const [showAIAnalyzer, setShowAIAnalyzer] = useState(false);
+  // const [showURLExtractor, setShowURLExtractor] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -152,6 +156,26 @@ export function RecipeForm({
     setShowAIAnalyzer(false);
   };
 
+  // const handleURLExtractionComplete = (recipeData: AIRecipeAnalysisResult) => {
+  //   setFormData({
+  //     title: recipeData.title || "",
+  //     description: recipeData.description || "",
+  //     ingredients: recipeData.ingredients || [""],
+  //     instructions: recipeData.instructions || [""],
+  //     prepTime: recipeData.prepTime || "",
+  //     cookTime: recipeData.cookTime || "",
+  //     servings: recipeData.servings || "",
+  //     category: recipeData.category || "",
+  //     image: recipeData.image || formData.image,
+  //     featured: formData.featured, // Preserve the featured setting
+  //   });
+  //   setShowURLExtractor(false);
+  // };
+
+  // const handleURLExtractorCancel = () => {
+  //   setShowURLExtractor(false);
+  // };
+
   // Show AI analyzer if enabled
   if (showAIAnalyzer) {
     return (
@@ -161,6 +185,16 @@ export function RecipeForm({
       />
     );
   }
+
+  // Show URL extractor if enabled
+  // if (showURLExtractor) {
+  //   return (
+  //     <URLRecipeExtractor
+  //       onExtractionComplete={handleURLExtractionComplete}
+  //       onCancel={handleURLExtractorCancel}
+  //     />
+  //   );
+  // }
 
   return (
     <div className={styles.container}>
@@ -262,6 +296,30 @@ export function RecipeForm({
                     Analyze Recipe Image
                   </button>
                 </div>
+                
+                {/* <div className={styles.aiDivider}></div>
+                
+                <div className={styles.aiSection}>
+                  <div className={styles.aiDescription}>
+                    <Globe className={styles.aiIcon} />
+                    <div>
+                      <h4>Extract Recipe from URL</h4>
+                      <p>
+                        Enter a recipe webpage URL and our AI will automatically
+                        extract all the details for you.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    disabled={true}
+                    type="button"
+                    onClick={() => setShowURLExtractor(true)}
+                    className={styles.aiButton}
+                  >
+                    <Globe className={styles.buttonIcon} />
+                    Extract from URL
+                  </button>
+                </div> */}
               </div>
             </div>
           )}

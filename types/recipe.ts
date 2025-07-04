@@ -27,3 +27,14 @@ export interface AIRecipeAnalysisResult {
   category?: string;
   image?: string;
 }
+
+export interface MultiImageAnalysisRequest {
+  imageData: string | string[];
+}
+
+export interface MultiImageAnalysisResponse {
+  recipe: AIRecipeAnalysisResult;
+  confidence: number;
+  processingTime: number;
+  imageCount?: number;
+}
