@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "./navigation.module.css";
 import Image from "next/image";
-import { AvatarDropdown } from "../avatar-dropdown/avatar-dropdown";
+import { AvatarDropdown } from "../../ui/avatar-dropdown/avatar-dropdown";
 
 export function Navigation() {
   return (

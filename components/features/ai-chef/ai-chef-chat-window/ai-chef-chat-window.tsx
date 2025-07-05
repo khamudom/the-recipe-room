@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, RefObject } from "react";
 import { AIChefMessage } from "../ai-chef-message/ai-chef-message";
-import { LoadingSpinner } from "../../loading-spinner/loading-spinner";
+import { LoadingSpinner } from "../../../ui/loading-spinner/loading-spinner";
 import { sendMessageToAI } from "../utils/openai";
 import styles from "./ai-chef-chat-window.module.css";
 

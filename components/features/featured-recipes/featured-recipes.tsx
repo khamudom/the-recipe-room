@@ -1,7 +1,7 @@
 "use client";
 
-import { RecipeCard } from "../recipe-card/recipe-card";
-import { LoadingSkeleton } from "../loading-skeleton/loading-skeleton";
+import { RecipeCard } from "../recipe/recipe-card/recipe-card";
+import { LoadingSkeleton } from "../../ui/loading-skeleton/loading-skeleton";
 import type { Recipe } from "@/types/recipe";
 import styles from "./featured-recipes.module.css";
 

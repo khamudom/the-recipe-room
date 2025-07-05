@@ -24,9 +24,9 @@
 
 import { useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import { RecipeCard } from "@/components/recipe-card/recipe-card";
-import { LoadingSpinner } from "@/components/loading-spinner/loading-spinner";
+import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
+import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
 import { ArrowLeft } from "lucide-react";
 import { useRecipesByCategory } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";

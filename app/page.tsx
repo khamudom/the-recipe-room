@@ -2,13 +2,13 @@
 
 import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/header/header";
-import { SearchControls } from "@/components/search-controls/search-controls";
-import { FeaturedRecipes } from "@/components/featured-recipes/featured-recipes";
-import { CategoriesSection } from "@/components/categories-section/categories-section";
-import { Footer } from "@/components/footer/footer";
-import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import { LoadingSkeleton } from "@/components/loading-skeleton/loading-skeleton";
+import { Header } from "@/components/layout/header/header";
+import { SearchControls } from "@/components/features/search/search-controls/search-controls";
+import { FeaturedRecipes } from "@/components/features/featured-recipes/featured-recipes";
+import { CategoriesSection } from "@/components/features/categories-section/categories-section";
+import { Footer } from "@/components/layout/footer/footer";
+import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
+import { LoadingSkeleton } from "@/components/ui/loading-skeleton/loading-skeleton";
 import { useFeaturedRecipes } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";

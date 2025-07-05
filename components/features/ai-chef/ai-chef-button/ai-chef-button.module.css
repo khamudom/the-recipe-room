@@ -1,0 +1,142 @@
+.chefButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+  color: white;
+  font-size: 1.5rem;
+  border: 2px solid #78350f;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+  transition: all 0.3s ease;
+  font-family: "Times New Roman", "Georgia", "Garamond", serif;
+}
+
+.chefButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 69, 19, 0.4);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #92400e;
+}
+
+.chefButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+}
+
+.chefButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Tooltip styles */
+.chefButton::before {
+  content: "Ask Chef";
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1001;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.chefButton::after {
+  content: "";
+  position: absolute;
+  bottom: 70px;
+  right: 15px;
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1001;
+}
+
+/* Chat bubble indicator */
+.chefButton .chatIndicator {
+  position: absolute;
+  top: -24px;
+  right: -12px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  border: 3px solid white;
+  animation: pulse 2s infinite;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Desktop hover effects */
+@media (hover: hover) {
+  .chefButton:hover::before,
+  .chefButton:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .chefButton:hover .chatIndicator {
+    animation: none;
+    transform: scale(1.1);
+  }
+}
+
+/* Mobile styles - show tooltip on touch */
+@media (hover: none) and (pointer: coarse) {
+  .chefButton::before {
+    content: "💬 Ask Chef";
+    bottom: 80px;
+    right: -10px;
+    background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+    border: 2px solid #78350f;
+    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+  }
+
+  .chefButton::after {
+    border-top-color: #92400e;
+    bottom: 70px;
+    right: 25px;
+  }
+
+  .chefButton.tooltipVisible::before,
+  .chefButton.tooltipVisible::after {
+    opacity: 1;
+    visibility: visible;
+  }
+}

@@ -2,10 +2,10 @@
 
 import { useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SearchControls } from "@/components/search-controls/search-controls";
-import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import { RecipeCard } from "@/components/recipe-card/recipe-card";
-import { LoadingSkeleton } from "@/components/loading-skeleton/loading-skeleton";
+import { SearchControls } from "@/components/features/search/search-controls/search-controls";
+import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
+import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
+import { LoadingSkeleton } from "@/components/ui/loading-skeleton/loading-skeleton";
 import { useSearchRecipes } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";

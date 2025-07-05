@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AuthForm } from "../../../components/auth-form/auth-form";
+import { AuthForm } from "@/components/features/auth/auth-form/auth-form";
 import styles from "./signup.module.css";
 
 export default function SignUpPage() {

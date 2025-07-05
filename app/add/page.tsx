@@ -2,9 +2,9 @@
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { RecipeForm } from "@/components/recipe-form/recipe-form";
-import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import { ProtectedRoute } from "@/components/protected-route/protected-route";
+import { RecipeForm } from "@/components/features/recipe/recipe-form/recipe-form";
+import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
+import { ProtectedRoute } from "@/components/layout/protected-route/protected-route";
 import { useCreateRecipe } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 

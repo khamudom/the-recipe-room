@@ -2,9 +2,9 @@
 
 import { useCallback } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
-import { RecipeDetail } from "@/components/recipe-detail/recipe-detail";
-import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import { LoadingSpinner } from "@/components/loading-spinner/loading-spinner";
+import { RecipeDetail } from "@/components/features/recipe/recipe-detail/recipe-detail";
+import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
+import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
 import { useRecipe, useDeleteRecipe } from "@/hooks/use-recipes-query";
 
 export default function RecipeDetailPage() {

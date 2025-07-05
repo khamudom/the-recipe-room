@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../../lib/auth-context";
+import { useAuth } from "../../../lib/auth-context";
 import styles from "./avatar-dropdown.module.css";
 
 export function AvatarDropdown() {

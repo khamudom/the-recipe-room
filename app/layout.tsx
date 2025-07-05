@@ -2,11 +2,11 @@ import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "../lib/auth-context";
-import { Navigation } from "../components/navigation/navigation";
+import { Navigation } from "../components/layout/navigation/navigation";
 import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
-import { LottiePreloader } from "@/components/lottie-preloader/lottie-preloader";
-import { AIChefWidget } from "@/components/ai-chef/ai-chef-widget";
-import { ReactQueryProvider } from "@/components/ReactQueryProvider";
+import { LottiePreloader } from "@/components/ui/lottie-preloader/lottie-preloader";
+import { AIChefWidget } from "@/components/features/ai-chef/ai-chef-widget";
+import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",

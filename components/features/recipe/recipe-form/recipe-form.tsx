@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 // TODO: Import MultiImageAnalysisResponse when we add URL extraction
 import type { Recipe, AIRecipeAnalysisResult } from "@/types/recipe";
-import { AIRecipeAnalyzer } from "@/components/ai-recipe-analyzer/ai-recipe-analyzer";
+import { AIRecipeAnalyzer } from "@/components/features/ai-recipe-analyzer/ai-recipe-analyzer";
 // import { URLRecipeExtractor } from "@/components/url-recipe-extractor/url-recipe-extractor";
 import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-form.module.css";

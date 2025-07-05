@@ -2,9 +2,9 @@
 
 import { useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { RecipeForm } from "@/components/recipe-form/recipe-form";
-import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
-import { ProtectedRoute } from "@/components/protected-route/protected-route";
+import { RecipeForm } from "@/components/features/recipe/recipe-form/recipe-form";
+import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
+import { ProtectedRoute } from "@/components/layout/protected-route/protected-route";
 import { useRecipe, useUpdateRecipe } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 
@@ -13,18 +13,17 @@ export default function EditRecipePage() {
   const params = useParams();
   const recipeId = params.id as string;
 
-  const { 
-    data: recipe, 
-    isLoading, 
-    error 
-  } = useRecipe(recipeId);
+  const { data: recipe, isLoading, error } = useRecipe(recipeId);
 
   const updateRecipeMutation = useUpdateRecipe();
 
   const handleUpdateRecipe = useCallback(
     async (updatedRecipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
       try {
-        await updateRecipeMutation.mutateAsync({ id: recipeId, recipe: updatedRecipe });
+        await updateRecipeMutation.mutateAsync({
+          id: recipeId,
+          recipe: updatedRecipe,
+        });
         router.push(`/recipe/${recipeId}`);
       } catch (error) {
         console.error("Error updating recipe:", error);

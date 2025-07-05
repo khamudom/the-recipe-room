@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../../../../lib/supabase";
 import styles from "./auth-form.module.css";
 
 type AuthMode = "signin" | "signup" | "forgot-password";
@@ -62,11 +62,7 @@ const AUTH_LINKS = {
   ],
 } as const;
 
-export function AuthForm({
-  mode,
-  onSuccess,
-  onModeChange,
-}: AuthFormProps) {
+export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
