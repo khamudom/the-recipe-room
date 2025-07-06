@@ -397,12 +397,13 @@ export function RecipeForm({
                   >
                     <option value="">Select category</option>
                     <option value="Appetizer">Appetizer</option>
-                    <option value="Main Course">Main Course</option>
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
                     <option value="Side Dish">Side Dish</option>
                     <option value="Dessert">Dessert</option>
-                    <option value="Beverage">Beverage</option>
-                    <option value="Breakfast">Breakfast</option>
                     <option value="Snack">Snack</option>
+                    <option value="Beverage">Beverage</option>
                   </select>
                 </div>
               </div>
@@ -602,12 +603,12 @@ export function RecipeForm({
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <>
+                <div className={styles.loadingTextContainer}>
                   <Loader2
                     className={`${styles.buttonIcon} ${styles.spinning}`}
                   />
                   {recipe ? "Updating..." : "Saving..."}
-                </>
+                </div>
               ) : recipe ? (
                 "Update Recipe"
               ) : (

@@ -12,6 +12,7 @@ import {
   Wine,
 } from "lucide-react";
 import styles from "./categories-section.module.css";
+import { useRecipesWithUser } from "@/hooks/use-recipes-query";
 
 // Icon mapping object
 const iconComponents = {
@@ -32,6 +33,13 @@ interface CategoriesSectionProps {
 export function CategoriesSection({
   title = "Recipe Categories",
 }: CategoriesSectionProps) {
+  const { data: recipes = [], isLoading } = useRecipesWithUser();
+  // Count recipes per category
+  const categoryCounts = recipes.reduce((acc, recipe) => {
+    acc[recipe.category] = (acc[recipe.category] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
   return (
     <section className={styles.categoriesSection}>
       <h2 className={`${styles.sectionTitle} section-header`}>{title}</h2>
@@ -42,6 +50,7 @@ export function CategoriesSection({
             iconComponents[
               CATEGORY_ICONS[category] as keyof typeof iconComponents
             ];
+          const count = categoryCounts[category] || 0;
           return (
             <a
               key={category}
@@ -50,6 +59,9 @@ export function CategoriesSection({
             >
               <IconComponent className={styles.categoryIcon} />
               <span>{category}</span>
+              <span className={styles.categoryCount}>
+                {isLoading ? "..." : `${count} recipe${count === 1 ? "" : "s"}`}
+              </span>
             </a>
           );
         })}

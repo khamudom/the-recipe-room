@@ -28,7 +28,7 @@ import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
 import { ArrowLeft } from "lucide-react";
-import { useRecipesByCategory } from "@/hooks/use-recipes-query";
+import { useRecipesByCategoryWithUser } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
 
@@ -41,7 +41,7 @@ export default function CategoryPage() {
     data: recipes = [],
     isLoading,
     error,
-  } = useRecipesByCategory(category);
+  } = useRecipesByCategoryWithUser(category);
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {

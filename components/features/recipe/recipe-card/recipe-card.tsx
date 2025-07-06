@@ -26,49 +26,51 @@ export const RecipeCard = React.memo(function RecipeCard({
       aria-label={`View recipe: ${recipe.title}`}
       type="button"
     >
-      {/* Recipe Image */}
-      <div className={styles.imageContainer}>
-        {recipe.image ? (
-          <Image
-            src={recipe.image}
-            alt={recipe.title}
-            fill
-            className={styles.recipeImage}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        ) : (
-          <div className={styles.placeholderImage}>
+      <div>
+        {/* Recipe Image */}
+        <div className={styles.imageContainer}>
+          {recipe.image ? (
             <Image
-              src="/placeholder.svg"
-              alt="Recipe placeholder"
-              width={48}
-              height={48}
-              className={styles.placeholderIcon}
+              src={recipe.image}
+              alt={recipe.title}
+              fill
+              className={styles.recipeImage}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
-            <p className={styles.placeholderText}>No image</p>
+          ) : (
+            <div className={styles.placeholderImage}>
+              <Image
+                src="/placeholder.svg"
+                alt="Recipe placeholder"
+                width={48}
+                height={48}
+                className={styles.placeholderIcon}
+              />
+              <p className={styles.placeholderText}>No image</p>
+            </div>
+          )}
+          <div className={styles.categoryTag}>
+            <Tag className={styles.tagIcon} />
+            <span className={styles.categoryText}>{recipe.category}</span>
           </div>
-        )}
-        <div className={styles.categoryTag}>
-          <Tag className={styles.tagIcon} />
-          <span className={styles.categoryText}>{recipe.category}</span>
+          {recipe.featured && (
+            <div className={styles.featuredBadge}>
+              <Star className={styles.featuredIcon} />
+              <span className={styles.featuredText}>Featured</span>
+            </div>
+          )}
+          {isMyRecipe && !recipe.featured && (
+            <div className={styles.myRecipeBadge}>
+              <User className={styles.myRecipeIcon} />
+              <span className={styles.myRecipeText}>My Recipe</span>
+            </div>
+          )}
         </div>
-        {recipe.featured && (
-          <div className={styles.featuredBadge}>
-            <Star className={styles.featuredIcon} />
-            <span className={styles.featuredText}>Featured</span>
-          </div>
-        )}
-        {isMyRecipe && !recipe.featured && (
-          <div className={styles.myRecipeBadge}>
-            <User className={styles.myRecipeIcon} />
-            <span className={styles.myRecipeText}>My Recipe</span>
-          </div>
-        )}
-      </div>
 
-      <div className={styles.header}>
-        <h3 className={`${styles.title} card-title`}>{recipe.title}</h3>
-        <p className={styles.description}>{recipe.description}</p>
+        <div className={styles.header}>
+          <h3 className={`${styles.title} card-title`}>{recipe.title}</h3>
+          <p className={styles.description}>{recipe.description}</p>
+        </div>
       </div>
 
       <div className={styles.content}>

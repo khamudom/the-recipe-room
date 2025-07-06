@@ -5,6 +5,8 @@ import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function ReactQueryProvider({
   children,
@@ -52,8 +54,26 @@ export function ReactQueryProvider({
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryAuthSync />
       {children}
       {/* {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />} */}
     </QueryClientProvider>
   );
+}
+
+function ReactQueryAuthSync() {
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        queryClient.clear();
+      } else if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+        queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      }
+    });
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
+  }, [queryClient]);
+  return null;
 }

@@ -5,6 +5,7 @@ import { database } from "@/lib/database";
 import { supabase } from "@/lib/supabase";
 import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
+import { useEffect, useState } from "react";
 
 // Query keys for React Query
 export const recipeKeys = {
@@ -72,6 +73,35 @@ export function useRecipesByCategory(category: string) {
   });
 }
 
+// User-aware recipes by category hook for correct cache per user
+export function useRecipesByCategoryWithUser(category: string) {
+  const [userId, setUserId] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    let mounted = true;
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (mounted) setUserId(user?.id ?? null);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (mounted) setUserId(session?.user?.id ?? null);
+      }
+    );
+    return () => {
+      mounted = false;
+      listener?.subscription.unsubscribe();
+    };
+  }, []);
+
+  return useQuery({
+    queryKey: ["recipes", "category", category, userId],
+    queryFn: () => database.getRecipesByCategory(supabase, category),
+    enabled: !!category && userId !== undefined,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+}
+
 // Hook to create a recipe
 export function useCreateRecipe() {
   const queryClient = useQueryClient();
@@ -110,7 +140,9 @@ export function useUpdateRecipe() {
       // Invalidate and refetch recipes lists
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
-
+      queryClient.invalidateQueries({ queryKey: recipeKeys.details() });
+      // Invalidate all category queries
+      queryClient.invalidateQueries({ queryKey: recipeKeys.all });
       // Update the recipe in cache
       queryClient.setQueryData(
         recipeKeys.detail(updatedRecipe.id),
@@ -134,6 +166,8 @@ export function useDeleteRecipe() {
       // Invalidate and refetch recipes lists
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
+      // Invalidate all user-aware queries
+      queryClient.invalidateQueries({ queryKey: ["recipes"] });
 
       // Remove the recipe from cache
       queryClient.removeQueries({ queryKey: recipeKeys.detail(deletedId) });
@@ -142,5 +176,34 @@ export function useDeleteRecipe() {
       console.error("Error deleting recipe:", error);
       throw new Error(ERROR_MESSAGES.DELETE_RECIPE);
     },
+  });
+}
+
+// User-aware recipes hook for correct cache per user
+export function useRecipesWithUser() {
+  const [userId, setUserId] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    let mounted = true;
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (mounted) setUserId(user?.id ?? null);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (mounted) setUserId(session?.user?.id ?? null);
+      }
+    );
+    return () => {
+      mounted = false;
+      listener?.subscription.unsubscribe();
+    };
+  }, []);
+
+  return useQuery({
+    queryKey: ["recipes", userId],
+    queryFn: () => database.getRecipes(supabase),
+    enabled: userId !== undefined, // Only run when userId is known
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }

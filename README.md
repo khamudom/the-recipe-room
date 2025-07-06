@@ -11,7 +11,7 @@ A beautiful, modern recipe management application built with Next.js 15, React, 
 - **AI Recipe Analysis**: Upload a photo of a recipe and let AI extract all the details automatically using OpenAI GPT-4 Vision
 - **AI Chef Assistant**: Chat with Chef Dashly, your virtual cooking assistant powered by OpenAI GPT-4
 - **Rich Recipe Details**: Include ingredients, instructions, prep time, cook time, and servings
-- **Category Organization**: Organize recipes by categories (Appetizer, Main Course, Side Dish, Dessert, Beverage, Breakfast, Snack)
+- **Category Organization**: Organize recipes by categories (Appetizer, Breakfast, Lunch, Dinner, Side Dish, Dessert, Snack, Beverage)
 - **Search Functionality**: Full-text search recipes by title, description, ingredients, or category
 - **Featured Recipes**: Admins can create featured recipes visible to all users
 - **Responsive Design**: Beautiful UI that works on desktop and mobile devices
@@ -27,7 +27,9 @@ A beautiful, modern recipe management application built with Next.js 15, React, 
 ## 🚀 New Features & Improvements
 
 ### React Query Integration
+
 The application now uses **TanStack React Query** for advanced state management:
+
 - **Intelligent Caching**: Automatic caching of recipe data with configurable stale times
 - **Background Updates**: Seamless data synchronization across components
 - **Optimistic Updates**: Instant UI updates with automatic rollback on errors
@@ -35,24 +37,28 @@ The application now uses **TanStack React Query** for advanced state management:
 - **Loading States**: Consistent loading indicators throughout the app
 
 ### Enhanced Loading Experience
+
 - **Lottie Animations**: Beautiful, smooth loading animations using Lottie
 - **Animation Caching**: Preloaded animations for instant display
 - **Loading Skeletons**: Elegant skeleton loaders for better perceived performance
 - **Progressive Loading**: Smart loading states that adapt to different scenarios
 
 ### Robust Error Handling
+
 - **Error Boundaries**: Comprehensive error catching and recovery
 - **Graceful Degradation**: App continues to function even when features fail
 - **User-Friendly Messages**: Clear, actionable error messages
 - **Development Debugging**: Detailed error information in development mode
 
 ### Performance Optimizations
+
 - **Query Optimization**: Efficient data fetching with React Query
 - **Component Memoization**: Optimized re-rendering for better performance
 - **Image Optimization**: Next.js Image component for optimized image loading
 - **Code Splitting**: Automatic code splitting for faster initial loads
 
 ### Development Experience
+
 - **Supabase Debugging**: Development-only Supabase client exposure for debugging
 - **Enhanced Logging**: Better error tracking and debugging information
 - **Type Safety**: Comprehensive TypeScript coverage throughout the application
@@ -95,6 +101,7 @@ The Recipe Room includes an AI-powered feature that can automatically extract re
 ### AI Chef Assistant
 
 Chat with Chef Dashly, your virtual cooking assistant! Get help with:
+
 - Cooking techniques and step-by-step instructions
 - Ingredient substitutions and measurements
 - Wine pairings and drink recommendations
@@ -236,12 +243,14 @@ The Recipe Room uses Supabase for secure authentication and data storage:
 The application integrates with OpenAI's GPT-4 for two main features:
 
 ### Recipe Analysis (GPT-4 Vision)
+
 - Analyzes recipe images to extract structured data
 - Supports various image formats and sources
 - Returns validated JSON with recipe information
 - Handles errors gracefully with user-friendly messages
 
 ### Chef Assistant (GPT-4)
+
 - Provides cooking advice and instructions
 - Answers food-related questions
 - Offers wine pairings and substitutions
@@ -369,6 +378,7 @@ npm run dev
 ### Other Platforms
 
 The app can be deployed to any platform that supports Next.js:
+
 - Netlify
 - Railway
 - DigitalOcean App Platform

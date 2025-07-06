@@ -23,7 +23,7 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
   try {
-    const { imageData } = await request.json() as MultiImageAnalysisRequest;
+    const { imageData } = (await request.json()) as MultiImageAnalysisRequest;
 
     if (!imageData) {
       return NextResponse.json(
@@ -101,7 +101,7 @@ async function analyzeSingleImage(imageData: string): Promise<NextResponse> {
     messages: [
       {
         role: "system",
-        content: `You are an expert recipe analyzer. Your task is to extract recipe information from images and return it in a specific JSON format. Be precise and thorough in your analysis.`
+        content: `You are an expert recipe analyzer. Your task is to extract recipe information from images and return it in a specific JSON format. Be precise and thorough in your analysis.`,
       },
       {
         role: "user",
@@ -118,7 +118,7 @@ async function analyzeSingleImage(imageData: string): Promise<NextResponse> {
   "prepTime": "prep time in minutes or descriptive text",
   "cookTime": "cook time in minutes or descriptive text", 
   "servings": number,
-  "category": "one of: Appetizer, Main Course, Side Dish, Dessert, Beverage, Breakfast, Snack"
+  "category": "one of: Appetizer, Breakfast, Lunch, Dinner, Side Dish, Dessert, Snack, Beverage"
 }
 
 Guidelines:
@@ -128,7 +128,7 @@ Guidelines:
 - For servings, use a string that is a number
 - Choose the most appropriate category from the list above
 - If any information is not clearly visible, make a reasonable estimate
-- Return ONLY the JSON object, no additional text or explanations`
+- Return ONLY the JSON object, no additional text or explanations`,
           },
           {
             type: "image_url",
@@ -157,14 +157,18 @@ Guidelines:
   try {
     // Clean the content to remove markdown formatting
     let cleanedContent = content.trim();
-    
+
     // Remove markdown code blocks if present
-    if (cleanedContent.startsWith('```json')) {
-      cleanedContent = cleanedContent.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-    } else if (cleanedContent.startsWith('```')) {
-      cleanedContent = cleanedContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    if (cleanedContent.startsWith("```json")) {
+      cleanedContent = cleanedContent
+        .replace(/^```json\s*/, "")
+        .replace(/\s*```$/, "");
+    } else if (cleanedContent.startsWith("```")) {
+      cleanedContent = cleanedContent
+        .replace(/^```\s*/, "")
+        .replace(/\s*```$/, "");
     }
-    
+
     // Try to parse the cleaned response as JSON
     recipeData = JSON.parse(cleanedContent);
   } catch (parseError) {
@@ -205,21 +209,27 @@ async function analyzeMultipleImages(images: string[]): Promise<NextResponse> {
   // Analyze each image individually
   for (let i = 0; i < images.length; i++) {
     console.log(`Analyzing image ${i + 1} of ${images.length}...`);
-    
+
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
           {
             role: "system",
-            content: `You are an expert recipe analyzer. Your task is to extract recipe information from images and return it in a specific JSON format. This is image ${i + 1} of ${images.length} - analyze it independently and extract any recipe information you can find.`
+            content: `You are an expert recipe analyzer. Your task is to extract recipe information from images and return it in a specific JSON format. This is image ${
+              i + 1
+            } of ${
+              images.length
+            } - analyze it independently and extract any recipe information you can find.`,
           },
           {
             role: "user",
             content: [
               {
                 type: "text",
-                text: `Please analyze this recipe image (image ${i + 1} of ${images.length}) and extract all available recipe information. Return ONLY a valid JSON object with this exact structure:
+                text: `Please analyze this recipe image (image ${i + 1} of ${
+                  images.length
+                }) and extract all available recipe information. Return ONLY a valid JSON object with this exact structure:
 
 {
   "title": "Recipe title or partial title",
@@ -229,7 +239,7 @@ async function analyzeMultipleImages(images: string[]): Promise<NextResponse> {
   "prepTime": "prep time in minutes or descriptive text",
   "cookTime": "cook time in minutes or descriptive text", 
   "servings": number,
-  "category": "one of: Appetizer, Main Course, Side Dish, Dessert, Beverage, Breakfast, Snack"
+  "category": "one of: Appetizer, Breakfast, Lunch, Dinner, Side Dish, Dessert, Snack, Beverage"
 }
 
 Guidelines:
@@ -240,7 +250,7 @@ Guidelines:
 - Choose the most appropriate category from the list above
 - If any information is not clearly visible, make a reasonable estimate
 - Return ONLY the JSON object, no additional text or explanations
-- If this image doesn't contain recipe information, return empty arrays for ingredients and instructions`
+- If this image doesn't contain recipe information, return empty arrays for ingredients and instructions`,
               },
               {
                 type: "image_url",
@@ -261,17 +271,24 @@ Guidelines:
       if (content) {
         try {
           let cleanedContent = content.trim();
-          
-          if (cleanedContent.startsWith('```json')) {
-            cleanedContent = cleanedContent.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-          } else if (cleanedContent.startsWith('```')) {
-            cleanedContent = cleanedContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+
+          if (cleanedContent.startsWith("```json")) {
+            cleanedContent = cleanedContent
+              .replace(/^```json\s*/, "")
+              .replace(/\s*```$/, "");
+          } else if (cleanedContent.startsWith("```")) {
+            cleanedContent = cleanedContent
+              .replace(/^```\s*/, "")
+              .replace(/\s*```$/, "");
           }
-          
+
           const recipeData = JSON.parse(cleanedContent);
           results.push(recipeData);
         } catch (parseError) {
-          console.error(`Failed to parse response for image ${i + 1}:`, parseError);
+          console.error(
+            `Failed to parse response for image ${i + 1}:`,
+            parseError
+          );
           // Continue with other images even if one fails
         }
       }
@@ -283,14 +300,14 @@ Guidelines:
 
   // Combine results from all images
   const combinedRecipe = combineRecipeResults(results);
-  
+
   return processRecipeData(combinedRecipe, totalTokens);
 }
 
 function combineRecipeResults(results: RecipeAnalysis[]): RecipeAnalysis {
   console.log("Combining results from", results.length, "images");
   console.log("Sample result:", JSON.stringify(results[0], null, 2));
-  
+
   if (results.length === 0) {
     throw new Error("No valid recipe data found in any image");
   }
@@ -312,75 +329,100 @@ function combineRecipeResults(results: RecipeAnalysis[]): RecipeAnalysis {
   };
 
   // Find the best title (non-empty, most complete)
-  const titles = results.map(r => r.title).filter(t => t && String(t).trim());
+  const titles = results
+    .map((r) => r.title)
+    .filter((t) => t && String(t).trim());
   combined.title = titles.length > 0 ? titles[0] : "Untitled Recipe";
 
   // Combine descriptions
-  const descriptions = results.map(r => r.description).filter(d => d && String(d).trim());
+  const descriptions = results
+    .map((r) => r.description)
+    .filter((d) => d && String(d).trim());
   combined.description = descriptions.join(" ");
 
   // Combine ingredients (remove duplicates)
-  const allIngredients = results.flatMap(r => r.ingredients || []);
-  const uniqueIngredients = Array.from(new Set(allIngredients.map(i => i.trim().toLowerCase())))
-    .map(ingredient => {
+  const allIngredients = results.flatMap((r) => r.ingredients || []);
+  const uniqueIngredients = Array.from(
+    new Set(allIngredients.map((i) => i.trim().toLowerCase()))
+  )
+    .map((ingredient) => {
       // Find the original case from the first occurrence
-      return allIngredients.find(i => i.trim().toLowerCase() === ingredient) || ingredient;
+      return (
+        allIngredients.find((i) => i.trim().toLowerCase() === ingredient) ||
+        ingredient
+      );
     })
-    .filter(i => i.trim());
+    .filter((i) => i.trim());
 
   combined.ingredients = uniqueIngredients;
 
   // Combine instructions (maintain order and remove duplicates)
-  const allInstructions = results.flatMap(r => r.instructions || []);
-  const uniqueInstructions = allInstructions.filter((instruction, index, arr) => {
-    const normalized = instruction.trim().toLowerCase();
-    return arr.findIndex(i => i.trim().toLowerCase() === normalized) === index;
-  }).filter(i => i.trim());
+  const allInstructions = results.flatMap((r) => r.instructions || []);
+  const uniqueInstructions = allInstructions
+    .filter((instruction, index, arr) => {
+      const normalized = instruction.trim().toLowerCase();
+      return (
+        arr.findIndex((i) => i.trim().toLowerCase() === normalized) === index
+      );
+    })
+    .filter((i) => i.trim());
 
   combined.instructions = uniqueInstructions;
 
   // Use the first non-empty value for each time field
-  combined.prepTime = results.find(r => r.prepTime && String(r.prepTime || "").trim())?.prepTime || "";
-  combined.cookTime = results.find(r => r.cookTime && String(r.cookTime || "").trim())?.cookTime || "";
-  
+  combined.prepTime =
+    results.find((r) => r.prepTime && String(r.prepTime || "").trim())
+      ?.prepTime || "";
+  combined.cookTime =
+    results.find((r) => r.cookTime && String(r.cookTime || "").trim())
+      ?.cookTime || "";
+
   // Handle servings more carefully since it might be a number
-  const servingsResult = results.find(r => {
+  const servingsResult = results.find((r) => {
     if (!r.servings) return false;
     const servingsStr = String(r.servings);
-    return servingsStr.trim() !== "" && servingsStr !== "null" && servingsStr !== "undefined";
+    return (
+      servingsStr.trim() !== "" &&
+      servingsStr !== "null" &&
+      servingsStr !== "undefined"
+    );
   });
   combined.servings = servingsResult ? String(servingsResult.servings) : "4";
 
   // Use the most common category, or the first non-empty one
-  const categories = results.map(r => r.category).filter(c => c && String(c).trim());
+  const categories = results
+    .map((r) => r.category)
+    .filter((c) => c && String(c).trim());
   if (categories.length > 0) {
     const categoryCounts = categories.reduce((acc, cat) => {
       acc[cat] = (acc[cat] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-    
-    const mostCommon = Object.entries(categoryCounts)
-      .sort(([,a], [,b]) => b - a)[0][0];
+
+    const mostCommon = Object.entries(categoryCounts).sort(
+      ([, a], [, b]) => b - a
+    )[0][0];
     combined.category = mostCommon;
   } else {
-    combined.category = "Main Course";
+    combined.category = "Dinner";
   }
 
   return combined;
 }
 
-function processRecipeData(recipeData: RecipeAnalysis, totalTokens: number): NextResponse {
+function processRecipeData(
+  recipeData: RecipeAnalysis,
+  totalTokens: number
+): NextResponse {
   // Validate the extracted data
   const requiredFields = ["title", "ingredients", "instructions"];
-  const missingFields = requiredFields.filter(
-    (field) => {
-      const value = recipeData[field as keyof RecipeAnalysis];
-      if (field === "ingredients" || field === "instructions") {
-        return !Array.isArray(value) || value.length === 0;
-      }
-      return !value || String(value).trim() === "";
+  const missingFields = requiredFields.filter((field) => {
+    const value = recipeData[field as keyof RecipeAnalysis];
+    if (field === "ingredients" || field === "instructions") {
+      return !Array.isArray(value) || value.length === 0;
     }
-  );
+    return !value || String(value).trim() === "";
+  });
 
   if (missingFields.length > 0) {
     return NextResponse.json(
@@ -391,9 +433,7 @@ function processRecipeData(recipeData: RecipeAnalysis, totalTokens: number): Nex
 
   // Ensure arrays are properly formatted
   if (!Array.isArray(recipeData.ingredients)) {
-    recipeData.ingredients = [recipeData.ingredients as string].filter(
-      Boolean
-    );
+    recipeData.ingredients = [recipeData.ingredients as string].filter(Boolean);
   }
 
   if (!Array.isArray(recipeData.instructions)) {
@@ -411,7 +451,7 @@ function processRecipeData(recipeData: RecipeAnalysis, totalTokens: number): Nex
     prepTime: recipeData.prepTime || "",
     cookTime: recipeData.cookTime || "",
     servings: String(recipeData.servings || "4"),
-    category: recipeData.category || "Main Course",
+    category: recipeData.category || "Dinner",
   };
 
   console.log("Successfully analyzed recipe:", analysis.title);

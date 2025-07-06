@@ -7,18 +7,18 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   outline: none;
-  /* Button reset styles */
   padding: 0;
   margin: 0;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
   text-align: left;
-  /* Ensure proper button behavior */
-  display: block;
   width: 100%;
   text-decoration: none;
   color: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .card:hover {

@@ -22,10 +22,7 @@ export async function POST(request: NextRequest) {
     const { url } = await request.json();
 
     if (!url) {
-      return NextResponse.json(
-        { error: "URL is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
     if (!process.env.OPENAI_API_KEY) {
@@ -52,8 +49,9 @@ export async function POST(request: NextRequest) {
     try {
       const response = await fetch(url, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        },
       });
 
       if (!response.ok) {
@@ -64,7 +62,10 @@ export async function POST(request: NextRequest) {
     } catch (fetchError) {
       console.error("Error fetching webpage:", fetchError);
       return NextResponse.json(
-        { error: "Failed to fetch webpage content. Please check the URL and try again." },
+        {
+          error:
+            "Failed to fetch webpage content. Please check the URL and try again.",
+        },
         { status: 400 }
       );
     }
@@ -75,7 +76,7 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: "system",
-          content: `You are an expert recipe extractor. Your task is to extract recipe information from webpage content and return it in a specific JSON format. Be precise and thorough in your analysis.`
+          content: `You are an expert recipe extractor. Your task is to extract recipe information from webpage content and return it in a specific JSON format. Be precise and thorough in your analysis.`,
         },
         {
           role: "user",
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
   "prepTime": "prep time in minutes or descriptive text",
   "cookTime": "cook time in minutes or descriptive text", 
   "servings": "number of servings",
-  "category": "one of: Appetizer, Main Course, Side Dish, Dessert, Beverage, Breakfast, Snack"
+  "category": "one of: Appetizer, Breakfast, Lunch, Dinner, Side Dish, Dessert, Snack, Beverage"
 }
 
 Guidelines:
@@ -103,7 +104,7 @@ Guidelines:
 - Return ONLY the JSON object, no additional text or explanations
 
 Webpage content:
-${webpageContent.substring(0, 8000)}` // Limit content to avoid token limits
+${webpageContent.substring(0, 8000)}`, // Limit content to avoid token limits
         },
       ],
       max_tokens: 2000,
@@ -124,14 +125,18 @@ ${webpageContent.substring(0, 8000)}` // Limit content to avoid token limits
     try {
       // Clean the content to remove markdown formatting
       let cleanedContent = content.trim();
-      
+
       // Remove markdown code blocks if present
-      if (cleanedContent.startsWith('```json')) {
-        cleanedContent = cleanedContent.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-      } else if (cleanedContent.startsWith('```')) {
-        cleanedContent = cleanedContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      if (cleanedContent.startsWith("```json")) {
+        cleanedContent = cleanedContent
+          .replace(/^```json\s*/, "")
+          .replace(/\s*```$/, "");
+      } else if (cleanedContent.startsWith("```")) {
+        cleanedContent = cleanedContent
+          .replace(/^```\s*/, "")
+          .replace(/\s*```$/, "");
       }
-      
+
       // Try to parse the cleaned response as JSON
       recipeData = JSON.parse(cleanedContent);
     } catch (parseError) {
@@ -196,7 +201,7 @@ ${webpageContent.substring(0, 8000)}` // Limit content to avoid token limits
       prepTime: recipeData.prepTime || "",
       cookTime: recipeData.cookTime || "",
       servings: recipeData.servings || "4",
-      category: recipeData.category || "Main Course",
+      category: recipeData.category || "Dinner",
     };
 
     console.log("Successfully extracted recipe:", analysis.title);
@@ -239,4 +244,4 @@ ${webpageContent.substring(0, 8000)}` // Limit content to avoid token limits
       { status: 500 }
     );
   }
-} 
+}

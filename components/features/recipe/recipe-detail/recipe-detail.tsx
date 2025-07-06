@@ -32,7 +32,9 @@ export function RecipeDetail({
           <button onClick={onBack} className={styles.backButton}>
             <ArrowLeft className={styles.buttonIcon} />
           </button>
-          <h1 className={styles.recipeTitle}>{recipe.title}</h1>
+          <h1 className={`${styles.recipeTitle} section-header`}>
+            {recipe.title}
+          </h1>
         </div>
 
         {/* Action Buttons */}

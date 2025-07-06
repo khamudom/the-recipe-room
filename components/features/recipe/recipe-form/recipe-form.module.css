@@ -403,6 +403,12 @@
   background-color: var(--color-primary);
 }
 
+.loadingTextContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .spinning {
   animation: spin 1s linear infinite;
 }
