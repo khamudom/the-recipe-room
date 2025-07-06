@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, RefObject } from "react";
+import { X, Maximize2, Minimize2 } from "lucide-react";
 import { AIChefMessage } from "../ai-chef-message/ai-chef-message";
 import { LoadingSpinner } from "../../../ui/loading-spinner/loading-spinner";
 import { sendMessageToAI } from "../utils/openai";
@@ -18,8 +19,24 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-expand textarea based on content
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  };
+
+  // Adjust textarea height when input changes
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [input]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -52,6 +69,11 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     setInput("");
     setLoading(true);
 
+    // Reset textarea height after sending
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
+
     try {
       const aiResponse = await sendMessageToAI(input);
       setMessages((prev) => [
@@ -72,13 +94,25 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     }
   };
 
+  const toggleMaximize = () => {
+    setIsMaximized(!isMaximized);
+  };
+
   return (
-    <div className={styles.chatWindow} ref={chatWindowRef}>
+    <div
+      className={`${styles.chatWindow} ${isMaximized ? styles.maximized : ""}`}
+      ref={chatWindowRef}
+    >
       <div className={styles.header}>
         <h3>Chef&apos;s Kitchen Chat</h3>
-        <button onClick={onClose} className={styles.closeButton}>
-          ✕
-        </button>
+        <div className={styles.headerButtons}>
+          <button onClick={toggleMaximize} className={styles.maximizeButton}>
+            {isMaximized ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+          </button>
+          <button onClick={onClose} className={styles.closeButton}>
+            <X size={18} />
+          </button>
+        </div>
       </div>
       <div className={styles.messages}>
         {messages.map((msg, index) => (
@@ -98,6 +132,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
       </div>
       <div className={styles.inputArea}>
         <textarea
+          ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}

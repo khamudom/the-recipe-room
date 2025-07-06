@@ -11,6 +11,20 @@
   flex-direction: column;
   z-index: 1001;
   box-shadow: 0 8px 25px rgba(139, 69, 19, 0.2);
+  transition: all 0.3s ease;
+}
+
+.maximized {
+  width: calc(100vw - 40px) !important;
+  height: calc(100vh - 120px) !important;
+  max-width: none !important;
+  max-height: none !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  left: 20px !important;
+  top: 20px !important;
+  margin: 0 auto;
+  border-radius: 12px;
 }
 
 .header {
@@ -25,10 +39,10 @@
   border-bottom: 2px solid #78350f;
 }
 
-.header h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
+.headerButtons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .closeButton {
@@ -46,6 +60,21 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+.maximizeButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.maximizeButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .messages {
   flex: 1;
   overflow-y: auto;
@@ -55,11 +84,8 @@
 
 .inputArea {
   display: flex;
-  padding: 1rem;
-  border-top: 2px solid #fbbf24;
-  background: #fefcf3;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  flex-direction: column;
+  padding: 0.75rem;
   gap: 0.5rem;
 }
 
@@ -72,8 +98,10 @@
   font-size: 1rem;
   color: #78350f;
   transition: border-color 0.2s ease;
-  resize: vertical;
+  resize: none;
   min-height: 60px;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .input:focus {
@@ -127,11 +155,20 @@
     width: calc(100vw - 40px);
     max-width: 400px;
     height: calc(100vh - 200px);
-    max-height: 600px;
-    bottom: 80px;
+    max-height: 70%;
+    bottom: 60px;
     right: 20px;
     left: 20px;
     margin: 0 auto;
+  }
+
+  .maximized {
+    width: calc(100vw - 20px) !important;
+    height: calc(100vh - 100px) !important;
+    bottom: 10px !important;
+    right: 10px !important;
+    left: 10px !important;
+    top: 10px !important;
   }
 }
 
@@ -143,25 +180,19 @@
     left: 10px;
     bottom: 100px;
     height: calc(100vh - 180px);
-    max-height: 500px;
   }
 
-  .header {
-    padding: 0.75rem;
-  }
-
-  .header h3 {
-    font-size: 1rem;
+  .maximized {
+    width: calc(100vw - 10px) !important;
+    height: calc(100vh - 80px) !important;
+    bottom: 5px !important;
+    right: 5px !important;
+    left: 5px !important;
+    top: 5px !important;
   }
 
   .messages {
     padding: 0.75rem;
-  }
-
-  .inputArea {
-    padding: 0.75rem;
-    gap: 0.25rem;
-    flex-direction: column;
   }
 
   .input {
