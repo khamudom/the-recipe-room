@@ -6,12 +6,32 @@
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  outline: none;
+  /* Button reset styles */
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: left;
+  /* Ensure proper button behavior */
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
 }
 
 .card:hover {
   box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
   transform: translateY(-4px);
   border-color: #f59e0b;
+}
+
+.card:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
 }
 
 .imageContainer {
@@ -50,7 +70,6 @@
 }
 
 .placeholderText {
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 0.875rem;
 }
 
@@ -76,7 +95,6 @@
 
 .categoryText {
   font-size: 0.75rem;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   color: var(--primary-color);
   font-weight: 600;
 }
@@ -104,7 +122,6 @@
 
 .featuredText {
   font-size: 0.75rem;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   color: white;
   font-weight: 600;
 }
@@ -132,7 +149,6 @@
 
 .myRecipeText {
   font-size: 0.75rem;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   color: white;
   font-weight: 600;
 }
@@ -142,24 +158,12 @@
 }
 
 .title {
-  font-size: 1.25rem;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
-  color: #78350f;
-  line-height: 1.3;
+  color: var(--primary-color);
   margin: 0 0 0.5rem;
   transition: color 0.2s;
 }
 
-.card:hover .title {
-  color: var(--primary-color);
-}
-
 .description {
-  color: var(--primary-color);
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
-  font-size: 0.875rem;
-  font-style: italic;
-  line-height: 1.5;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -175,9 +179,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.875rem;
   color: #d97706;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
 }
 
 .metaItem {

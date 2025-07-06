@@ -29,7 +29,10 @@ export function FeaturedRecipes({
 
   return (
     <section className={styles.featuredSection}>
-      <h2 className={styles.sectionTitle}>Featured Recipes</h2>
+      <h2 className={`${styles.sectionTitle} section-header`}>
+        Featured Recipes
+      </h2>
+      <div className={styles.decorativeLine}></div>
       {isLoading ? (
         <LoadingSkeleton count={maxRecipes} type="recipe" />
       ) : featuredRecipes.length > 0 ? (

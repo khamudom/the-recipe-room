@@ -231,16 +231,13 @@ export function RecipeForm({
 
   return (
     <div className={styles.container}>
-      <div className={styles.textureOverlay}></div>
-
       <div className={styles.content}>
-        {/* Header */}
+        {/* Hero Section */}
         <div className={styles.header}>
-          <button onClick={onCancel} className={styles.cancelButton}>
-            <ArrowLeft className={styles.buttonIcon} />
+          <button onClick={onCancel} className={styles.cancelSubmitButton}>
             Cancel
           </button>
-          <h1 className={styles.title}>
+          <h1 className={`${styles.title} section-header`}>
             {recipe ? "Edit Recipe" : "Add New Recipe"}
           </h1>
           <div className={styles.spacer}></div>

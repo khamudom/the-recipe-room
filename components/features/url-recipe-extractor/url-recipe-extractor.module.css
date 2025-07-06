@@ -21,7 +21,6 @@
   background: transparent;
   border: 1px solid #fbbf24;
   color: #92400e;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   cursor: pointer;
@@ -40,7 +39,6 @@
   align-items: center;
   gap: 0.75rem;
   color: #78350f;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
@@ -69,7 +67,6 @@
 
 .description p {
   color: #78350f;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1.125rem;
   line-height: 1.6;
   margin: 0;
@@ -91,7 +88,6 @@
 
 .label {
   color: #78350f;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-weight: 600;
   font-size: 1.125rem;
 }
@@ -116,7 +112,6 @@
   padding: 1rem 1rem 1rem 3rem;
   border: 2px solid #fbbf24;
   border-radius: 0.5rem;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1rem;
   color: #78350f;
   background-color: #fefcf3;
@@ -139,7 +134,6 @@
   align-items: center;
   gap: 0.5rem;
   color: #dc2626;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   margin-top: 1rem;
   padding: 0.75rem;
   background-color: #fef2f2;
@@ -158,7 +152,6 @@
   align-items: flex-start;
   gap: 0.5rem;
   color: #b45309;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   margin-top: 1rem;
   padding: 0.75rem;
   background-color: #fef3c7;
@@ -186,7 +179,6 @@
 .extractButton {
   background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
   color: #fefcf3;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1.125rem;
   font-weight: 600;
   padding: 1rem 2rem;
@@ -214,7 +206,6 @@
 .extractingInfo {
   text-align: center;
   color: #78350f;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
 }
 
 .extractingInfo p:first-child {
@@ -237,7 +228,6 @@
 
 .tips h3 {
   color: #78350f;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
@@ -251,7 +241,6 @@
 
 .tips li {
   color: #92400e;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   padding: 0.5rem 0;
   position: relative;
   padding-left: 1.5rem;
@@ -275,7 +264,6 @@
 
 .supportedSites h3 {
   color: #78350f;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
@@ -290,7 +278,6 @@
 .siteList span {
   background-color: #fef3c7;
   color: #92400e;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
   font-size: 0.875rem;
@@ -307,7 +294,6 @@
 
 .pricing h3 {
   color: #78350f;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
@@ -315,7 +301,6 @@
 
 .pricing p {
   color: #92400e;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   margin: 0;
 }
 
@@ -362,4 +347,4 @@
   .siteList {
     justify-content: center;
   }
-} 
+}

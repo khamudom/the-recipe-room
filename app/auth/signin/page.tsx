@@ -40,7 +40,9 @@ export default function SignInPage() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h1 className={styles.title}>{currentContent.title}</h1>
+        <h1 className={`${styles.header} auth-header`}>
+          {currentContent.title}
+        </h1>
         <p className={styles.subtitle}>{currentContent.subtitle}</p>
         <AuthForm
           mode={mode}

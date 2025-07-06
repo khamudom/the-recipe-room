@@ -11,7 +11,6 @@
   flex-direction: column;
   z-index: 1001;
   box-shadow: 0 8px 25px rgba(139, 69, 19, 0.2);
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
 }
 
 .header {
@@ -30,7 +29,6 @@
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
 }
 
 .closeButton {
@@ -42,7 +40,6 @@
   padding: 0.25rem;
   border-radius: 4px;
   transition: background-color 0.2s ease;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
 }
 
 .closeButton:hover {
@@ -72,7 +69,6 @@
   border: 2px solid #d2b48c;
   border-radius: 8px;
   background: #ffffff;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-size: 1rem;
   color: #78350f;
   transition: border-color 0.2s ease;
@@ -98,7 +94,6 @@
   border: 2px solid #78350f;
   border-radius: 8px;
   cursor: pointer;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.2s ease;

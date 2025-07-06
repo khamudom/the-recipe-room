@@ -55,7 +55,7 @@ export default function ResetPasswordPage() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h1 className={styles.title}>Set New Password</h1>
+        <h1 className={`${styles.header} auth-header`}>Set New Password</h1>
         <p className={styles.subtitle}>Enter your new password below</p>
 
         <form onSubmit={handleSubmit} className={styles.form}>

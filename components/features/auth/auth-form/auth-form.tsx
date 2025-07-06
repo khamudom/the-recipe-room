@@ -121,7 +121,9 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>{currentContent.title}</h2>
+      <h2 className={`${styles.title} auth-card-title`}>
+        {currentContent.title}
+      </h2>
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>

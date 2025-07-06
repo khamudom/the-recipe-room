@@ -20,7 +20,12 @@ export const RecipeCard = React.memo(function RecipeCard({
   const isMyRecipe = user && recipe.userId === user.id;
 
   return (
-    <div className={styles.card} onClick={onClick}>
+    <button
+      className={styles.card}
+      onClick={onClick}
+      aria-label={`View recipe: ${recipe.title}`}
+      type="button"
+    >
       {/* Recipe Image */}
       <div className={styles.imageContainer}>
         {recipe.image ? (
@@ -62,12 +67,12 @@ export const RecipeCard = React.memo(function RecipeCard({
       </div>
 
       <div className={styles.header}>
-        <h3 className={styles.title}>{recipe.title}</h3>
+        <h3 className={`${styles.title} card-title`}>{recipe.title}</h3>
         <p className={styles.description}>{recipe.description}</p>
       </div>
 
       <div className={styles.content}>
-        <div className={styles.metaInfo}>
+        <div className={`${styles.metaInfo} card-meta`}>
           <div className={styles.metaItem}>
             <Clock className={styles.metaIcon} />
             <span>{recipe.prepTime}</span>
@@ -78,6 +83,6 @@ export const RecipeCard = React.memo(function RecipeCard({
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 });

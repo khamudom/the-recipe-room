@@ -8,7 +8,7 @@ import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card
 import { LoadingSkeleton } from "@/components/ui/loading-skeleton/loading-skeleton";
 import { useSearchRecipes } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
-import styles from "./page.module.css";
+import styles from "./search-results.module.css";
 
 export function SearchResultsClient() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export function SearchResultsClient() {
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <div className={styles.searchHeader}>
-            <h1>Search Results for {query}</h1>
+            <h1 className="page-header">Search Results for {query}</h1>
           </div>
 
           <SearchControls

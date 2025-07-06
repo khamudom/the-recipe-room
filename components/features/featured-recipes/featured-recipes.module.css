@@ -1,14 +1,25 @@
 .featuredSection {
-  margin-block: 4rem;
+  padding-block-start: 6rem;
+  padding-block-end: 8rem;
 }
 
 .sectionTitle {
-  font-size: 2rem;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   color: var(--color-heading);
   margin-bottom: 1.5rem;
   text-align: center;
-  font-weight: 400;
+}
+
+.decorativeLine {
+  width: 8rem;
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--primary-color),
+    transparent
+  );
+  margin: 0 auto 0.5rem;
+  margin-bottom: 2rem;
 }
 
 .recipeGrid {

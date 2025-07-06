@@ -87,7 +87,7 @@
 
 .userInfo {
   padding: 1.1rem 1.2rem 0.7rem 1.2rem;
-  background: #fbeedc; /* lighter cream */
+  background: #fbeedc;
   border-bottom: 1.5px solid #ecd9c6;
 }
 
@@ -108,16 +108,26 @@
   width: 100%;
   padding: 0.85rem 1.2rem;
   text-decoration: none;
-  color: #7c4a1e;
   background: none;
   border: none;
   text-align: left;
-  font-size: 1rem;
-  font-family: inherit;
-  font-weight: 500;
   cursor: pointer;
   transition: background 0.18s, color 0.18s;
   border-radius: 0;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: none;
+  color: var(--primary-color);
+  font-family: inherit;
+  font-weight: 400;
+}
+
+button.dropdownItem:disabled,
+.dropdownItem[aria-disabled="true"] {
+  color: var(--primary-color);
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: none;
 }
 
 .dropdownItem:hover {

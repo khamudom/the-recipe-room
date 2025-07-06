@@ -14,7 +14,7 @@ export default function SignUpPage() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h1 className={styles.title}>Join The Recipe Room</h1>
+        <h1 className={`${styles.header} auth-header`}>Join The Recipe Room</h1>
         <p className={styles.subtitle}>
           Create your account to start collecting and sharing recipes
         </p>

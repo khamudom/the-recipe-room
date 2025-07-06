@@ -27,7 +27,7 @@ export function RecipeDetail({
       <div className={styles.textureOverlay}></div>
 
       <div className={styles.content}>
-        {/* Header */}
+        {/* Hero Section */}
         <div className={styles.headerControls}>
           <button onClick={onBack} className={styles.backButton}>
             <ArrowLeft className={styles.buttonIcon} />
@@ -60,7 +60,7 @@ export function RecipeDetail({
           </div>
         )}
 
-        {/* Recipe Header */}
+        {/* Recipe Description */}
         <div className={styles.recipeHeader}>
           <div className={styles.titleLine}></div>
           <p className={styles.recipeDescription}>

@@ -30,14 +30,12 @@
 
 .errorState p {
   color: var(--primary-color);
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   margin-bottom: 1rem;
 }
 
 .errorState button {
   background-color: var(--primary-color);
   color: #fefcf3;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 0.5rem;

@@ -1,0 +1,17 @@
+.hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.titleSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.mainTitle {
+  color: var(--color-heading);
+  margin: 0;
+}

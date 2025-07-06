@@ -8,18 +8,6 @@
   background: var(--background-gradient, #fff6e6);
 }
 
-.textureOverlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.02) 0 1px,
-    transparent 1px 20px
-  );
-}
-
 .content {
   position: relative;
   z-index: 1;
@@ -36,11 +24,9 @@
 }
 
 .mainTitle {
+  color: var(--color-primary);
   flex: 1;
   text-align: center;
-  font-size: 2rem;
-  font-weight: 400;
-  color: #6b3200;
   margin: 0;
 }
 
@@ -65,21 +51,14 @@
 }
 
 .emptyTitle {
-  font-size: 1.5rem;
   color: #b36b00;
   margin-bottom: 0.5rem;
-}
-
-.emptyText {
-  color: #a67c52;
-  font-size: 1rem;
 }
 
 .backButton {
   color: var(--primary-color);
   background: transparent;
   border: 1px solid #92400e;
-  font-family: "Times New Roman", "Georgia", "Garamond", serif;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -90,8 +69,7 @@
 }
 
 .backButton:hover {
-  background-color: var(--primary-color);
-  color: #fef3c7;
+  background-color: var(--color-background-light);
 }
 
 .buttonIcon {

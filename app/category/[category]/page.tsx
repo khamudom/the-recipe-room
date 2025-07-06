@@ -60,13 +60,14 @@ export default function CategoryPage() {
   return (
     <ErrorBoundary>
       <div className={styles.container}>
-        <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <div className={styles.header}>
             <button onClick={handleBack} className={styles.backButton}>
               <ArrowLeft className={styles.buttonIcon} />
             </button>
-            <h1 className={styles.mainTitle}>{category} Recipes</h1>
+            <h1 className={`${styles.mainTitle} section-header`}>
+              {category} Recipes
+            </h1>
           </div>
           {isLoading ? (
             <div className={styles.loadingContainer}>
@@ -80,9 +81,7 @@ export default function CategoryPage() {
           ) : recipes.length === 0 ? (
             <div className={styles.emptyState}>
               <h3 className={styles.emptyTitle}>No recipes found</h3>
-              <p className={styles.emptyText}>
-                There are no recipes in this category yet.
-              </p>
+              <p>There are no recipes in this category yet.</p>
             </div>
           ) : (
             <div className={styles.recipeGrid}>

@@ -1,16 +1,29 @@
 export const CATEGORIES = [
   "Appetizer",
-  "Main Course",
+  "Breakfast",
+  "Lunch",
+  "Dinner",
   "Side Dish",
   "Dessert",
-  "Beverage",
-  "Breakfast",
   "Snack",
+  "Beverage",
 ] as const;
+
+// Category icon mapping for Lucide icons
+export const CATEGORY_ICONS = {
+  Appetizer: "HandPlatter",
+  Breakfast: "Sun",
+  Lunch: "Sandwich",
+  Dinner: "CookingPot",
+  "Side Dish": "Salad",
+  Dessert: "CakeSlice",
+  Snack: "Cookie",
+  Beverage: "Wine",
+} as const;
 
 export const SEARCH_DEBOUNCE_DELAY = 300;
 
-export const DEFAULT_PAGE_TITLE = "Your Personal Recipe Collection";
+export const DEFAULT_PAGE_TITLE = "Personal Recipe Collection";
 export const DEFAULT_PAGE_SUBTITLE =
   "Save your favorites, discover new ones, and build your own recipe room to cook from anytime.";
 export const DEFAULT_FOOTER_QUOTE = '"The secret ingredient is always love"';

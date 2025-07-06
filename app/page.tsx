@@ -2,7 +2,7 @@
 
 import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/layout/header/header";
+import { HeroSection } from "@/components/layout/hero/hero";
 import { SearchControls } from "@/components/features/search/search-controls/search-controls";
 import { FeaturedRecipes } from "@/components/features/featured-recipes/featured-recipes";
 import { CategoriesSection } from "@/components/features/categories-section/categories-section";
@@ -48,7 +48,7 @@ export default function RecipeBook() {
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
-          <Header />
+          <HeroSection />
           <div className={styles.loadingContainer}>
             <LoadingSkeleton count={3} />
           </div>
@@ -63,7 +63,7 @@ export default function RecipeBook() {
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
-          <Header />
+          <HeroSection />
           <div className={styles.errorState}>
             <p>Failed to load featured recipes. Please try again.</p>
             <button onClick={handleRetry}>Try Again</button>
@@ -79,7 +79,7 @@ export default function RecipeBook() {
       <div className={styles.container}>
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
-          <Header />
+          <HeroSection />
 
           <SearchControls
             searchTerm={searchTerm}
