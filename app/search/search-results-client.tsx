@@ -40,7 +40,7 @@ export function SearchResultsClient() {
         <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <div className={styles.searchHeader}>
-            <h1 className="page-header">Search Results for {query}</h1>
+            <h1 className="section-header">Search Results for {query}</h1>
           </div>
 
           <SearchControls

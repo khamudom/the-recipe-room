@@ -1,6 +1,6 @@
 .featuredSection {
-  padding-block-start: 6rem;
-  padding-block-end: 8rem;
+  padding-block-start: 2rem;
+  padding-block-end: 6rem;
 }
 
 .sectionTitle {
@@ -29,6 +29,11 @@
 }
 
 @media (min-width: 768px) {
+  .featuredSection {
+    padding-block-start: 6rem;
+    padding-block-end: 8rem;
+  }
+
   .recipeGrid {
     grid-template-columns: repeat(2, 1fr);
   }

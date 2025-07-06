@@ -6,7 +6,7 @@
   --font-family-body: "Crimson Text", serif;
 
   /* Font Sizes */
-  --font-size-page-header: clamp(28px, 6vw, 52px);
+  --font-size-page-header: clamp(32px, 6vw, 52px);
   --font-size-section-header: clamp(22px, 5vw, 36px);
   --font-size-body: clamp(16px, 3.5vw, 20px);
 
