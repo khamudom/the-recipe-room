@@ -15,7 +15,6 @@
 import type React from "react";
 import { useState, useRef } from "react";
 import {
-  ArrowLeft,
   Plus,
   X,
   Upload,
