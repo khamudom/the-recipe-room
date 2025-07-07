@@ -10,10 +10,10 @@ type Message = {
   text: string;
 };
 
-type Props = {
+interface Props {
   onClose: () => void;
   buttonRef: RefObject<HTMLButtonElement | null>;
-};
+}
 
 export function AIChefChatWindow({ onClose, buttonRef }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -104,8 +104,8 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
       ref={chatWindowRef}
     >
       <div className={styles.header}>
-        <h3>Chef&apos;s Kitchen Chat</h3>
-        <div className={styles.headerButtons}>
+        <h3>Chef Gusto&apos;s Kitchen Chat</h3>
+        <div className={styles.headerActions}>
           <button onClick={toggleMaximize} className={styles.maximizeButton}>
             {isMaximized ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
           </button>
@@ -136,7 +136,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask me anything about food..."
+          placeholder="How can I help?"
           className={styles.input}
           rows={1}
         />

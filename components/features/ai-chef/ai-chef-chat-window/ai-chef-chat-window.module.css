@@ -32,34 +32,19 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+  background: var(--color-background-gradient-dark);
   color: var(--color-white);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom: 2px solid #78350f;
+  border-top-left-radius: var(--radius-large);
+  border-top-right-radius: var(--radius-large);
 }
 
-.headerButtons {
+.headerActions {
   display: flex;
-  gap: 0.5rem;
   align-items: center;
+  gap: 0.5rem;
 }
 
-.closeButton {
-  background: none;
-  border: none;
-  color: var(--color-white);
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: var(--radius-small);
-  transition: background-color 0.2s ease;
-}
-
-.closeButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
+.closeButton,
 .maximizeButton {
   background: none;
   border: none;
@@ -69,10 +54,14 @@
   padding: 0.25rem;
   border-radius: var(--radius-small);
   transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.closeButton:hover,
 .maximizeButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .messages {
@@ -93,9 +82,9 @@
   flex: 1;
   padding: 0.75rem;
   border: 2px solid #d2b48c;
-  border-radius: 8px;
+  border-radius: var(--radius-large);
   background: var(--color-white);
-  font-size: 1rem;
+  font-size: 16px;
   color: var(--color-text-primary);
   transition: border-color 0.2s ease;
   resize: none;
@@ -117,22 +106,15 @@
 
 .sendButton {
   padding: 0.75rem 1rem;
-  background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+  background: var(--color-background-gradient-dark);
   color: var(--color-white);
-  border: 2px solid #78350f;
+  border: 2px solid var(--color-border);
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.2s ease;
   min-width: 60px;
-}
-
-.sendButton:hover:not(:disabled) {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  border-color: #92400e;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
 }
 
 .sendButton:disabled {

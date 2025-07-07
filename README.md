@@ -9,7 +9,7 @@ A beautiful, modern recipe management application built with Next.js 15, React, 
 - **User Authentication**: Secure sign up, sign in, and password reset with Supabase Auth
 - **Recipe Management**: Create, edit, and delete recipes with detailed information
 - **AI Recipe Analysis**: Upload a photo of a recipe and let AI extract all the details automatically using OpenAI GPT-4 Vision
-- **AI Chef Assistant**: Chat with Chef Dashly, your virtual cooking assistant powered by OpenAI GPT-4
+- **AI Chef Assistant**: Chat with Chef Gusto, your virtual cooking assistant powered by OpenAI GPT-4
 - **Rich Recipe Details**: Include ingredients, instructions, prep time, cook time, and servings
 - **Category Organization**: Organize recipes by categories (Appetizer, Breakfast, Lunch, Dinner, Side Dish, Dessert, Snack, Beverage)
 - **Search Functionality**: Full-text search recipes by title, description, ingredients, or category
@@ -100,7 +100,7 @@ The Recipe Room includes an AI-powered feature that can automatically extract re
 
 ### AI Chef Assistant
 
-Chat with Chef Dashly, your virtual cooking assistant! Get help with:
+Chat with Chef Gusto, your virtual cooking assistant! Get help with:
 
 - Cooking techniques and step-by-step instructions
 - Ingredient substitutions and measurements

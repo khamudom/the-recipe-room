@@ -2,7 +2,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import styles from "./ai-chef-message.module.css";
 
-type Props = { sender: "user" | "ai"; text: string };
+interface Props { sender: "user" | "ai"; text: string }
 
 interface CodeComponentProps {
   className?: string;
