@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -9,8 +9,9 @@ export async function POST(req: NextRequest) {
   try {
     const { message } = await req.json();
 
-    const chatResponse = await openai.chat.completions.create({
-      model: "gpt-4",
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o",
+      stream: true,
       messages: [
         {
           role: "system",
@@ -54,16 +55,26 @@ export async function POST(req: NextRequest) {
       ],
     });
 
-    const reply =
-      chatResponse.choices[0]?.message?.content ||
-      "Sorry, I don't know that one.";
+    const encoder = new TextEncoder();
 
-    return NextResponse.json({ reply });
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          const content = chunk.choices[0]?.delta?.content || "";
+          controller.enqueue(encoder.encode(content));
+        }
+        controller.close();
+      },
+    });
+
+    return new Response(readableStream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+      },
+    });
   } catch (error) {
     console.error("OpenAI API error:", error);
-    return NextResponse.json(
-      { reply: "Sorry, something went wrong." },
-      { status: 500 }
-    );
+    return new Response("Sorry, something went wrong.", { status: 500 });
   }
 }

@@ -4,6 +4,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   href?: string;
   className?: string;
+  variant?: "default" | "primary" | "outline";
+  iconOnly?: boolean;
 }
 
 export function Button({
@@ -12,11 +14,21 @@ export function Button({
   href,
   type = "button",
   className,
+  variant = "default",
+  iconOnly = false,
   ...props
 }: ButtonProps) {
+  const buttonClasses = [
+    styles.button,
+    variant === "primary" && styles.primary,
+    variant === "outline" && styles.outline,
+    iconOnly && styles.iconOnly,
+    className
+  ].filter(Boolean).join(" ");
+
   if (href) {
     return (
-      <a href={href} className={`${styles.button} ${className}`}>
+      <a href={href} className={buttonClasses}>
         {children}
       </a>
     );
@@ -25,7 +37,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={`${styles.button} ${className}`}
+      className={buttonClasses}
       onClick={onClick}
       {...props}
     >

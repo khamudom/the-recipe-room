@@ -44,35 +44,40 @@ export default function RecipeBook() {
     window.location.reload();
   }, []);
 
-  // Show loading state only if we have no cached data and are loading
-  if (isFeaturedLoading && featuredRecipes.length === 0) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.loadingContainer}>
-            <LoadingSkeleton count={3} />
-          </div>
+  const renderContent = () => {
+    // Show loading state only if we have no cached data and are loading
+    if (isFeaturedLoading && featuredRecipes.length === 0) {
+      return (
+        <div className={styles.loadingContainer}>
+          <LoadingSkeleton count={3} />
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  // Show error state if there's a critical error
-  if (featuredError) {
+    // Show error state if there's a critical error
+    if (featuredError) {
+      return (
+        <Card className={styles.errorStateCard}>
+          <p>Failed to load featured recipes. Please try again.</p>
+          <Button onClick={handleRetry}>Try Again</Button>
+        </Card>
+      );
+    }
+
+    // Main content
     return (
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <HeroSection />
-          <Card className={styles.errorStateCard}>
-            <p>Failed to load featured recipes. Please try again.</p>
-            <Button onClick={handleRetry}>Try Again</Button>
-          </Card>
-        </div>
-      </div>
-    );
-  }
+      <>
+        <FeaturedRecipes
+          recipes={featuredRecipes}
+          isLoading={isFeaturedLoading}
+          onRecipeClick={handleRecipeClick}
+        />
 
-  // Main page layout
+        <CategoriesSection />
+      </>
+    );
+  };
+
   return (
     <ErrorBoundary>
       <div className={styles.container}>
@@ -85,13 +90,7 @@ export default function RecipeBook() {
             onAddRecipe={handleAddRecipeClick}
           />
 
-          <FeaturedRecipes
-            recipes={featuredRecipes}
-            isLoading={isFeaturedLoading}
-            onRecipeClick={handleRecipeClick}
-          />
-
-          <CategoriesSection />
+          {renderContent()}
 
           <Footer />
         </div>

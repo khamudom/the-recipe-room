@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, RefObject } from "react";
 import { X, Maximize2, Minimize2 } from "lucide-react";
 import { AIChefMessage } from "../ai-chef-message/ai-chef-message";
 import { LoadingSpinner } from "../../../ui/loading-spinner/loading-spinner";
-import { sendMessageToAI } from "../utils/openai";
+import { sendMessageToAIStream } from "../utils/openai";
 import styles from "./ai-chef-chat-window.module.css";
 
 type Message = {
@@ -20,6 +20,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [streamingMessage, setStreamingMessage] = useState("");
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -56,10 +57,10 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     };
   }, [onClose, buttonRef]);
 
-  // Auto-scroll to bottom when messages change or loading state changes
+  // Auto-scroll to bottom when messages change, loading state changes, or streaming message changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages, loading, streamingMessage]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -68,6 +69,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
+    setStreamingMessage("");
 
     // Reset textarea height after sending
     if (textareaRef.current) {
@@ -75,13 +77,35 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     }
 
     try {
-      const aiResponse = await sendMessageToAI(input);
+      const stream = await sendMessageToAIStream(input);
+      const reader = stream.getReader();
+      const decoder = new TextDecoder();
+
+      let fullResponse = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value, { stream: true });
+        fullResponse += chunk;
+        setStreamingMessage(fullResponse);
+      }
+
+      // Add the complete streaming message to the messages array
       setMessages((prev) => [
         ...prev,
-        { sender: "ai" as const, text: aiResponse },
+        { sender: "ai" as const, text: fullResponse },
       ]);
+      setStreamingMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
+      setMessages((prev) => [
+        ...prev,
+        { 
+          sender: "ai" as const, 
+          text: "Sorry, I encountered an error. Please try again." 
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -118,7 +142,10 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
         {messages.map((msg, index) => (
           <AIChefMessage key={index} sender={msg.sender} text={msg.text} />
         ))}
-        {loading && (
+        {streamingMessage && (
+          <AIChefMessage sender="ai" text={streamingMessage} isTyping={true} />
+        )}
+        {loading && !streamingMessage && (
           <div className={styles.loadingContainer}>
             <LoadingSpinner
               size="medium"
@@ -126,6 +153,11 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
               centered={false}
               animationPath="/assets/lottie/chat-bubble/Animation - 1751394047556.json"
             />
+          </div>
+        )}
+        {loading && streamingMessage && (
+          <div className={styles.typingIndicator}>
+            <span className={styles.typingText}>Chef is typing...</span>
           </div>
         )}
         <div ref={messagesEndRef} />

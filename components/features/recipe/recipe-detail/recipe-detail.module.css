@@ -20,21 +20,7 @@
 }
 
 .backButton {
-  color: var(--color-text);
-  background: transparent;
-  border: 1px solid var(--color-border);
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: var(--radius-small);
-  transition: all 0.2s;
-  margin-inline-end: 0.75rem;
-}
-
-.backButton:hover {
-  background-color: var(--color-background-light);
 }
 
 .actionButtons {

@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import type { Recipe } from "@/types/recipe";
 import styles from "./recipe-detail.module.css";
 import Image from "next/image";
+import { Button } from "@/components/ui/button/button";
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -27,9 +28,9 @@ export function RecipeDetail({
       <div className={styles.content}>
         {/* Hero Section */}
         <div className={styles.headerControls}>
-          <button onClick={onBack} className={styles.backButton}>
+          <Button onClick={onBack} variant="outline" iconOnly className={styles.backButton}>
             <ArrowLeft className={styles.buttonIcon} />
-          </button>
+          </Button>
           <h1 className={`${styles.recipeTitle} section-header`}>
             {recipe.title}
           </h1>
@@ -38,12 +39,12 @@ export function RecipeDetail({
         {/* Action Buttons */}
         {isOwner && (
           <div className={styles.actionButtons}>
-            <button onClick={onEdit} className={styles.editButton}>
+            <Button onClick={onEdit} variant="primary" iconOnly className={styles.editButton}>
               <Edit className={styles.buttonIcon} />
-            </button>
-            <button onClick={onDelete} className={styles.deleteButton}>
+            </Button>
+            <Button onClick={onDelete} variant="primary" iconOnly className={styles.deleteButton}>
               <Trash2 className={styles.buttonIcon} />
-            </button>
+            </Button>
           </div>
         )}
 
