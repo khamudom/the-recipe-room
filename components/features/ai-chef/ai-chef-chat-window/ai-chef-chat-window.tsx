@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, RefObject } from "react";
 import { X, Maximize2, Minimize2 } from "lucide-react";
 import { AIChefMessage } from "../ai-chef-message/ai-chef-message";
 import { LoadingSpinner } from "../../../ui/loading-spinner/loading-spinner";
+import { Button } from "@/components/ui/button/button";
 import { sendMessageToAIStream } from "../utils/openai";
 import styles from "./ai-chef-chat-window.module.css";
 
@@ -172,13 +173,13 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
           className={styles.input}
           rows={1}
         />
-        <button
+        <Button
           onClick={handleSend}
           disabled={loading}
           className={styles.sendButton}
         >
           Send
-        </button>
+        </Button>
       </div>
     </div>
   );
