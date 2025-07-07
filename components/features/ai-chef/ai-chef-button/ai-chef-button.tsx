@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect } from "react";
+import React, { forwardRef } from "react";
 import Image from "next/image";
 import styles from "./ai-chef-button.module.css";
 
