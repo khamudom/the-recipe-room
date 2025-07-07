@@ -46,7 +46,6 @@ export default function RecipeBook() {
   if (isFeaturedLoading && featuredRecipes.length === 0) {
     return (
       <div className={styles.container}>
-        <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <HeroSection />
           <div className={styles.loadingContainer}>
@@ -61,7 +60,6 @@ export default function RecipeBook() {
   if (featuredError) {
     return (
       <div className={styles.container}>
-        <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <HeroSection />
           <div className={styles.errorState}>
@@ -77,7 +75,6 @@ export default function RecipeBook() {
   return (
     <ErrorBoundary>
       <div className={styles.container}>
-        <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <HeroSection />
 

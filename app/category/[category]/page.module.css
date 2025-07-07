@@ -45,8 +45,10 @@
 }
 
 .emptyState {
-  text-align: center;
-  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .emptyTitle {
@@ -74,4 +76,43 @@
 .buttonIcon {
   width: 1.5rem;
   height: 1.5rem;
+}
+
+.addButton {
+  background-color: var(--primary-color);
+  color: #fefcf3;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 2px solid #78350f;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  width: fit-content;
+  margin-top: 2rem;
+}
+
+.addButton:hover {
+  background-color: var(--primary-color);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.addButton:active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.addButton:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.addButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

@@ -24,8 +24,6 @@ export function RecipeDetail({
 
   return (
     <div className={styles.container}>
-      <div className={styles.textureOverlay}></div>
-
       <div className={styles.content}>
         {/* Hero Section */}
         <div className={styles.headerControls}>

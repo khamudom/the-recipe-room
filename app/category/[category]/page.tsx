@@ -27,20 +27,24 @@ import { useParams, useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { useRecipesByCategoryWithUser } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./page.module.css";
+import Image from "next/image";
+import { useAuth } from "@/lib/auth-context";
 
 export default function CategoryPage() {
   const params = useParams();
   const router = useRouter();
   const category = decodeURIComponent(params.category as string);
+  const { user } = useAuth();
 
   const {
     data: recipes = [],
     isLoading,
     error,
+    isSuccess,
   } = useRecipesByCategoryWithUser(category);
 
   const handleRecipeClick = useCallback(
@@ -55,6 +59,10 @@ export default function CategoryPage() {
 
   const handleBack = useCallback(() => {
     router.push("/");
+  }, [router]);
+
+  const onAddRecipe = useCallback(() => {
+    router.push("/add");
   }, [router]);
 
   return (
@@ -78,12 +86,7 @@ export default function CategoryPage() {
               <h3 className={styles.emptyTitle}>Error Loading Recipes</h3>
               <p className={styles.emptyText}>{error.message}</p>
             </div>
-          ) : recipes.length === 0 ? (
-            <div className={styles.emptyState}>
-              <h3 className={styles.emptyTitle}>No recipes found</h3>
-              <p>There are no recipes in this category yet.</p>
-            </div>
-          ) : (
+          ) : isSuccess && recipes.length > 0 ? (
             <div className={styles.recipeGrid}>
               {recipes.map((recipe) => (
                 <RecipeCard
@@ -93,7 +96,40 @@ export default function CategoryPage() {
                 />
               ))}
             </div>
-          )}
+          ) : isSuccess && recipes.length === 0 ? (
+            <div className={styles.emptyState}>
+              <h3 className={styles.emptyTitle}>No recipes found</h3>
+              <Image
+                src="/assets/no-recipe.webp"
+                alt="No recipes found"
+                width={400}
+                height={400}
+              />
+              <p style={{ textAlign: "center" }}>
+                Looks like this category is waiting for its first delicious
+                creation!
+              </p>
+              {user ? (
+                <button
+                  onClick={onAddRecipe}
+                  className={styles.addButton}
+                  aria-label="Add new recipe"
+                >
+                  <Plus className={styles.buttonIcon} aria-hidden="true" />
+                  Add Recipe
+                </button>
+              ) : (
+                <a
+                  href="/auth/signin"
+                  className={styles.addButton}
+                  aria-label="Sign in to add recipe"
+                >
+                  <Plus className={styles.buttonIcon} aria-hidden="true" />
+                  Sign In to Add Recipe
+                </a>
+              )}
+            </div>
+          ) : null}
         </div>
       </div>
     </ErrorBoundary>

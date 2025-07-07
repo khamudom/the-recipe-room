@@ -37,7 +37,6 @@ export function SearchResultsClient() {
   return (
     <ErrorBoundary>
       <div className={styles.container}>
-        <div className={styles.textureOverlay}></div>
         <div className={styles.content}>
           <div className={styles.searchHeader}>
             <h1 className="section-header">Search Results for {query}</h1>
