@@ -248,7 +248,7 @@ export function AIRecipeAnalyzer({
           <X className={styles.buttonIcon} />
           Cancel
         </button>
-        <h1 className={styles.title}>
+        <h1 className={`${styles.title} page-header`}>
           <Sparkles className={styles.sparklesIcon} />
           AI Recipe Analyzer
         </h1>

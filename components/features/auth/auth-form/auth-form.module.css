@@ -35,7 +35,7 @@
 .input {
   padding: 0.75rem;
   border: 2px solid #d2b48c;
-  border-radius: 4px;
+  border-radius: var(--radius-small);
   background: #fff;
   font-size: 1rem;
   transition: border-color 0.2s ease;
@@ -54,7 +54,7 @@
   background: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-small);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -75,7 +75,7 @@
   padding: 0.75rem;
   background: #fee;
   border: 1px solid #fcc;
-  border-radius: 4px;
+  border-radius: var(--radius-small);
   color: #c33;
   font-size: 0.9rem;
 }
@@ -84,7 +84,7 @@
   padding: 0.75rem;
   background: #efe;
   border: 1px solid #cfc;
-  border-radius: 4px;
+  border-radius: var(--radius-small);
   color: #363;
   font-size: 0.9rem;
 }
@@ -107,7 +107,7 @@
   cursor: pointer;
   color: var(--primary-color);
   padding: 0.25rem;
-  border-radius: 4px;
+  border-radius: var(--radius-small);
   transition: color 0.2s ease;
 }
 
@@ -137,7 +137,7 @@
   text-decoration: underline;
   transition: color 0.2s ease;
   padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-small);
 }
 
 .linkButton:hover {

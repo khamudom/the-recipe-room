@@ -1,10 +1,11 @@
 "use client";
 
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import styles from "./search-controls.module.css";
 import { useCallback } from "react";
+import { Button } from "@/components/ui/button/button";
 
 interface SearchControlsProps {
   searchTerm: string;
@@ -40,7 +41,6 @@ export function SearchControls({
     <div className={styles.controls}>
       <form onSubmit={handleSearchSubmit} className={styles.searchContainer}>
         <div className={styles.inputWrapper}>
-          <Search className={styles.searchIcon} aria-hidden="true" />
           <input
             placeholder="Search recipes, ingredients, or categories..."
             value={searchTerm}
@@ -56,7 +56,7 @@ export function SearchControls({
               onClick={handleClearSearch}
               aria-label="Clear search"
             >
-              ×
+              <X className={styles.buttonIcon} aria-hidden="true" />
             </button>
           )}
           <button
@@ -69,23 +69,23 @@ export function SearchControls({
         </div>
       </form>
       {user ? (
-        <button
+        <Button
           onClick={onAddRecipe}
           className={styles.addButton}
           aria-label="Add new recipe"
         >
           <Plus className={styles.buttonIcon} aria-hidden="true" />
           Add Recipe
-        </button>
+        </Button>
       ) : (
-        <a
+        <Button
           href="/auth/signin"
           className={styles.addButton}
           aria-label="Sign in to add recipe"
         >
           <Plus className={styles.buttonIcon} aria-hidden="true" />
           Sign In to Add Recipe
-        </a>
+        </Button>
       )}
     </div>
   );

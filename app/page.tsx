@@ -10,8 +10,10 @@ import { Footer } from "@/components/layout/footer/footer";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { LoadingSkeleton } from "@/components/ui/loading-skeleton/loading-skeleton";
 import { useFeaturedRecipes } from "@/hooks/use-recipes-query";
+import { Card } from "@/components/ui/card/card";
+import { Button } from "@/components/ui/button/button";
 import type { Recipe } from "@/types/recipe";
-import styles from "./page.module.css";
+import styles from "./home.module.css";
 
 export default function RecipeBook() {
   const router = useRouter();
@@ -47,7 +49,6 @@ export default function RecipeBook() {
     return (
       <div className={styles.container}>
         <div className={styles.content}>
-          <HeroSection />
           <div className={styles.loadingContainer}>
             <LoadingSkeleton count={3} />
           </div>
@@ -62,10 +63,10 @@ export default function RecipeBook() {
       <div className={styles.container}>
         <div className={styles.content}>
           <HeroSection />
-          <div className={styles.errorState}>
+          <Card className={styles.errorStateCard}>
             <p>Failed to load featured recipes. Please try again.</p>
-            <button onClick={handleRetry}>Try Again</button>
-          </div>
+            <Button onClick={handleRetry}>Try Again</Button>
+          </Card>
         </div>
       </div>
     );

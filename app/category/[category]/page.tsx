@@ -30,7 +30,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner"
 import { ArrowLeft, Plus } from "lucide-react";
 import { useRecipesByCategoryWithUser } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
-import styles from "./page.module.css";
+import styles from "./category.module.css";
 import Image from "next/image";
 import { useAuth } from "@/lib/auth-context";
 

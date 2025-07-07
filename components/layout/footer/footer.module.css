@@ -12,7 +12,7 @@
 }
 
 .footerText {
-  color: var(--color-primary);
+  color: var(--primary-color);
   font-style: italic;
   margin: 0;
 }

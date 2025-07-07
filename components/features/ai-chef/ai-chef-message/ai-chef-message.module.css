@@ -10,7 +10,7 @@
 
 .messageBubble {
   padding: 0.75rem 1rem;
-  border-radius: 12px;
+  border-radius: var(--radius-large);
   word-wrap: break-word;
 }
 
@@ -73,7 +73,7 @@
 .inlineCode {
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
-  border-radius: 4px;
+  border-radius: var(--radius-small);
   padding: 0.125rem 0.25rem;
   font-size: 0.85rem;
   color: #dc2626;
