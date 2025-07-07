@@ -4,12 +4,15 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../../lib/auth-context";
+import { Modal } from "../modal/modal";
+import { About } from "../about/about";
 import styles from "./avatar-dropdown.module.css";
 
 export function AvatarDropdown() {
   const { user, signOut } = useAuth();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const avatarButtonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
@@ -71,6 +74,11 @@ export function AvatarDropdown() {
 
   const onAddRecipe = () => {
     router.push("/add");
+  };
+
+  const onAboutClick = () => {
+    setIsAboutModalOpen(true);
+    setIsOpen(false);
   };
 
   const toggleDropdown = () => {
@@ -160,6 +168,9 @@ export function AvatarDropdown() {
           <Link href="/" className={styles.dropdownItem}>
             Shopping List - Coming Soon
           </Link>
+          <button onClick={onAboutClick} className={styles.dropdownItem}>
+            About
+          </button>
           <div className={styles.divider} />
           {user ? (
             <button onClick={handleSignOut} className={styles.dropdownItem}>
@@ -177,6 +188,14 @@ export function AvatarDropdown() {
           )}
         </div>
       )}
+      
+      <Modal
+        isOpen={isAboutModalOpen}
+        onClose={() => setIsAboutModalOpen(false)}
+        title="About The Recipe Room"
+      >
+        <About />
+      </Modal>
     </div>
   );
 }
