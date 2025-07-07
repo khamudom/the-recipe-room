@@ -37,8 +37,11 @@
   --secondary-color: #fbbf24;
   --secondary-light-color: #fef3c7;
   --secondary-dark-color: #92400e;
+  --accent-color: #d97706;
 
   /* Additional Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
   --color-background: #fdf6e3;
   --color-foreground: #2c1a12;
   --color-primary: #800000;
@@ -51,10 +54,12 @@
   --color-heading: var(--primary-color);
   --color-text: var(--secondary-dark-color);
   --color-input-text: var(--secondary-dark-color);
+  --color-foreground-accent: var(--accent-color);
 
   /* Backgrounds */
   --color-background-light: var(--secondary-light-color);
   --color-background-gradient: var(--color-linear-gradient);
+  --color-background-accent: var(--accent-color);
 
   /* Borders */
   --color-border: var(--secondary-color);

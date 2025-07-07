@@ -33,7 +33,7 @@
   align-items: center;
   padding: 1rem;
   background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
-  color: white;
+  color: var(--color-white);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border-bottom: 2px solid #78350f;
@@ -48,7 +48,7 @@
 .closeButton {
   background: none;
   border: none;
-  color: white;
+  color: var(--color-white);
   font-size: 1.2rem;
   cursor: pointer;
   padding: 0.25rem;
@@ -63,7 +63,7 @@
 .maximizeButton {
   background: none;
   border: none;
-  color: white;
+  color: var(--color-white);
   font-size: 1.2rem;
   cursor: pointer;
   padding: 0.25rem;
@@ -94,9 +94,9 @@
   padding: 0.75rem;
   border: 2px solid #d2b48c;
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--color-white);
   font-size: 1rem;
-  color: #78350f;
+  color: var(--color-text-primary);
   transition: border-color 0.2s ease;
   resize: none;
   min-height: 60px;
@@ -111,14 +111,14 @@
 }
 
 .input::placeholder {
-  color: #d97706;
+  color: var(--color-foreground-accent);
   font-style: italic;
 }
 
 .sendButton {
   padding: 0.75rem 1rem;
   background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
-  color: #ffffff;
+  color: var(--color-white);
   border: 2px solid #78350f;
   border-radius: 8px;
   cursor: pointer;

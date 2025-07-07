@@ -148,12 +148,12 @@
 .uploadIcon {
   width: 3rem;
   height: 3rem;
-  color: #d97706;
+  color: var(--color-foreground-accent);
   margin-bottom: 0.5rem;
 }
 
 .uploadText {
-  color: #92400e;
+  color: var(--color-foreground-accent);
   margin: 0;
 }
 
@@ -259,14 +259,14 @@
 }
 
 .toggleContainer:hover {
-  border-color: #d97706;
+  border-color: var(--color-background-accent);
   background-color: #fef7ed;
 }
 
 .toggleInput {
   width: 1.25rem;
   height: 1.25rem;
-  accent-color: #d97706;
+  accent-color: var(--color-background-accent);
   cursor: pointer;
   margin-top: 0.25rem;
 }
@@ -315,7 +315,7 @@
 .stepNumber {
   width: 2rem;
   height: 2rem;
-  background-color: #d97706;
+  background-color: var(--color-background-accent);
   color: #fefcf3;
   border-radius: 50%;
   display: flex;
@@ -453,7 +453,7 @@
 .aiIcon {
   width: 2.5rem;
   height: 2.5rem;
-  color: #d97706;
+  color: var(--color-foreground-accent);
   flex-shrink: 0;
 }
 
