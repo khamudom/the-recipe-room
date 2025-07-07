@@ -73,16 +73,14 @@ export const RecipeCard = React.memo(function RecipeCard({
         </div>
       </div>
 
-      <div className={styles.content}>
-        <div className={`${styles.metaInfo} card-meta`}>
-          <div className={styles.metaItem}>
-            <Clock className={styles.metaIcon} />
-            <span>{recipe.prepTime}</span>
-          </div>
-          <div className={styles.metaItem}>
-            <Users className={styles.metaIcon} />
-            <span>{recipe.servings} servings</span>
-          </div>
+      <div className={`${styles.metaInfo} card-meta`}>
+        <div className={styles.metaItem}>
+          <Clock className={styles.metaIcon} />
+          <span>{recipe.prepTime}</span>
+        </div>
+        <div className={styles.metaItem}>
+          <Users className={styles.metaIcon} />
+          <span>{recipe.servings} servings</span>
         </div>
       </div>
     </button>

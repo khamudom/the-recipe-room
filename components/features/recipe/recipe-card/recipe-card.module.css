@@ -171,15 +171,13 @@
   overflow: hidden;
 }
 
-.content {
-  padding: 0 1rem 1rem;
-}
-
 .metaInfo {
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: #d97706;
+  padding: 0 1rem 1rem;
+  width: 100%;
 }
 
 .metaItem {
