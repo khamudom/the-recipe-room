@@ -21,20 +21,18 @@
 
 .searchInput {
   padding-left: 1rem;
-  background-color: var(--color-background-primary-light);
-  border: 1px solid var(--color-border);
+  background-color: var(--color-input-background);
+  border: 1px solid var(--color-border-secondary);
   border-radius: var(--radius-large);
   height: 2.5rem;
   width: 100%;
   transition: all 0.2s ease;
-  color: var(--color-input-text);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-body);
+  color: var(--color-input-foreground);
 }
 
 .searchInput:focus,
 .searchInput:focus-visible {
-  border-color: var(--color-border);
+  border-color: var(--color-border-secondary);
   outline: none;
 }
 

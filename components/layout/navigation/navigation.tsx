@@ -11,10 +11,10 @@ export function Navigation() {
       <div className={styles.container}>
         <Link href="/" className={styles.logoContainer}>
           <Image
-            src="/trr-logo.png"
+            src="/recipebox.png"
             alt="Recipe Room Logo"
-            width={40}
-            height={40}
+            width={50}
+            height={50}
           />
           <div className={styles.logoText}>The Recipe Room</div>
         </Link>

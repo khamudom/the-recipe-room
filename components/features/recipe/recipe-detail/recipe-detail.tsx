@@ -47,7 +47,7 @@ export function RecipeDetail({
           <div className={styles.actionButtons}>
             <Button
               onClick={onEdit}
-              variant="primary"
+              variant="outline"
               iconOnly
               className={styles.editButton}
             >
@@ -55,7 +55,7 @@ export function RecipeDetail({
             </Button>
             <Button
               onClick={onDelete}
-              variant="primary"
+              variant="outline"
               iconOnly
               className={styles.deleteButton}
             >

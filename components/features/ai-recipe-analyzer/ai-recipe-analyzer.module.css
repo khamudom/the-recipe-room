@@ -1,6 +1,5 @@
 .container {
   min-height: 100vh;
-  background: var(--color-background-gradient);
   position: relative;
   overflow-x: hidden;
 }
@@ -41,7 +40,7 @@
   gap: 0.5rem;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--color-white);
+  color: var(--white-color);
   padding: 0.75rem 1rem;
   border-radius: 8px;
   cursor: pointer;
@@ -102,7 +101,7 @@
 .dragDropArea {
   margin-bottom: 1.5rem;
   min-height: 200px;
-  border: 2px dashed var(--color-border);
+  border: 2px dashed var(--color-border-secondary);
   border-radius: var(--radius-large);
   transition: all 0.3s ease;
   background: #f9fafb;

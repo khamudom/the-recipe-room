@@ -23,15 +23,15 @@
 
 .card:hover {
   box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-  border-color: #f59e0b;
+  transform: translateY(-1px);
+  border-color: var(--color-border-secondary);
 }
 
 .card:focus-visible {
   outline: 3px solid #f59e0b;
   outline-offset: 2px;
   box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .imageContainer {
@@ -46,10 +46,6 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
-}
-
-.card:hover .recipeImage {
-  transform: scale(1.05);
 }
 
 .placeholderImage {

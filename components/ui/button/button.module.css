@@ -15,14 +15,14 @@
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
 /* Primary variant */
 .primary {
   background-color: var(--primary-color);
-  color: var(--color-white);
+  color: var(--white-color);
 }
 
 .primary:hover {
@@ -38,7 +38,7 @@
 
 .outline:hover {
   background-color: var(--primary-color);
-  color: var(--color-white);
+  color: var(--white-color);
 }
 
 /* Icon-only variant */

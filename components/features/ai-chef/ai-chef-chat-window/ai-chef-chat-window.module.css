@@ -5,7 +5,7 @@
   width: 450px;
   max-height: 500px;
   background: linear-gradient(135deg, #fefcf3 0%, #fef7ed 100%);
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--color-border-secondary);
   border-radius: var(--radius-large);
   display: flex;
   flex-direction: column;
@@ -32,7 +32,7 @@
   align-items: center;
   padding: 1rem;
   background: var(--color-background-gradient-dark);
-  color: var(--color-white);
+  color: var(--white-color);
   border-top-left-radius: var(--radius-large);
   border-top-right-radius: var(--radius-large);
 }
@@ -47,7 +47,7 @@
 .maximizeButton {
   background: none;
   border: none;
-  color: var(--color-white);
+  color: var(--white-color);
   font-size: 1.2rem;
   cursor: pointer;
   padding: 0.25rem;
@@ -82,7 +82,7 @@
   padding: 0.75rem;
   border: 2px solid #d2b48c;
   border-radius: var(--radius-large);
-  background: var(--color-white);
+  background: var(--white-color);
   font-size: 16px;
   font-family: var(--font-family-body);
   color: var(--color-text-primary);

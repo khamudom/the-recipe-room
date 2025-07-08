@@ -1,7 +1,5 @@
 .container {
   min-height: 100vh;
-  background: var(--color-background-gradient);
-  position: relative;
 }
 
 .content {

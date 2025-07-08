@@ -1,5 +1,6 @@
 .nav {
-  background: var(--primary-color);
+  /* background: var(--primary-color); */
+  background: var(--color-linear-gradient-dark);
   color: white;
   padding: 1rem 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -18,7 +19,7 @@
 .logoContainer {
   display: flex;
   align-items: center;
-  gap: var(--spacing-small-nudge);
+  gap: var(--spacing-small);
   text-decoration: none;
 }
 
@@ -28,7 +29,7 @@
 }
 
 .logoText {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-family: var(--font-family-cormorant);
   font-weight: var(--font-weight-bold);
   color: var(--color-foreground-primary-light);

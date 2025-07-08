@@ -25,9 +25,9 @@
 }
 
 .modal {
-  color: var(--color-foreground);
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
+  color: var(--foreground-color);
+  background: var(--background-color);
+  border: 1px solid var(--color-border-secondary);
   border-radius: var(--radius-large);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -44,22 +44,22 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border-secondary);
   background: var(--color-background-gradient-dark);
-  color: var(--color-white);
+  color: var(--white-color);
 }
 
 .title {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-white);
+  color: var(--white-color);
 }
 
 .closeButton {
   background: none;
   border: none;
-  color: var(--color-white);
+  color: var(--white-color);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: var(--radius-small);
