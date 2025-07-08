@@ -1,11 +1,14 @@
-export async function sendMessageToAIStream(message: string): Promise<ReadableStream<Uint8Array>> {
+export async function sendMessageToAIStream(
+  message: string, 
+  conversationHistory: Array<{ sender: "user" | "ai"; text: string }> = []
+): Promise<ReadableStream<Uint8Array>> {
   try {
     const response = await fetch("/api/chef", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, conversationHistory }),
     });
 
     if (!response.ok) {
@@ -24,9 +27,12 @@ export async function sendMessageToAIStream(message: string): Promise<ReadableSt
 }
 
 // Keep the old function for backward compatibility if needed
-export async function sendMessageToAI(message: string): Promise<string> {
+export async function sendMessageToAI(
+  message: string, 
+  conversationHistory: Array<{ sender: "user" | "ai"; text: string }> = []
+): Promise<string> {
   try {
-    const stream = await sendMessageToAIStream(message);
+    const stream = await sendMessageToAIStream(message, conversationHistory);
     const reader = stream.getReader();
     const decoder = new TextDecoder();
     let result = "";

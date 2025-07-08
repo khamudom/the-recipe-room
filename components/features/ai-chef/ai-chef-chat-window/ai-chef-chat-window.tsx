@@ -78,7 +78,9 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     }
 
     try {
-      const stream = await sendMessageToAIStream(input);
+      // Pass the current conversation history (excluding the user message we just added)
+      const conversationHistory = messages;
+      const stream = await sendMessageToAIStream(input, conversationHistory);
       const reader = stream.getReader();
       const decoder = new TextDecoder();
 

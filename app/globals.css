@@ -21,6 +21,7 @@
     --color-linear-gradient-dark: linear-gradient(
       135deg,
       #7c021d 0%,
+      #7c021d 50%,
       #580000 100%
     );
     --color-linear-gradient-transparent: linear-gradient(
@@ -199,7 +200,6 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
   color: var(--foreground-color);
-  /* background: var(--background-color); */
   background: 
     linear-gradient(135deg,
       rgba(253, 246, 227, 0.85), 

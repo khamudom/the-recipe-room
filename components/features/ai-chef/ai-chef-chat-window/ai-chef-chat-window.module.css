@@ -3,7 +3,7 @@
   bottom: 100px;
   right: 60px;
   width: 450px;
-  max-height: 500px;
+  max-height: 80%;
   background: linear-gradient(135deg, #fefcf3 0%, #fef7ed 100%);
   border: 2px solid var(--color-border-secondary);
   border-radius: var(--radius-large);
