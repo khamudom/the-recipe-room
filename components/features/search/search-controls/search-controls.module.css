@@ -29,7 +29,7 @@
   transition: all 0.2s ease;
   color: var(--color-input-text);
   font-family: var(--font-family-body);
-  font-size: var(--font-size-card-meta);
+  font-size: var(--font-size-body);
 }
 
 .searchInput:focus,

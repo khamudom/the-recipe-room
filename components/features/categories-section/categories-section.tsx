@@ -58,7 +58,7 @@ export function CategoriesSection({
               className={`${styles.categoryCard} category-card`}
             >
               <IconComponent className={styles.categoryIcon} />
-              <span>{category}</span>
+              <span className={styles.categoryTitle}>{category}</span>
               <span className={`${styles.categoryCount} card-meta`}>
                 {isLoading ? "..." : `${count} recipe${count === 1 ? "" : "s"}`}
               </span>

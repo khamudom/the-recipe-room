@@ -25,17 +25,13 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #ffe4ba;
+  background: var(--color-background-primary-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #d2b48c;
+  border: 2px solid var(--color-background-primary-dark);
   transition: border-color 0.2s;
   color: var(--primary-color);
-}
-
-.avatar:hover {
-  border-color: #b97a2a;
 }
 
 .initials {
@@ -62,7 +58,7 @@
   top: 100%;
   right: 0;
   margin-top: 0.5rem;
-  background: #fff8f0;
+  background: var(--color-background-primary-light);
   border-radius: var(--radius-xl);
   border: 1.5px solid #d2b48c;
   box-shadow: 0 6px 24px rgba(139, 69, 19, 0.1),

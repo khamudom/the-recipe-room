@@ -19,6 +19,7 @@
   margin-bottom: 1rem;
   border-bottom: 2px solid var(--color-border);
   padding-bottom: 0.5rem;
+  font-family: var(--font-family-header);
 }
 
 .section p {
@@ -74,12 +75,12 @@
   .about {
     max-width: 100%;
   }
-  
+
   .section h3 {
     font-size: 1.1rem;
   }
-  
+
   .section ul {
     padding-left: 1rem;
   }
-} 
+}

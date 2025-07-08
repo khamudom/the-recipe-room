@@ -9,14 +9,14 @@ export function Navigation() {
   return (
     <nav className={styles.nav}>
       <div className={styles.container}>
-        <Link href="/" className={styles.logo}>
+        <Link href="/" className={styles.logoContainer}>
           <Image
-            src="/recipebox.png"
+            src="/trr-logo.png"
             alt="Recipe Room Logo"
             width={40}
             height={40}
           />
-          The Recipe Room
+          <div className={styles.logoText}>The Recipe Room</div>
         </Link>
         <div className={styles.menu}>
           <AvatarDropdown />

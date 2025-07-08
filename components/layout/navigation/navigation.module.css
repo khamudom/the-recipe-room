@@ -15,20 +15,25 @@
   align-items: center;
 }
 
-.logo {
+.logoContainer {
   display: flex;
   align-items: center;
-  column-gap: 10px;
-  color: white;
   text-decoration: none;
-  font-size: 1.5rem;
-  font-weight: bold;
-  font-family: var(--font-family-header);
 }
 
-.logo img {
+.logoContainer img {
   width: 40px;
   height: 40px;
+}
+
+.logoText {
+  font-size: 1.75rem;
+  font-family: var(--font-family-cormorant);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-foreground-primary-light);
+  width: 130px;
+  line-height: 1;
+  text-align: center;
 }
 
 .menu {

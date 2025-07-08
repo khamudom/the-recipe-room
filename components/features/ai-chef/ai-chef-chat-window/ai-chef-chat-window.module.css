@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 100px;
   right: 60px;
-  width: 400px;
+  width: 450px;
   max-height: 500px;
   background: linear-gradient(135deg, #fefcf3 0%, #fef7ed 100%);
   border: 2px solid var(--color-border);
@@ -10,7 +10,6 @@
   display: flex;
   flex-direction: column;
   z-index: 1001;
-  box-shadow: 0 8px 25px rgba(139, 69, 19, 0.2);
   transition: all 0.3s ease;
 }
 
@@ -85,6 +84,7 @@
   border-radius: var(--radius-large);
   background: var(--color-white);
   font-size: 16px;
+  font-family: var(--font-family-body);
   color: var(--color-text-primary);
   transition: border-color 0.2s ease;
   resize: none;
@@ -101,7 +101,6 @@
 
 .input::placeholder {
   color: var(--color-foreground-accent);
-  font-style: italic;
 }
 
 .sendButton {
@@ -132,7 +131,8 @@
 }
 
 @keyframes fadeInOut {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
   }
   50% {
@@ -188,14 +188,6 @@
 
   .input {
     padding: 0.5rem;
-    font-size: 16px; /* Prevent iOS zoom by using 16px minimum */
     min-height: 50px;
-  }
-
-  .sendButton {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-    min-width: 100%;
-    margin-top: 0.25rem;
   }
 }

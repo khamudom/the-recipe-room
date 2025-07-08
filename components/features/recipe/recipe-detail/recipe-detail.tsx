@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { ArrowLeft, Clock, Users, Edit, Trash2, ChefHat } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import type { Recipe } from "@/types/recipe";
@@ -28,7 +29,12 @@ export function RecipeDetail({
       <div className={styles.content}>
         {/* Hero Section */}
         <div className={styles.headerControls}>
-          <Button onClick={onBack} variant="outline" iconOnly className={styles.backButton}>
+          <Button
+            onClick={onBack}
+            variant="outline"
+            iconOnly
+            className={styles.backButton}
+          >
             <ArrowLeft className={styles.buttonIcon} />
           </Button>
           <h1 className={`${styles.recipeTitle} section-header`}>
@@ -39,10 +45,20 @@ export function RecipeDetail({
         {/* Action Buttons */}
         {isOwner && (
           <div className={styles.actionButtons}>
-            <Button onClick={onEdit} variant="primary" iconOnly className={styles.editButton}>
+            <Button
+              onClick={onEdit}
+              variant="primary"
+              iconOnly
+              className={styles.editButton}
+            >
               <Edit className={styles.buttonIcon} />
             </Button>
-            <Button onClick={onDelete} variant="primary" iconOnly className={styles.deleteButton}>
+            <Button
+              onClick={onDelete}
+              variant="primary"
+              iconOnly
+              className={styles.deleteButton}
+            >
               <Trash2 className={styles.buttonIcon} />
             </Button>
           </div>
@@ -64,9 +80,7 @@ export function RecipeDetail({
         {/* Recipe Description */}
         <div className={styles.recipeHeader}>
           <div className={styles.titleLine}></div>
-          <p className={styles.recipeDescription}>
-            &quot;{recipe.description}&quot;
-          </p>
+          <p className={styles.recipeDescription}>{recipe.description}</p>
         </div>
 
         {/* Recipe Info */}

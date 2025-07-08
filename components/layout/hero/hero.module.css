@@ -12,6 +12,6 @@
 }
 
 .mainTitle {
-  color: var(--color-heading);
   margin: 0;
+  text-transform: uppercase;
 }

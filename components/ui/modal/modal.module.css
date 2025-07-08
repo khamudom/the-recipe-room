@@ -6,7 +6,7 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  z-index: 1000;
+  z-index: 1001;
   animation: fadeIn 0.2s ease-out;
 }
 
@@ -29,7 +29,8 @@
   background: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-large);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-width: 600px;
   max-height: 90vh;
   overflow: hidden;
@@ -103,17 +104,17 @@
   .modalContainer {
     padding: 0.5rem;
   }
-  
+
   .modal {
     max-width: 95vw;
     max-height: 98vh;
   }
-  
+
   .header {
     padding: 1rem;
   }
-  
+
   .content {
     padding: 1rem;
   }
-} 
+}

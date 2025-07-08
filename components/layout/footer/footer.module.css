@@ -7,7 +7,7 @@
 .footerLine {
   width: 12rem;
   height: 4px;
-  background: linear-gradient(to right, transparent, #7c021d, transparent);
+  background: var(--color-decorative-line);
   margin: 0 auto 1rem;
 }
 

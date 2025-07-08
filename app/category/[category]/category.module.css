@@ -54,6 +54,7 @@
 .emptyTitle {
   color: #b36b00;
   margin-bottom: 0.5rem;
+  font-family: var(--font-family-header);
 }
 
 .backButton {

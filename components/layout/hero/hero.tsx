@@ -17,7 +17,7 @@ export function HeroSection({
       <div className={styles.titleSection}>
         <h1 className={`${styles.mainTitle} page-header`}>{title}</h1>
       </div>
-      <p>{subtitle}</p>
+      <p className={styles.subtitle}>{subtitle}</p>
     </div>
   );
 }

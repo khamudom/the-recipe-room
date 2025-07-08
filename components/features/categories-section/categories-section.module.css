@@ -1,5 +1,4 @@
 .sectionTitle {
-  color: var(--color-heading);
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -21,7 +20,6 @@
   text-decoration: none;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: var(--color-heading);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -50,7 +48,11 @@
 }
 
 .categoryCard:hover .categoryIcon {
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(-10deg);
+}
+
+.categoryTitle {
+  color: var(--color-heading);
 }
 
 .decorativeLine {
@@ -67,7 +69,5 @@
 }
 
 .categoryCount {
-  display: block;
   margin-top: 0.5rem;
-  color: var(--color-foreground-accent);
 }
