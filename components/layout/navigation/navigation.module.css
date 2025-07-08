@@ -18,12 +18,13 @@
 .logoContainer {
   display: flex;
   align-items: center;
+  gap: var(--spacing-small-nudge);
   text-decoration: none;
 }
 
 .logoContainer img {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
 }
 
 .logoText {
@@ -31,7 +32,6 @@
   font-family: var(--font-family-cormorant);
   font-weight: var(--font-weight-bold);
   color: var(--color-foreground-primary-light);
-  width: 130px;
   line-height: 1;
   text-align: center;
 }
