@@ -5,9 +5,8 @@
 
 .categoriesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1rem;
-  max-width: 900px;
   margin: auto;
 }
 
@@ -70,4 +69,10 @@
 
 .categoryCount {
   margin-top: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .categoriesGrid {
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  }
 }

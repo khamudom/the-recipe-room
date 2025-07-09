@@ -202,8 +202,8 @@ body {
   color: var(--foreground-color);
   background: linear-gradient(
       135deg,
-      rgba(253, 246, 227, 0.85),
-      rgba(254, 215, 170, 0.85)
+      rgba(253, 246, 227, 0.75),
+      rgba(254, 215, 170, 0.75)
     ),
     url("/assets/worn-paper-optimized.webp");
   background-size: cover;

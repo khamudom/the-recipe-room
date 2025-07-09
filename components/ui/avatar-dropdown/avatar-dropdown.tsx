@@ -148,7 +148,7 @@ export function AvatarDropdown() {
           <Link href="/" className={styles.dropdownItem}>
             Recipes
           </Link>
-          {user ? (
+          {user && (
             <button
               onClick={onAddRecipe}
               className={styles.dropdownItem}
@@ -156,14 +156,6 @@ export function AvatarDropdown() {
             >
               Add Recipe
             </button>
-          ) : (
-            <Link
-              href="/auth/signin"
-              className={styles.dropdownItem}
-              aria-label="Sign in to add recipe"
-            >
-              Sign In to Add Recipe
-            </Link>
           )}
           <Link href="/" className={styles.dropdownItem}>
             Shopping List - Coming Soon
@@ -188,7 +180,7 @@ export function AvatarDropdown() {
           )}
         </div>
       )}
-      
+
       <Modal
         isOpen={isAboutModalOpen}
         onClose={() => setIsAboutModalOpen(false)}
