@@ -15,6 +15,9 @@ export function Navigation() {
             alt="Recipe Room Logo"
             width={50}
             height={50}
+            priority
+            sizes="50px"
+            quality={90}
           />
           <div className={styles.logoText}>The Recipe Room</div>
         </Link>

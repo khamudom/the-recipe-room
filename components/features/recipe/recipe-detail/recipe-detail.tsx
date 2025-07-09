@@ -73,6 +73,9 @@ export function RecipeDetail({
               width={400}
               height={300}
               className={styles.heroImage}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+              quality={85}
+              loading="lazy"
             />
           </div>
         )}

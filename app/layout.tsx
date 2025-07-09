@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "The Recipe Room",
   description: "A vintage-style recipe collection app",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favrecipebox.webp",
   },
 };
 

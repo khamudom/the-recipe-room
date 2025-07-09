@@ -2,7 +2,9 @@ import React, { forwardRef } from "react";
 import Image from "next/image";
 import styles from "./ai-chef-button.module.css";
 
-interface Props { onClick: () => void };
+interface Props {
+  onClick: () => void;
+}
 
 export const AIChefButton = forwardRef<HTMLButtonElement, Props>(
   ({ onClick }, ref) => {
@@ -29,10 +31,13 @@ export const AIChefButton = forwardRef<HTMLButtonElement, Props>(
         </div>
         <span aria-hidden="true">
           <Image
-            src="/assets/lechef.png"
+            src="/assets/lechef.webp"
             alt="AI Chef"
             width={28}
             height={28}
+            priority
+            sizes="28px"
+            quality={85}
           />
         </span>
         <span className="sr-only">Chat with AI Chef</span>

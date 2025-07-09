@@ -104,6 +104,9 @@ export default function CategoryPage() {
                 alt="No recipes found"
                 width={400}
                 height={400}
+                sizes="(max-width: 768px) 300px, 400px"
+                quality={85}
+                loading="lazy"
               />
               <p style={{ textAlign: "center" }}>
                 Looks like this category is waiting for its first delicious

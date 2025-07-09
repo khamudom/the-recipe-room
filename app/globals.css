@@ -3,33 +3,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap");
 
 :root {
-    /*Colors*/
-    --primary-color: #7c021d;
-    --primary-dark-color: #5e0118;
-    --primary-light-color: #fefcf3;
-    --secondary-color: #fbbf24;
-    --secondary-light-color: #fef3c7;
-    --secondary-dark-color: #92400e;
-    --accent-color: #d97706;
-    --white-color: #ffffff;
-    --black-color: #000000;
+  /*Colors*/
+  --primary-color: #7c021d;
+  --primary-dark-color: #5e0118;
+  --primary-light-color: #fefcf3;
+  --secondary-color: #fbbf24;
+  --secondary-light-color: #fef3c7;
+  --secondary-dark-color: #92400e;
+  --accent-color: #d97706;
+  --white-color: #ffffff;
+  --black-color: #000000;
 
-    --background-color: #fdf6e3;
-    --foreground-color: #2c1a12;
-  
-    --color-linear-gradient: linear-gradient(135deg, #fef7ed 0%, #fed7aa 100%);
-    --color-linear-gradient-dark: linear-gradient(
-      135deg,
-      #7c021d 0%,
-      #7c021d 50%,
-      #580000 100%
-    );
-    --color-linear-gradient-transparent: linear-gradient(
-      to right,
-      transparent,
-      #7c021d,
-      transparent
-    );
+  --background-color: #fdf6e3;
+  --foreground-color: #2c1a12;
+
+  --color-linear-gradient: linear-gradient(135deg, #fef7ed 0%, #fed7aa 100%);
+  --color-linear-gradient-dark: linear-gradient(
+    135deg,
+    #7c021d 0%,
+    #7c021d 50%,
+    #580000 100%
+  );
+  --color-linear-gradient-transparent: linear-gradient(
+    to right,
+    transparent,
+    #7c021d,
+    transparent
+  );
 
   /* Font Families */
   --font-family-header: "Playfair Display", serif;
@@ -200,12 +200,12 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
   color: var(--foreground-color);
-  background: 
-    linear-gradient(135deg,
-      rgba(253, 246, 227, 0.85), 
+  background: linear-gradient(
+      135deg,
+      rgba(253, 246, 227, 0.85),
       rgba(254, 215, 170, 0.85)
     ),
-    url('/assets/worn-paper.webp');
+    url("/assets/worn-paper-optimized.webp");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

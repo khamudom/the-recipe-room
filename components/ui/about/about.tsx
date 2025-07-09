@@ -1,4 +1,5 @@
 import styles from "./about.module.css";
+import Image from "next/image";
 
 export function About() {
   return (
@@ -80,10 +81,14 @@ export function About() {
       <div className={styles.footer}>
         <p className={styles.footerText}>
           <em>Happy cooking!</em>
-          <img
-            src="/assets/chef-gusto-arms-crossed.png"
+          <Image
+            src="/assets/chef-gusto-arms-crossed.webp"
             alt="Chef Gusto"
-            style={{ width: "60px", height: "60px" }}
+            width={60}
+            height={60}
+            sizes="60px"
+            quality={85}
+            loading="lazy"
           />
         </p>
       </div>
