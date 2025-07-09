@@ -29,39 +29,9 @@
   margin-bottom: 0.5rem;
 }
 
-.editButton,
-.deleteButton {
-  background: transparent;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: var(--radius-small);
-  transition: all 0.2s;
-}
-
-.editButton {
-  border: 1px solid var(--color-border-secondary);
-  color: var(--color-text);
-}
-
-.editButton:hover {
-  background-color: var(--color-background-light);
-}
-
-.deleteButton {
-  border: 1px solid #fca5a5;
-  color: #dc2626;
-}
-
-.deleteButton:hover {
-  background-color: #fef2f2;
-}
-
 .buttonIcon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--icon-size-large);
+  height: var(--icon-size-large);
 }
 
 .heroImageContainer {

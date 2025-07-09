@@ -114,6 +114,14 @@
   --spacing-xxxl: 4rem; /* 64px */
 
   --translate-y-2: 0.125rem; /* 2px */
+
+  --icon-size-small: 0.875rem; /* 14px */
+  --icon-size-medium: 1rem; /* 16px */
+  --icon-size-large: 1.25rem; /* 20px */
+  --icon-size-xl: 1.5rem; /* 24px */
+  --icon-size-xxl: 2rem; /* 32px */
+  --icon-size-xxxl: 2.5rem; /* 40px */
+  --icon-size-xxxxl: 3rem; /* 48px */
 }
 
 /* Typography Utility Classes */

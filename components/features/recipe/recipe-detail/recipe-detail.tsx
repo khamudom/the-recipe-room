@@ -49,7 +49,6 @@ export function RecipeDetail({
               onClick={onEdit}
               variant="outline"
               iconOnly
-              className={styles.editButton}
             >
               <Edit className={styles.buttonIcon} />
             </Button>
@@ -57,7 +56,6 @@ export function RecipeDetail({
               onClick={onDelete}
               variant="outline"
               iconOnly
-              className={styles.deleteButton}
             >
               <Trash2 className={styles.buttonIcon} />
             </Button>
