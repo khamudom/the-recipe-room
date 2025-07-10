@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Clock, Users, Tag, Star, User } from "lucide-react";
+import { Clock, Users, Tag, Star, User, ChefHat } from "lucide-react";
 import type { Recipe } from "@/types/recipe";
 import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-card.module.css";
@@ -77,6 +77,10 @@ export const RecipeCard = React.memo(function RecipeCard({
         <div className={styles.metaItem}>
           <Clock className={styles.metaIcon} />
           <span>{recipe.prepTime}</span>
+        </div>
+        <div className={styles.metaItem}>
+          <ChefHat className={styles.metaIcon} />
+          <span>{recipe.cookTime}</span>
         </div>
         <div className={styles.metaItem}>
           <Users className={styles.metaIcon} />
