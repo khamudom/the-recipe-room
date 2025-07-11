@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "../../../../lib/supabase";
+import { Button } from "@/components/ui/button/button";
 import styles from "./auth-form.module.css";
 
 type AuthMode = "signin" | "signup" | "forgot-password";
@@ -190,21 +191,22 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
         {error && <div className={styles.error}>{error}</div>}
         {message && <div className={styles.message}>{message}</div>}
 
-        <button type="submit" disabled={loading} className={styles.button}>
+        <Button type="submit" disabled={loading} className={styles.button}>
           {loading ? currentContent.loadingText : currentContent.buttonText}
-        </button>
+        </Button>
       </form>
 
       <div className={styles.links}>
         {currentLinks.map((link, index) => (
-          <button
+          <Button
             key={`${link.mode}-${index}`}
             type="button"
+            variant="link"
             className={styles.linkButton}
             onClick={() => handleModeChange(link.mode)}
           >
             {link.text}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

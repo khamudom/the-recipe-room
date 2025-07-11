@@ -50,25 +50,7 @@
 }
 
 .button {
-  padding: 0.75rem 1.5rem;
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: var(--radius-small);
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
   margin-top: 0.5rem;
-}
-
-.button:hover:not(:disabled) {
-  background: #a0522d;
-}
-
-.button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
 }
 
 .error {
@@ -126,26 +108,4 @@
   flex-direction: column;
   gap: 0.75rem;
   align-items: center;
-}
-
-.linkButton {
-  background: none;
-  border: none;
-  color: var(--primary-color);
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-decoration: underline;
-  transition: color 0.2s ease;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-small);
-}
-
-.linkButton:hover {
-  color: #a0522d;
-  background: rgba(139, 69, 19, 0.05);
-}
-
-.linkButton:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.1);
 }
