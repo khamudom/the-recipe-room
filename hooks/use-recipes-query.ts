@@ -113,6 +113,8 @@ export function useCreateRecipe() {
       // Invalidate and refetch recipes lists
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
+      // Invalidate category counts
+      queryClient.invalidateQueries({ queryKey: ["category-counts"] });
 
       // Add the new recipe to the cache
       queryClient.setQueryData(recipeKeys.detail(newRecipe.id), newRecipe);
@@ -143,6 +145,8 @@ export function useUpdateRecipe() {
       queryClient.invalidateQueries({ queryKey: recipeKeys.details() });
       // Invalidate all category queries
       queryClient.invalidateQueries({ queryKey: recipeKeys.all });
+      // Invalidate category counts
+      queryClient.invalidateQueries({ queryKey: ["category-counts"] });
       // Update the recipe in cache
       queryClient.setQueryData(
         recipeKeys.detail(updatedRecipe.id),
@@ -168,6 +172,8 @@ export function useDeleteRecipe() {
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
       // Invalidate all user-aware queries
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      // Invalidate category counts
+      queryClient.invalidateQueries({ queryKey: ["category-counts"] });
 
       // Remove the recipe from cache
       queryClient.removeQueries({ queryKey: recipeKeys.detail(deletedId) });
@@ -176,6 +182,22 @@ export function useDeleteRecipe() {
       console.error("Error deleting recipe:", error);
       throw new Error(ERROR_MESSAGES.DELETE_RECIPE);
     },
+  });
+}
+
+// Hook to get category recipe counts efficiently
+export function useCategoryCounts() {
+  return useQuery({
+    queryKey: ["category-counts"],
+    queryFn: async () => {
+      const response = await fetch("/api/category-recipe-counts");
+      if (!response.ok) {
+        throw new Error("Failed to fetch category counts");
+      }
+      return response.json() as Promise<Record<string, number>>;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 

@@ -26,7 +26,7 @@ import { useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
+import { LoadingPageTransition } from "@/components/ui/page-transition/loading-page-transition";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useRecipesByCategoryWithUser } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
@@ -65,6 +65,73 @@ export default function CategoryPage() {
     router.push("/add");
   }, [router]);
 
+  const renderContent = () => {
+    if (isSuccess && recipes.length > 0) {
+      return (
+        <div className={styles.recipeGrid}>
+          {recipes.map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onClick={() => handleRecipeClick(recipe)}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    if (isSuccess && recipes.length === 0) {
+      return (
+        <div className={styles.emptyState}>
+          <h3 className={styles.emptyTitle}>No recipes found</h3>
+          <Image
+            src="/assets/no-recipe.webp"
+            alt="No recipes found"
+            width={400}
+            height={400}
+            sizes="(max-width: 768px) 300px, 400px"
+            quality={85}
+            loading="lazy"
+          />
+          <p style={{ textAlign: "center" }}>
+            Looks like this category is waiting for its first delicious
+            creation!
+          </p>
+          {user ? (
+            <button
+              onClick={onAddRecipe}
+              className={styles.addButton}
+              aria-label="Add new recipe"
+            >
+              <Plus className={styles.buttonIcon} aria-hidden="true" />
+              Add Recipe
+            </button>
+          ) : (
+            <a
+              href="/auth/signin"
+              className={styles.addButton}
+              aria-label="Sign in to add recipe"
+            >
+              <Plus className={styles.buttonIcon} aria-hidden="true" />
+              Sign In to Add Recipe
+            </a>
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const errorFallback = (
+    <div className={styles.emptyState}>
+      <h3 className={styles.emptyTitle}>Error Loading Recipes</h3>
+      <p className={styles.emptyText}>
+        {error?.message || "Something went wrong"}
+      </p>
+    </div>
+  );
+
   return (
     <ErrorBoundary>
       <div className={styles.container}>
@@ -77,62 +144,14 @@ export default function CategoryPage() {
               {category} Recipes
             </h1>
           </div>
-          {isLoading ? (
-            <div className={styles.loadingContainer}>
-              <LoadingSpinner />
-            </div>
-          ) : error ? (
-            <div className={styles.emptyState}>
-              <h3 className={styles.emptyTitle}>Error Loading Recipes</h3>
-              <p className={styles.emptyText}>{error.message}</p>
-            </div>
-          ) : isSuccess && recipes.length > 0 ? (
-            <div className={styles.recipeGrid}>
-              {recipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={recipe}
-                  onClick={() => handleRecipeClick(recipe)}
-                />
-              ))}
-            </div>
-          ) : isSuccess && recipes.length === 0 ? (
-            <div className={styles.emptyState}>
-              <h3 className={styles.emptyTitle}>No recipes found</h3>
-              <Image
-                src="/assets/no-recipe.webp"
-                alt="No recipes found"
-                width={400}
-                height={400}
-                sizes="(max-width: 768px) 300px, 400px"
-                quality={85}
-                loading="lazy"
-              />
-              <p style={{ textAlign: "center" }}>
-                Looks like this category is waiting for its first delicious
-                creation!
-              </p>
-              {user ? (
-                <button
-                  onClick={onAddRecipe}
-                  className={styles.addButton}
-                  aria-label="Add new recipe"
-                >
-                  <Plus className={styles.buttonIcon} aria-hidden="true" />
-                  Add Recipe
-                </button>
-              ) : (
-                <a
-                  href="/auth/signin"
-                  className={styles.addButton}
-                  aria-label="Sign in to add recipe"
-                >
-                  <Plus className={styles.buttonIcon} aria-hidden="true" />
-                  Sign In to Add Recipe
-                </a>
-              )}
-            </div>
-          ) : null}
+
+          <LoadingPageTransition
+            isLoading={isLoading}
+            error={error}
+            fallback={errorFallback}
+          >
+            {renderContent()}
+          </LoadingPageTransition>
         </div>
       </div>
     </ErrorBoundary>

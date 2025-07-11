@@ -7,6 +7,7 @@ import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
 import { LottiePreloader } from "@/components/ui/lottie-preloader/lottie-preloader";
 import { AIChefWidget } from "@/components/features/ai-chef/ai-chef-widget";
 import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
+import { PageTransition } from "@/components/ui/page-transition/page-transition";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",
@@ -39,7 +40,9 @@ export default function RootLayout({
             {process.env.NODE_ENV === "development" && <ExposeSupabase />}
             <LottiePreloader />
             <Navigation />
-            <main>{children}</main>
+            <PageTransition>
+              <main>{children}</main>
+            </PageTransition>
             <AIChefWidget />
           </AuthProvider>
         </ReactQueryProvider>

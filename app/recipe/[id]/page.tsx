@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { RecipeDetail } from "@/components/features/recipe/recipe-detail/recipe-detail";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
-import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
+import { LoadingPageTransition } from "@/components/ui/page-transition/loading-page-transition";
 import { useRecipe, useDeleteRecipe } from "@/hooks/use-recipes-query";
 
 export default function RecipeDetailPage() {
@@ -44,41 +44,29 @@ export default function RecipeDetailPage() {
     }
   }, [router, from]);
 
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "50vh",
-          width: "100%",
-        }}
-      >
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  if (error || !recipe) {
-    return (
-      <div>
-        <div>
-          <p>{error?.message || "Recipe not found"}</p>
-          <button onClick={handleBack}>Back to Recipes</button>
-        </div>
-      </div>
-    );
-  }
+  const errorFallback = (
+    <div>
+      <p>Failed to load recipe. Please try again.</p>
+      <button onClick={handleBack}>Back to Recipes</button>
+    </div>
+  );
 
   return (
     <ErrorBoundary>
-      <RecipeDetail
-        recipe={recipe}
-        onBack={handleBack}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <LoadingPageTransition
+        isLoading={isLoading}
+        error={error}
+        fallback={errorFallback}
+      >
+        {recipe && (
+          <RecipeDetail
+            recipe={recipe}
+            onBack={handleBack}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        )}
+      </LoadingPageTransition>
     </ErrorBoundary>
   );
 }

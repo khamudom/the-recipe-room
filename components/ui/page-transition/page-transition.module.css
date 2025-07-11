@@ -1,0 +1,88 @@
+.pageContainer {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.pageContent {
+  width: 100%;
+  min-height: 100vh;
+  transform: translateX(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* Mobile-only transitions */
+@media (max-width: 768px) {
+  .pageContainer.transitioning .pageContent {
+    animation: slideInFromRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .pageContainer.slideFromLeft .pageContent {
+    animation: slideInFromLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .pageContainer.fadeTransition .pageContent {
+    animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+/* Desktop: no transitions to maintain performance */
+@media (min-width: 769px) {
+  .pageContainer.transitioning .pageContent,
+  .pageContainer.slideFromLeft .pageContent,
+  .pageContainer.fadeTransition .pageContent {
+    animation: none;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .pageContainer .pageContent {
+    animation: none !important;
+    transition: none !important;
+    transform: translateX(0) !important;
+  }
+}
+
+/* Ensure smooth scrolling on mobile */
+@media (max-width: 768px) {
+  .pageContainer {
+    -webkit-overflow-scrolling: touch;
+  }
+}
