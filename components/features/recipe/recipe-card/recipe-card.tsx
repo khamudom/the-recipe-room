@@ -33,9 +33,11 @@ export const RecipeCard = React.memo(function RecipeCard({
             <Image
               src={recipe.image}
               alt={recipe.title}
-              fill
+              width={800}
+              height={450}
               className={styles.recipeImage}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{ width: "100%", height: "auto" }}
             />
           ) : (
             <div className={styles.placeholderImage}>
