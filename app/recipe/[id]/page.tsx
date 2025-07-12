@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { RecipeDetail } from "@/components/features/recipe/recipe-detail/recipe-detail";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
-import { LoadingPageTransition } from "@/components/ui/page-transition/loading-page-transition";
+import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
 import { useRecipe, useDeleteRecipe } from "@/hooks/use-recipes-query";
 
 export default function RecipeDetailPage() {
@@ -44,29 +44,47 @@ export default function RecipeDetailPage() {
     }
   }, [router, from]);
 
-  const errorFallback = (
-    <div>
-      <p>Failed to load recipe. Please try again.</p>
-      <button onClick={handleBack}>Back to Recipes</button>
-    </div>
-  );
+  // Show loading state
+  if (isLoading) {
+    return (
+      <ErrorBoundary>
+        <div style={{ padding: "2rem" }}>
+          <LoadingSpinner />
+        </div>
+      </ErrorBoundary>
+    );
+  }
 
+  // Show error state
+  if (error) {
+    return (
+      <ErrorBoundary>
+        <div
+          style={{
+            padding: "2rem",
+            textAlign: "center",
+            maxWidth: "400px",
+            margin: "0 auto",
+          }}
+        >
+          <p>Failed to load recipe. Please try again.</p>
+          <button onClick={handleBack}>Back to Recipes</button>
+        </div>
+      </ErrorBoundary>
+    );
+  }
+
+  // Show recipe content
   return (
     <ErrorBoundary>
-      <LoadingPageTransition
-        isLoading={isLoading}
-        error={error}
-        fallback={errorFallback}
-      >
-        {recipe && (
-          <RecipeDetail
-            recipe={recipe}
-            onBack={handleBack}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        )}
-      </LoadingPageTransition>
+      {recipe && (
+        <RecipeDetail
+          recipe={recipe}
+          onBack={handleBack}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
     </ErrorBoundary>
   );
 }

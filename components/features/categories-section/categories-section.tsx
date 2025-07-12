@@ -36,7 +36,7 @@ export function CategoriesSection({
   const { data: categoryCounts = {}, isLoading } = useCategoryCounts();
 
   return (
-    <section className={styles.categoriesSection}>
+    <section id="categories" className={styles.categoriesSection}>
       <h2 className={`${styles.sectionTitle} section-header`}>{title}</h2>
       <div className={styles.decorativeLine}></div>
       <div className={styles.categoriesGrid}>

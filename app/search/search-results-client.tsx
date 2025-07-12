@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SearchControls } from "@/components/features/search/search-controls/search-controls";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
-import { LoadingPageTransition } from "@/components/ui/page-transition/loading-page-transition";
+import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
 import { useSearchRecipes } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./search-results.module.css";
@@ -61,12 +61,36 @@ export function SearchResultsClient() {
     );
   };
 
-  const errorFallback = (
-    <div className={styles.noResults}>
-      <h2>Search Error</h2>
-      <p>{error?.message || "Something went wrong with your search"}</p>
-    </div>
-  );
+  const renderResults = () => {
+    // Show loading state
+    if (isLoading) {
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            marginTop: "150px",
+          }}
+        >
+          <LoadingSpinner />
+        </div>
+      );
+    }
+
+    // Show error state
+    if (error) {
+      return (
+        <div className={styles.noResults}>
+          <h2>Search Error</h2>
+          <p>{error?.message || "Something went wrong with your search"}</p>
+        </div>
+      );
+    }
+
+    // Show content
+    return renderContent();
+  };
 
   return (
     <ErrorBoundary>
@@ -82,13 +106,7 @@ export function SearchResultsClient() {
             onAddRecipe={handleAddRecipeClick}
           />
 
-          <LoadingPageTransition
-            isLoading={isLoading}
-            error={error}
-            fallback={errorFallback}
-          >
-            {renderContent()}
-          </LoadingPageTransition>
+          {renderResults()}
         </div>
       </div>
     </ErrorBoundary>

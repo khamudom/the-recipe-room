@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { HeroSection } from "@/components/layout/hero/hero";
 import { SearchControls } from "@/components/features/search/search-controls/search-controls";
@@ -24,6 +24,29 @@ export default function RecipeBook() {
     isLoading: isFeaturedLoading,
     error: featuredError,
   } = useFeaturedRecipes();
+
+  // Handle scrolling to categories section when coming from category page
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      window.location.hash === "#categories"
+    ) {
+      // Small delay to ensure the page is fully rendered
+      const timer = setTimeout(() => {
+        const categoriesSection = document.getElementById("categories");
+        if (categoriesSection) {
+          categoriesSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+          // Remove the hash from URL without triggering a page reload
+          window.history.replaceState(null, "", window.location.pathname);
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {

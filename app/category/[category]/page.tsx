@@ -26,13 +26,14 @@ import { useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
-import { LoadingPageTransition } from "@/components/ui/page-transition/loading-page-transition";
-import { ArrowLeft, Plus } from "lucide-react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
+import { ArrowLeft } from "lucide-react";
 import { useRecipesByCategoryWithUser } from "@/hooks/use-recipes-query";
+import { Button } from "@/components/ui/button/button";
+import { useAuth } from "@/lib/auth-context";
+import Image from "next/image";
 import type { Recipe } from "@/types/recipe";
 import styles from "./category.module.css";
-import Image from "next/image";
-import { useAuth } from "@/lib/auth-context";
 
 export default function CategoryPage() {
   const params = useParams();
@@ -58,7 +59,7 @@ export default function CategoryPage() {
   );
 
   const handleBack = useCallback(() => {
-    router.push("/");
+    router.push("/#categories");
   }, [router]);
 
   const onAddRecipe = useCallback(() => {
@@ -83,7 +84,6 @@ export default function CategoryPage() {
     if (isSuccess && recipes.length === 0) {
       return (
         <div className={styles.emptyState}>
-          <h3 className={styles.emptyTitle}>No recipes found</h3>
           <Image
             src="/assets/no-recipe.webp"
             alt="No recipes found"
@@ -98,23 +98,17 @@ export default function CategoryPage() {
             creation!
           </p>
           {user ? (
-            <button
-              onClick={onAddRecipe}
-              className={styles.addButton}
-              aria-label="Add new recipe"
-            >
-              <Plus className={styles.buttonIcon} aria-hidden="true" />
+            <Button onClick={onAddRecipe} aria-label="Add new recipe">
               Add Recipe
-            </button>
+            </Button>
           ) : (
-            <a
+            <Button
               href="/auth/signin"
               className={styles.addButton}
               aria-label="Sign in to add recipe"
             >
-              <Plus className={styles.buttonIcon} aria-hidden="true" />
-              Sign In to Add Recipe
-            </a>
+              <span>Sign In to Add Recipe</span>
+            </Button>
           )}
         </div>
       );
@@ -123,35 +117,47 @@ export default function CategoryPage() {
     return null;
   };
 
-  const errorFallback = (
-    <div className={styles.emptyState}>
-      <h3 className={styles.emptyTitle}>Error Loading Recipes</h3>
-      <p className={styles.emptyText}>
-        {error?.message || "Something went wrong"}
-      </p>
-    </div>
-  );
+  const renderResults = () => {
+    // Show loading state
+    if (isLoading) {
+      return <LoadingSpinner />;
+    }
+
+    // Show error state
+    if (error) {
+      return (
+        <div className={styles.emptyState}>
+          <h3 className={styles.emptyTitle}>Error Loading Recipes</h3>
+          <p className={styles.emptyText}>
+            {error?.message || "Something went wrong"}
+          </p>
+        </div>
+      );
+    }
+
+    // Show content
+    return renderContent();
+  };
 
   return (
     <ErrorBoundary>
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.header}>
-            <button onClick={handleBack} className={styles.backButton}>
+            <Button
+              onClick={handleBack}
+              variant="outline"
+              iconOnly
+              className={styles.backButton}
+            >
               <ArrowLeft className={styles.buttonIcon} />
-            </button>
+            </Button>
             <h1 className={`${styles.mainTitle} section-header`}>
               {category} Recipes
             </h1>
           </div>
 
-          <LoadingPageTransition
-            isLoading={isLoading}
-            error={error}
-            fallback={errorFallback}
-          >
-            {renderContent()}
-          </LoadingPageTransition>
+          {renderResults()}
         </div>
       </div>
     </ErrorBoundary>
