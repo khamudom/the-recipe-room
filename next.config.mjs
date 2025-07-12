@@ -21,7 +21,7 @@ const nextConfig = {
 const pwaConfig = withPWA({
   dest: "public",
   register: true,
-  skipWaiting: true,
+  skipWaiting: false, // Changed to false to allow manual control
   disable: process.env.NODE_ENV === "development",
   runtimeCaching: [
     {
@@ -35,6 +35,8 @@ const pwaConfig = withPWA({
       },
     },
   ],
+  // Add custom service worker script
+  sw: "/sw-custom.js",
 });
 
 export default pwaConfig(nextConfig);

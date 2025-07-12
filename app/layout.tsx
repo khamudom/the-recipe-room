@@ -8,6 +8,7 @@ import { LottiePreloader } from "@/components/ui/lottie-preloader/lottie-preload
 import { AIChefWidget } from "@/components/features/ai-chef/ai-chef-widget";
 import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
 import { PageTransition } from "@/components/ui/page-transition/page-transition";
+import { ServiceWorkerUpdateHandler } from "@/components/ui/service-worker-update-handler/service-worker-update-handler";
 
 export const metadata: Metadata = {
   title: "The Recipe Room",
@@ -44,6 +45,7 @@ export default function RootLayout({
               <main>{children}</main>
             </PageTransition>
             <AIChefWidget />
+            <ServiceWorkerUpdateHandler />
           </AuthProvider>
         </ReactQueryProvider>
       </body>
