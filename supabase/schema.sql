@@ -107,4 +107,27 @@ BEGIN
       )
     );
 END;
+$$ LANGUAGE plpgsql;
+
+-- Create a function to get category recipe counts
+CREATE OR REPLACE FUNCTION category_recipe_counts()
+RETURNS TABLE (
+  category TEXT,
+  count BIGINT
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    recipes.category,
+    COUNT(*)::BIGINT
+  FROM recipes
+  WHERE
+    -- For authenticated users, count their own recipes
+    (auth.uid() = recipes.user_id)
+    OR 
+    -- For anonymous users, count featured recipes and admin-created recipes
+    (auth.uid() IS NULL AND (recipes.featured = TRUE OR recipes.by_admin = TRUE))
+  GROUP BY recipes.category
+  ORDER BY recipes.category;
+END;
 $$ LANGUAGE plpgsql; 

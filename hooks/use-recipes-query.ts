@@ -75,28 +75,10 @@ export function useRecipesByCategory(category: string) {
 
 // User-aware recipes by category hook for correct cache per user
 export function useRecipesByCategoryWithUser(category: string) {
-  const [userId, setUserId] = useState<string | null | undefined>(undefined);
-
-  useEffect(() => {
-    let mounted = true;
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (mounted) setUserId(user?.id ?? null);
-    });
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (mounted) setUserId(session?.user?.id ?? null);
-      }
-    );
-    return () => {
-      mounted = false;
-      listener?.subscription.unsubscribe();
-    };
-  }, []);
-
   return useQuery({
-    queryKey: ["recipes", "category", category, userId],
+    queryKey: ["recipes", "category", category],
     queryFn: () => database.getRecipesByCategory(supabase, category),
-    enabled: !!category && userId !== undefined,
+    enabled: !!category,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
@@ -190,41 +172,24 @@ export function useCategoryCounts() {
   return useQuery({
     queryKey: ["category-counts"],
     queryFn: async () => {
-      const response = await fetch("/api/category-recipe-counts");
+      const response = await fetch("/api/category-recipe-counts", {
+        credentials: "include", // Ensures cookies/session are sent!
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch category counts");
       }
       return response.json() as Promise<Record<string, number>>;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }
 
 // User-aware recipes hook for correct cache per user
 export function useRecipesWithUser() {
-  const [userId, setUserId] = useState<string | null | undefined>(undefined);
-
-  useEffect(() => {
-    let mounted = true;
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (mounted) setUserId(user?.id ?? null);
-    });
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (mounted) setUserId(session?.user?.id ?? null);
-      }
-    );
-    return () => {
-      mounted = false;
-      listener?.subscription.unsubscribe();
-    };
-  }, []);
-
   return useQuery({
-    queryKey: ["recipes", userId],
+    queryKey: ["recipes"],
     queryFn: () => database.getRecipes(supabase),
-    enabled: userId !== undefined, // Only run when userId is known
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
