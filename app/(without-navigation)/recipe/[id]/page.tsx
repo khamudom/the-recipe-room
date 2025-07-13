@@ -7,7 +7,7 @@ import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
 import { useRecipe, useDeleteRecipe } from "@/hooks/use-recipes-query";
 
-export default function RecipeDetailPage() {
+function RecipeDetailContent() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
@@ -47,44 +47,46 @@ export default function RecipeDetailPage() {
   // Show loading state
   if (isLoading) {
     return (
-      <ErrorBoundary>
-        <div style={{ padding: "2rem" }}>
-          <LoadingSpinner />
-        </div>
-      </ErrorBoundary>
+      <div style={{ padding: "2rem" }}>
+        <LoadingSpinner />
+      </div>
     );
   }
 
   // Show error state
   if (error) {
     return (
-      <ErrorBoundary>
-        <div
-          style={{
-            padding: "2rem",
-            textAlign: "center",
-            maxWidth: "400px",
-            margin: "0 auto",
-          }}
-        >
-          <p>Failed to load recipe. Please try again.</p>
-          <button onClick={handleBack}>Back to Recipes</button>
-        </div>
-      </ErrorBoundary>
+      <div
+        style={{
+          padding: "2rem",
+          textAlign: "center",
+          maxWidth: "400px",
+          margin: "0 auto",
+        }}
+      >
+        <p>Failed to load recipe. Please try again.</p>
+        <button onClick={handleBack}>Back to Recipes</button>
+      </div>
     );
   }
 
   // Show recipe content
   return (
+    recipe && (
+      <RecipeDetail
+        recipe={recipe}
+        onBack={handleBack}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+    )
+  );
+}
+
+export default function RecipeDetailPage() {
+  return (
     <ErrorBoundary>
-      {recipe && (
-        <RecipeDetail
-          recipe={recipe}
-          onBack={handleBack}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      )}
+      <RecipeDetailContent />
     </ErrorBoundary>
   );
 }

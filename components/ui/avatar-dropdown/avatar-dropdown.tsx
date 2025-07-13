@@ -111,15 +111,6 @@ export function AvatarDropdown() {
             </svg>
           </div>
         )}
-        <svg
-          className={`${styles.chevron} ${isOpen ? styles.chevronUp : ""}`}
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M7 10l5 5 5-5z" />
-        </svg>
       </button>
 
       {isOpen && (

@@ -75,17 +75,15 @@ function ReactQueryAuthSync() {
       if (event === "SIGNED_OUT") {
         queryClient.clear();
       } else if (event === "SIGNED_IN" || event === "USER_UPDATED") {
-        // Invalidate all recipe-related queries including category counts
+        // Invalidate queries but don't force immediate refetch
         queryClient.invalidateQueries({ queryKey: ["recipes"] });
         queryClient.invalidateQueries({ queryKey: ["category-counts"] });
         queryClient.invalidateQueries({ queryKey: recipeKeys.all });
-        // Also invalidate any queries that might be user-specific
         queryClient.invalidateQueries({ queryKey: ["featured"] });
         queryClient.invalidateQueries({ queryKey: ["search"] });
 
-        // Force refetch critical queries immediately
+        // Only refetch category counts immediately as they're critical for navigation
         queryClient.refetchQueries({ queryKey: ["category-counts"] });
-        queryClient.refetchQueries({ queryKey: ["recipes"] });
       }
     });
     return () => {

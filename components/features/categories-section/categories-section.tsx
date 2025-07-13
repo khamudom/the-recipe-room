@@ -31,7 +31,7 @@ interface CategoriesSectionProps {
 }
 
 export function CategoriesSection({
-  title = "Recipe Categories",
+  title = "Categories",
 }: CategoriesSectionProps) {
   const { data: categoryCounts = {}, isLoading } = useCategoryCounts();
 

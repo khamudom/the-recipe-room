@@ -109,3 +109,23 @@
   gap: 0.75rem;
   align-items: center;
 }
+
+.guestSection {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #d2b48c;
+  display: flex;
+  justify-content: center;
+}
+
+.guestButton {
+  color: var(--primary-color);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.guestButton:hover {
+  color: #a0522d;
+  text-decoration: underline;
+}

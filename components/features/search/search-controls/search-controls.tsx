@@ -33,7 +33,7 @@ export function SearchControls({
       <form onSubmit={handleSearchSubmit} className={styles.searchContainer}>
         <div className={styles.inputWrapper}>
           <input
-            placeholder="Search for recipes..."
+            placeholder="Search recipes, ingredients, categories"
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
             className={styles.searchInput}

@@ -83,7 +83,7 @@ export function usePageTransition(options: UsePageTransitionOptions = {}) {
         setIsTransitioning(false);
         onTransitionEnd?.();
         previousPathRef.current = pathname;
-      }, 300);
+      }, 150);
 
       return () => clearTimeout(timer);
     }

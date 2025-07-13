@@ -5,7 +5,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   href?: string;
   className?: string;
   variant?: "default" | "primary" | "outline" | "link" | "gold";
+  size?: "small" | "medium" | "large";
   iconOnly?: boolean;
+  shape?: "square" | "round" | "circle";
 }
 
 export function Button({
@@ -15,7 +17,9 @@ export function Button({
   type = "button",
   className,
   variant = "default",
+  size = "medium",
   iconOnly = false,
+  shape = "round",
   ...props
 }: ButtonProps) {
   const buttonClasses = [
@@ -24,7 +28,11 @@ export function Button({
     variant === "outline" && styles.outline,
     variant === "link" && styles.link,
     variant === "gold" && styles.gold,
+    size === "small" && styles.small,
+    size === "large" && styles.large,
     iconOnly && styles.iconOnly,
+    shape === "square" && styles.square,
+    shape === "circle" && styles.circle,
     className,
   ]
     .filter(Boolean)

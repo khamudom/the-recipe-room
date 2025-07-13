@@ -47,7 +47,6 @@
 .addButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 }
 
 .logoText span,
@@ -65,18 +64,24 @@
     gap: 1rem;
   }
 
-  .logoText {
-    text-align: left;
+  .logoContainer img {
+    width: 30px;
+    height: 30px;
   }
 
-  .menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--spacing-small);
+  .logoText {
+    text-align: left;
+    font-size: 1.75rem;
   }
 
   .logoText span,
   .addButton span {
     display: none;
+  }
+
+  .menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-medium);
   }
 }

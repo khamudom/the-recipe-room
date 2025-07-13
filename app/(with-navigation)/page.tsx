@@ -88,7 +88,7 @@ export default function RecipeBook() {
       );
     }
 
-    // Main content
+    // Main content - show even if loading but we have cached data
     return (
       <>
         <FeaturedRecipes

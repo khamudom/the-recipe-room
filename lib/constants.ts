@@ -23,7 +23,7 @@ export const CATEGORY_ICONS = {
 
 export const SEARCH_DEBOUNCE_DELAY = 300;
 
-export const DEFAULT_PAGE_TITLE = "Personal Recipe Collection";
+export const DEFAULT_PAGE_TITLE = "Recipe Collection";
 export const DEFAULT_PAGE_SUBTITLE =
   "Save your favorites, discover new ones, and build your own recipe room to cook from anytime.";
 export const DEFAULT_FOOTER_QUOTE = '"The secret ingredient is always love"';

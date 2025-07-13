@@ -35,7 +35,7 @@ export function useFeaturedRecipes() {
   return useQuery({
     queryKey: recipeKeys.featured(),
     queryFn: () => database.getFeaturedRecipes(supabase),
-    staleTime: 10 * 60 * 1000, // 10 minutes - featured recipes don't change often
+    staleTime: 15 * 60 * 1000, // 15 minutes - featured recipes don't change often
     gcTime: 30 * 60 * 1000, // 30 minutes - keep in cache longer
   });
 }

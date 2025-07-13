@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../../../../lib/supabase";
 import { Button } from "@/components/ui/button/button";
 import styles from "./auth-form.module.css";
@@ -64,6 +65,7 @@ const AUTH_LINKS = {
 } as const;
 
 export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -125,7 +127,6 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
       <h2 className={`${styles.title} auth-card-title`}>
         {currentContent.title}
       </h2>
-
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
           <label htmlFor="email" className={styles.label}>
@@ -195,7 +196,6 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
           {loading ? currentContent.loadingText : currentContent.buttonText}
         </Button>
       </form>
-
       <div className={styles.links}>
         {currentLinks.map((link, index) => (
           <Button
@@ -208,6 +208,16 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
             {link.text}
           </Button>
         ))}
+      </div>
+      <div className={styles.guestSection}>
+        <Button
+          type="button"
+          variant="link"
+          className={styles.guestButton}
+          onClick={() => router.push("/")}
+        >
+          Continue as Guest
+        </Button>
       </div>
     </div>
   );

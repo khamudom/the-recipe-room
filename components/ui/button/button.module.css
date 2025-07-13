@@ -10,6 +10,15 @@
   font-size: var(--font-size-button);
 }
 
+/* Shape variants */
+.square {
+  border-radius: 0;
+}
+
+.circle {
+  border-radius: 9999px;
+}
+
 .button:hover {
   background-color: var(--color-button-background-hover);
   cursor: pointer;
@@ -42,16 +51,6 @@
   color: var(--white-color);
 }
 
-/* Icon-only variant */
-.iconOnly {
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.5rem;
-  min-height: 2.5rem;
-}
-
 /* Link variant */
 .link {
   background-color: transparent;
@@ -68,6 +67,73 @@
   background-color: transparent;
   text-decoration: underline;
 }
+
+/* Size variants */
+.small {
+  padding: 0.75rem 1rem;
+  font-size: 1rem; /* 16px for better readability */
+  min-height: 2.25rem; /* Mobile touch target minimum */
+  min-width: 2.25rem;
+}
+
+.large {
+  padding: 0.875rem 1.5rem;
+  font-size: 1.125rem;
+  min-height: 3rem;
+}
+
+/* Icon-only variant - responsive by default */
+.iconOnly {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+}
+
+/* Icon-only size variants */
+.iconOnly.small {
+  padding: 0.625rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+}
+
+.iconOnly.large {
+  padding: 0.75rem;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+}
+
+/* Responsive behavior for icon-only buttons */
+@media (max-width: 768px) {
+  .iconOnly {
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  .iconOnly.small {
+    padding: 0.625rem;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+  }
+
+  .iconOnly.large {
+    padding: 0.75rem;
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+  }
+
+  /* Hide text on mobile for icon-only buttons */
+  .iconOnly span {
+    display: none;
+  }
+}
+
 .gold {
   background-color: #f4d03f;
   color: #3a1a00;

@@ -33,24 +33,25 @@
 
   /* Font Families */
   --font-family-header: "Playfair Display", serif;
-  --font-family-body: "EB Garamond";
   --font-family-crimson: "Crimson Text", serif;
   --font-family-cormorant: "Cormorant Garamond", serif;
+  --font-family-eb-garamond: "EB Garamond", serif;
+  --font-family-body: var(--font-family-crimson);
 
   /* Font Sizes */
-  --font-size-page-header: clamp(32px, 6vw, 52px);
+  --font-size-page-header: clamp(28px, 6vw, 40px);
   --font-size-section-header: clamp(22px, 5vw, 36px);
-  --font-size-body: clamp(16px, 3.5vw, 20px);
+  --font-size-body: clamp(18px, 4.8vw, 20px);
 
-  --font-size-card-title: clamp(16px, 3vw, 20px);
-  --font-size-card-body: clamp(16px, 3vw, 18px);
-  --font-size-card-meta: clamp(14px, 2.5vw, 16px);
+  --font-size-card-title: clamp(18px, 4vw, 20px);
+  --font-size-card-body: clamp(18px, 3vw, 18px);
+  --font-size-card-meta: clamp(16px, 2.5vw, 16px);
 
   --font-size-category-card: clamp(16px, 2.5vw, 20px);
 
   --font-size-chat: clamp(16px, 3vw, 18px);
 
-  --font-size-button: 16px;
+  --font-size-button: 18px;
 
   /* Font Weights */
   --font-weight-regular: 400;
@@ -153,7 +154,7 @@
 .recipe-form-title {
   font-family: var(--font-family-header);
   font-size: var(--font-size-card-title);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-medium);
   line-height: var(--line-height-section);
   color: var(--color-heading);
   letter-spacing: 0.5px;

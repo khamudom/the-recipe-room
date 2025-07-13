@@ -6,19 +6,11 @@
 .avatarButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: var(--radius-small);
   transition: background-color 0.2s;
   box-shadow: none;
-}
-
-.avatarButton:hover {
-  background-color: #fbeedc;
-  color: var(--primary-color);
 }
 
 .avatar {
@@ -29,28 +21,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--color-background-primary-dark);
+  border: 2px solid var(--color-background-primary-light);
   transition: border-color 0.2s;
   color: var(--primary-color);
+}
+
+.avatarButton:hover .avatar {
+  border-color: var(--secondary-color);
 }
 
 .initials {
   font-weight: bold;
   font-size: 1.1rem;
   color: var(--primary-color);
-}
-
-.avatarButton:hover .chevron {
-  color: #7c4a1e;
-}
-
-.chevron {
-  transition: transform 0.2s;
-  color: #ffe4ba;
-}
-
-.chevronUp {
-  transform: rotate(180deg);
 }
 
 .dropdown {

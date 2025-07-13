@@ -428,7 +428,7 @@ export function RecipeForm({
               {/* Admin-only featured recipe toggle */}
               {isAdmin && (
                 <div className={styles.inputGroup}>
-                  <label className={styles.label}>Featured Recipe</label>
+                  <label className={styles.label}>Featured</label>
                   <div className={styles.toggleContainer}>
                     <input
                       type="checkbox"

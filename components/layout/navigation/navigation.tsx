@@ -42,6 +42,9 @@ export function Navigation() {
           <Button
             onClick={handleAddRecipe}
             variant="gold"
+            size="small"
+            iconOnly
+            shape="circle"
             className={styles.addButton}
             aria-label={user ? "Add new recipe" : "Sign in to add recipe"}
           >
