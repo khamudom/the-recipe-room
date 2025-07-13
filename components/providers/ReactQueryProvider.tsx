@@ -7,6 +7,7 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
+import { recipeKeys } from "@/hooks/use-recipes-query";
 
 export function ReactQueryProvider({
   children,
@@ -30,11 +31,17 @@ export function ReactQueryProvider({
     if (typeof window !== "undefined") {
       const persister = createSyncStoragePersister({
         storage: window.localStorage,
+        // Add serialization options to handle potential issues
+        serialize: (data: unknown) => JSON.stringify(data),
+        deserialize: (data: string) => JSON.parse(data),
       });
 
       persistQueryClient({
         queryClient: client,
         persister,
+        // Add options to handle persistence issues
+        maxAge: 1000 * 60 * 60 * 24, // 24 hours
+        buster: "v1", // Add a version buster
       });
     }
 
@@ -68,7 +75,17 @@ function ReactQueryAuthSync() {
       if (event === "SIGNED_OUT") {
         queryClient.clear();
       } else if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+        // Invalidate all recipe-related queries including category counts
         queryClient.invalidateQueries({ queryKey: ["recipes"] });
+        queryClient.invalidateQueries({ queryKey: ["category-counts"] });
+        queryClient.invalidateQueries({ queryKey: recipeKeys.all });
+        // Also invalidate any queries that might be user-specific
+        queryClient.invalidateQueries({ queryKey: ["featured"] });
+        queryClient.invalidateQueries({ queryKey: ["search"] });
+
+        // Force refetch critical queries immediately
+        queryClient.refetchQueries({ queryKey: ["category-counts"] });
+        queryClient.refetchQueries({ queryKey: ["recipes"] });
       }
     });
     return () => {

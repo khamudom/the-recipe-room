@@ -16,13 +16,21 @@ const nextConfig = {
     minimumCacheTTL: 60,
   },
   devIndicators: false,
+  // Allow cross-origin requests from local network devices for development
+  allowedDevOrigins: [
+    "localhost",
+    "127.0.0.1",
+    "192.168.1.187", // Your phone's IP address
+    "192.168.1.0/24", // Allow any device on your local network (192.168.1.x)
+  ],
 };
 
 const pwaConfig = withPWA({
   dest: "public",
   register: true,
-  skipWaiting: false, // Changed to false to allow manual control
-  disable: process.env.NODE_ENV === "development",
+  skipWaiting: false,
+  disable: process.env.NODE_ENV === "development", // Standard: disable in dev, enable in production
+  sw: "/sw-custom.js",
   runtimeCaching: [
     {
       urlPattern: /^https?.*/,
@@ -35,8 +43,6 @@ const pwaConfig = withPWA({
       },
     },
   ],
-  // Add custom service worker script
-  sw: "/sw-custom.js",
 });
 
 export default pwaConfig(nextConfig);

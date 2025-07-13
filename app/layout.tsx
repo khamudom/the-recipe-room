@@ -2,7 +2,6 @@ import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "../lib/auth-context";
-import { Navigation } from "../components/layout/navigation/navigation";
 import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
 import { LottiePreloader } from "@/components/ui/lottie-preloader/lottie-preloader";
 import { AIChefWidget } from "@/components/features/ai-chef/ai-chef-widget";
@@ -29,10 +28,6 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#b48a78" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="The Recipe Room" />
-        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
       </head>
       <body suppressHydrationWarning={true}>
         <ReactQueryProvider>
@@ -40,7 +35,6 @@ export default function RootLayout({
             {/* Only expose Supabase in development */}
             {process.env.NODE_ENV === "development" && <ExposeSupabase />}
             <LottiePreloader />
-            <Navigation />
             <PageTransition>
               <main>{children}</main>
             </PageTransition>

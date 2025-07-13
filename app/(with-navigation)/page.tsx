@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HeroSection } from "@/components/layout/hero/hero";
 import { SearchControls } from "@/components/features/search/search-controls/search-controls";
@@ -14,7 +14,7 @@ import { usePageTransition } from "@/hooks/use-page-transition";
 import { Card } from "@/components/ui/card/card";
 import { Button } from "@/components/ui/button/button";
 import type { Recipe } from "@/types/recipe";
-import styles from "./home.module.css";
+import styles from "../home.module.css";
 
 export default function RecipeBook() {
   const router = useRouter();
@@ -26,78 +26,32 @@ export default function RecipeBook() {
     error: featuredError,
   } = useFeaturedRecipes();
 
-  const { isTransitioning } = usePageTransition({
+  usePageTransition({
     onTransitionStart: () => {
-      // When transition starts, if we're going to categories, prepare the scroll
-      if (window.location.hash === "#categories") {
-        // Set a flag to scroll after transition
-        sessionStorage.setItem("scrollToCategories", "true");
+      // Save current scroll position when navigating away
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("homeScrollPosition", window.scrollY.toString());
       }
     },
     onTransitionEnd: () => {
-      // When transition ends, check if we need to scroll to categories
-      if (sessionStorage.getItem("scrollToCategories") === "true") {
-        sessionStorage.removeItem("scrollToCategories");
-
-        // Use multiple attempts to ensure it works on mobile
-        const attemptScroll = (attempts = 0) => {
-          const categoriesSection = document.getElementById("categories");
-          if (categoriesSection && attempts < 5) {
-            const elementTop = categoriesSection.offsetTop;
-            const headerOffset = 80;
-            const offsetPosition = elementTop - headerOffset;
-
+      // Restore scroll position when returning to the page
+      if (typeof window !== "undefined") {
+        const savedPosition = sessionStorage.getItem("homeScrollPosition");
+        if (savedPosition) {
+          const position = parseInt(savedPosition, 10);
+          // Only restore if it's a reasonable position (not at the very top)
+          if (position > 100) {
             window.scrollTo({
-              top: offsetPosition,
+              top: position,
               behavior: "auto",
             });
-
-            // Remove the hash from URL
-            window.history.replaceState(null, "", window.location.pathname);
-
-            // Verify scroll worked, if not, try again
-            setTimeout(() => {
-              if (window.scrollY < offsetPosition - 50) {
-                attemptScroll(attempts + 1);
-              }
-            }, 100);
           }
-        };
-
-        // Start the scroll attempt
-        setTimeout(attemptScroll, 50);
+          // Clear the saved position after restoring
+          sessionStorage.removeItem("homeScrollPosition");
+        }
       }
     },
   });
-
-  // Handle scrolling to categories section when coming from category page (fallback for direct navigation)
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.location.hash === "#categories" &&
-      !isTransitioning &&
-      !sessionStorage.getItem("scrollToCategories")
-    ) {
-      const scrollToCategories = () => {
-        const categoriesSection = document.getElementById("categories");
-        if (categoriesSection) {
-          const elementTop = categoriesSection.offsetTop;
-          const headerOffset = 80;
-          const offsetPosition = elementTop - headerOffset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "auto",
-          });
-
-          window.history.replaceState(null, "", window.location.pathname);
-        }
-      };
-
-      const timer = setTimeout(scrollToCategories, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isTransitioning]);
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
@@ -105,10 +59,6 @@ export default function RecipeBook() {
     },
     [router]
   );
-
-  const handleAddRecipeClick = useCallback(() => {
-    router.push("/add");
-  }, [router]);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
@@ -161,7 +111,6 @@ export default function RecipeBook() {
           <SearchControls
             searchTerm={searchTerm}
             onSearchChange={handleSearchChange}
-            onAddRecipe={handleAddRecipeClick}
           />
 
           {renderContent()}

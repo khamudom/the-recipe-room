@@ -1,24 +1,19 @@
 "use client";
 
-import { Plus, Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
 import styles from "./search-controls.module.css";
 import { useCallback } from "react";
-import { Button } from "@/components/ui/button/button";
 
 interface SearchControlsProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
-  onAddRecipe: () => void;
 }
 
 export function SearchControls({
   searchTerm,
   onSearchChange,
-  onAddRecipe,
 }: SearchControlsProps) {
-  const { user } = useAuth();
   const router = useRouter();
 
   const handleSearchSubmit = useCallback(
@@ -33,32 +28,18 @@ export function SearchControls({
     [router, searchTerm, onSearchChange]
   );
 
-  const handleClearSearch = useCallback(() => {
-    onSearchChange("");
-  }, [onSearchChange]);
-
   return (
     <div className={styles.controls}>
       <form onSubmit={handleSearchSubmit} className={styles.searchContainer}>
         <div className={styles.inputWrapper}>
           <input
-            placeholder="Search recipes, ingredients, or categories..."
+            placeholder="Search for recipes..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
             className={styles.searchInput}
             type="search"
             aria-label="Search recipes"
           />
-          {searchTerm && (
-            <button
-              type="button"
-              className={styles.clearButton}
-              onClick={handleClearSearch}
-              aria-label="Clear search"
-            >
-              <X className={styles.buttonIcon} aria-hidden="true" />
-            </button>
-          )}
           <button
             type="submit"
             className={styles.searchButton}
@@ -68,25 +49,6 @@ export function SearchControls({
           </button>
         </div>
       </form>
-      {user ? (
-        <Button
-          onClick={onAddRecipe}
-          className={styles.addButton}
-          aria-label="Add new recipe"
-        >
-          <Plus className={styles.buttonIcon} aria-hidden="true" />
-          Add Recipe
-        </Button>
-      ) : (
-        <Button
-          href="/auth/signin"
-          className={styles.addButton}
-          aria-label="Sign in to add recipe"
-        >
-          <Plus className={styles.buttonIcon} aria-hidden="true" />
-          Sign In to Add Recipe
-        </Button>
-      )}
     </div>
   );
 }

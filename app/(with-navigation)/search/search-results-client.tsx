@@ -30,10 +30,6 @@ export function SearchResultsClient() {
     [router]
   );
 
-  const handleAddRecipeClick = useCallback(() => {
-    router.push("/add");
-  }, [router]);
-
   const renderContent = () => {
     if (recipes.length > 0) {
       return (
@@ -70,7 +66,7 @@ export function SearchResultsClient() {
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
-            marginTop: "150px",
+            marginTop: "30%",
           }}
         >
           <LoadingSpinner />
@@ -103,7 +99,6 @@ export function SearchResultsClient() {
           <SearchControls
             searchTerm={searchTerm}
             onSearchChange={handleSearchChange}
-            onAddRecipe={handleAddRecipeClick}
           />
 
           {renderResults()}

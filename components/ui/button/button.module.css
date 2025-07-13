@@ -68,3 +68,13 @@
   background-color: transparent;
   text-decoration: underline;
 }
+.gold {
+  background-color: #f4d03f;
+  color: #3a1a00;
+  border: none;
+}
+
+.gold:hover {
+  background-color: #ffe082;
+  color: #3a1a00;
+}

@@ -34,6 +34,8 @@
   color: var(--color-foreground-primary-light);
   line-height: 1;
   text-align: center;
+  display: flex;
+  column-gap: 0.5rem;
 }
 
 .menu {
@@ -42,15 +44,20 @@
   gap: 2rem;
 }
 
-.link {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.link:hover {
-  color: #f4d03f;
+.logoText span,
+.addButton span {
+  display: block;
+}
+
+.buttonIcon {
+  width: 1rem;
+  height: 1rem;
 }
 
 @media (max-width: 768px) {
@@ -58,9 +65,18 @@
     gap: 1rem;
   }
 
+  .logoText {
+    text-align: left;
+  }
+
   .menu {
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1rem;
+    gap: var(--spacing-small);
+  }
+
+  .logoText span,
+  .addButton span {
+    display: none;
   }
 }
