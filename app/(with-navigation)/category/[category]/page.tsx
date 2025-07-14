@@ -26,7 +26,7 @@ import { useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
+import { LoadingSkeleton } from "@/components/ui/loading-skeleton/loading-skeleton";
 import { ArrowLeft } from "lucide-react";
 import { useRecipesByCategoryWithUser } from "@/hooks/use-recipes-query";
 import { Button } from "@/components/ui/button/button";
@@ -81,6 +81,7 @@ export default function CategoryPage() {
       );
     }
 
+    // Show empty state if no recipes are found
     if (isSuccess && recipes.length === 0) {
       return (
         <div className={styles.emptyState}>
@@ -120,7 +121,7 @@ export default function CategoryPage() {
   const renderResults = () => {
     // Show loading state
     if (isLoading) {
-      return <LoadingSpinner />;
+      return <LoadingSkeleton count={1} type="recipe" />;
     }
 
     // Show error state
@@ -152,12 +153,11 @@ export default function CategoryPage() {
             >
               <ArrowLeft className={styles.buttonIcon} />
             </Button>
-            <h1 className={`${styles.mainTitle} section-header`}>
+            <h1 className={`${styles.mainTitle} page-header`}>
               {category} Recipes
             </h1>
           </div>
-
-          {renderResults()}
+          <div className={styles.resultsContainer}>{renderResults()}</div>
         </div>
       </div>
     </ErrorBoundary>

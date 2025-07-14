@@ -17,11 +17,15 @@
   right: 0;
   bottom: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 1001;
-  padding: 1rem;
+  padding-top: 7vh;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
   overflow: auto;
+  margin-block-start: 20px;
 }
 
 .modal {
@@ -101,10 +105,6 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .modalContainer {
-    padding: 0.5rem;
-  }
-
   .modal {
     max-width: 95vw;
     max-height: 98vh;

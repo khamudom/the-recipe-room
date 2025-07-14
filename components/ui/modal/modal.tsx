@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import styles from "./modal.module.css";
 
@@ -12,7 +13,13 @@ interface ModalProps {
   className?: string;
 }
 
-export function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  className,
+}: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,7 +42,10 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         onClose();
       }
     };
@@ -51,7 +61,10 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
 
   if (!isOpen) return null;
 
-  return (
+  // Use portal to render modal at the document body level
+  if (typeof window === "undefined") return null;
+
+  return createPortal(
     <>
       <div className={styles.overlay} />
       <div className={styles.modalContainer}>
@@ -76,11 +89,10 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
               </button>
             </div>
           )}
-          <div className={styles.content}>
-            {children}
-          </div>
+          <div className={styles.content}>{children}</div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
-} 
+}

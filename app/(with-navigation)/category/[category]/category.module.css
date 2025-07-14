@@ -29,6 +29,10 @@
   margin: 0;
 }
 
+.resultsContainer {
+  min-height: 200px;
+}
+
 .recipeGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
