@@ -99,7 +99,11 @@ export default function CategoryPage() {
             creation!
           </p>
           {user ? (
-            <Button onClick={onAddRecipe} aria-label="Add new recipe">
+            <Button
+              onClick={onAddRecipe}
+              className={styles.addButton}
+              aria-label="Add new recipe"
+            >
               Add Recipe
             </Button>
           ) : (
