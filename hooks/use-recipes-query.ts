@@ -37,6 +37,8 @@ export function useFeaturedRecipes() {
     queryFn: () => database.getFeaturedRecipes(supabase),
     staleTime: 15 * 60 * 1000, // 15 minutes - featured recipes don't change often
     gcTime: 30 * 60 * 1000, // 30 minutes - keep in cache longer
+    refetchOnWindowFocus: false, // Don't refetch when window gains focus
+    refetchOnMount: false, // Don't refetch when component mounts if data exists
   });
 }
 
@@ -76,7 +78,7 @@ export function useRecipesByCategory(category: string) {
 // User-aware recipes by category hook for correct cache per user
 export function useRecipesByCategoryWithUser(category: string) {
   return useQuery({
-    queryKey: ["recipes", "category", category],
+    queryKey: recipeKeys.category(category),
     queryFn: () => database.getRecipesByCategory(supabase, category),
     enabled: !!category,
     staleTime: 5 * 60 * 1000,
@@ -152,8 +154,8 @@ export function useDeleteRecipe() {
       // Invalidate and refetch recipes lists
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
-      // Invalidate all user-aware queries
-      queryClient.invalidateQueries({ queryKey: ["recipes"] });
+      // Invalidate category queries
+      queryClient.invalidateQueries({ queryKey: recipeKeys.all });
       // Invalidate category counts
       queryClient.invalidateQueries({ queryKey: ["category-counts"] });
 

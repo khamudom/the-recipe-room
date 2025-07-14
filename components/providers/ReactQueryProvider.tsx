@@ -21,8 +21,9 @@ export function ReactQueryProvider({
           staleTime: 5 * 60 * 1000, // 5 minutes
           gcTime: 10 * 60 * 1000, // 10 minutes
           retry: 3,
-          refetchOnWindowFocus: true,
+          refetchOnWindowFocus: false, // Disable refetch on window focus to prevent unnecessary requests
           refetchOnReconnect: true,
+          refetchOnMount: false, // Don't refetch when component mounts if data exists
         },
       },
     });
@@ -76,11 +77,8 @@ function ReactQueryAuthSync() {
         queryClient.clear();
       } else if (event === "SIGNED_IN" || event === "USER_UPDATED") {
         // Invalidate queries but don't force immediate refetch
-        queryClient.invalidateQueries({ queryKey: ["recipes"] });
-        queryClient.invalidateQueries({ queryKey: ["category-counts"] });
         queryClient.invalidateQueries({ queryKey: recipeKeys.all });
-        queryClient.invalidateQueries({ queryKey: ["featured"] });
-        queryClient.invalidateQueries({ queryKey: ["search"] });
+        queryClient.invalidateQueries({ queryKey: ["category-counts"] });
 
         // Only refetch category counts immediately as they're critical for navigation
         queryClient.refetchQueries({ queryKey: ["category-counts"] });

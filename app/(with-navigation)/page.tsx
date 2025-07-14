@@ -8,7 +8,6 @@ import { FeaturedRecipes } from "@/components/features/featured-recipes/featured
 import { CategoriesSection } from "@/components/features/categories-section/categories-section";
 import { Footer } from "@/components/layout/footer/footer";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
-import { LoadingSkeleton } from "@/components/ui/loading-skeleton/loading-skeleton";
 import { useFeaturedRecipes } from "@/hooks/use-recipes-query";
 import { usePageTransition } from "@/hooks/use-page-transition";
 import { Card } from "@/components/ui/card/card";
@@ -69,15 +68,6 @@ export default function RecipeBook() {
   }, []);
 
   const renderContent = () => {
-    // Show loading state only if we have no cached data and are loading
-    if (isFeaturedLoading && featuredRecipes.length === 0) {
-      return (
-        <div className={styles.loadingContainer}>
-          <LoadingSkeleton count={3} />
-        </div>
-      );
-    }
-
     // Show error state if there's a critical error
     if (featuredError) {
       return (
@@ -88,7 +78,7 @@ export default function RecipeBook() {
       );
     }
 
-    // Main content - show even if loading but we have cached data
+    // Main content - always show, let FeaturedRecipes handle its own loading state
     return (
       <>
         <FeaturedRecipes
