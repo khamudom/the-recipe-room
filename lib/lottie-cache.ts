@@ -1,54 +1,86 @@
-// Lottie animation data types
+/**
+ * Lottie Animation Cache System
+ *
+ * This file provides a caching mechanism for Lottie animations to improve performance
+ * and user experience by preloading and storing animation data in memory.
+ *
+ * Key Features:
+ * - Preloads animations to prevent loading delays
+ * - Caches animation data for instant playback
+ * - Prevents duplicate loading requests
+ * - Client-side only operation (SSR safe)
+ * - Automatic preloading of default animations
+ *
+ * Benefits:
+ * - Faster animation startup times
+ * - Reduced network requests
+ * - Better user experience with smooth animations
+ * - Memory-efficient caching with cleanup options
+ *
+ * Usage:
+ * - Import lottieCache instance
+ * - Use preloadAnimation() to cache animations
+ * - Use getCachedAnimation() to retrieve cached data
+ * - Use isLoaded() to check if animation is cached
+ */
+
+// Lottie animation data types for TypeScript support
 export interface LottieAsset {
   id: string;
-  w?: number;
-  h?: number;
-  u?: string;
-  p?: string;
-  e?: number;
+  w?: number; // width
+  h?: number; // height
+  u?: string; // url
+  p?: string; // path
+  e?: number; // extension
   layers?: LottieLayer[];
-  [key: string]: unknown;
+  [key: string]: unknown; // Allow additional properties
 }
 
 export interface LottieLayer {
-  ddd?: number;
-  ind: number;
-  ty: number;
-  nm: string;
-  sr: number;
-  ks: Record<string, unknown>;
-  ao: number;
-  sw: number;
-  sh: number;
-  sc: string;
-  pf: string;
-  t: number;
-  [key: string]: unknown;
+  ddd?: number; // 3D flag
+  ind: number; // index
+  ty: number; // type
+  nm: string; // name
+  sr: number; // start time
+  ks: Record<string, unknown>; // keyframes
+  ao: number; // auto orient
+  sw: number; // stroke width
+  sh: number; // stroke height
+  sc: string; // stroke color
+  pf: string; // path
+  t: number; // time
+  [key: string]: unknown; // Allow additional properties
 }
 
 export interface LottieAnimationData {
-  v: string;
-  fr: number;
-  ip: number;
-  op: number;
-  w: number;
-  h: number;
-  nm: string;
-  ddd: number;
+  v: string; // version
+  fr: number; // frame rate
+  ip: number; // in point
+  op: number; // out point
+  w: number; // width
+  h: number; // height
+  nm: string; // name
+  ddd: number; // 3D flag
   assets: LottieAsset[];
   layers: LottieLayer[];
   [key: string]: unknown; // Allow additional properties that might be in Lottie files
 }
 
 // Lottie animation cache for instant loading
+// Manages preloading, caching, and retrieval of animation data
 class LottieCache {
+  // Cache for storing loaded animation data
   private cache = new Map<string, LottieAnimationData>();
+  // Track ongoing loading promises to prevent duplicate requests
   private loadingPromises = new Map<string, Promise<LottieAnimationData>>();
 
+  // Preload an animation and cache it for future use
   async preloadAnimation(path: string): Promise<LottieAnimationData> {
-    // Don't preload on server side
-    if (typeof window === 'undefined') {
-      return Promise.reject(new Error('Lottie animations can only be preloaded on the client side'));
+    // Don't preload on server side - Lottie is client-only
+    if (typeof window === "undefined") {
+      return Promise.reject(
+        new Error("Lottie animations can only be preloaded on the client side")
+      );
     }
 
     // If already cached, return immediately
@@ -56,12 +88,12 @@ class LottieCache {
       return this.cache.get(path)!;
     }
 
-    // If already loading, wait for that promise
+    // If already loading, wait for that promise to avoid duplicate requests
     if (this.loadingPromises.has(path)) {
       return this.loadingPromises.get(path)!;
     }
 
-    // Start loading
+    // Start loading the animation
     const loadPromise = this.loadAnimation(path);
     this.loadingPromises.set(path, loadPromise);
 
@@ -76,10 +108,13 @@ class LottieCache {
     }
   }
 
+  // Internal method to load animation data from a URL
   private async loadAnimation(path: string): Promise<LottieAnimationData> {
     // Only load animations on the client side
-    if (typeof window === 'undefined') {
-      throw new Error('Lottie animations can only be loaded on the client side');
+    if (typeof window === "undefined") {
+      throw new Error(
+        "Lottie animations can only be loaded on the client side"
+      );
     }
 
     const response = await fetch(path);
@@ -89,25 +124,31 @@ class LottieCache {
     return response.json();
   }
 
+  // Get cached animation data if available
   getCachedAnimation(path: string): LottieAnimationData | null {
     return this.cache.get(path) || null;
   }
 
+  // Check if an animation is already loaded and cached
   isLoaded(path: string): boolean {
     return this.cache.has(path);
   }
 
+  // Clear all cached animations and loading promises
+  // Useful for memory management or when switching contexts
   clearCache(): void {
     this.cache.clear();
     this.loadingPromises.clear();
   }
 }
 
-// Global instance
+// Global instance for use throughout the application
 export const lottieCache = new LottieCache();
 
 // Preload default animation on module load (only on client side)
-if (typeof window !== 'undefined') {
-  const DEFAULT_ANIMATION_PATH = "/assets/lottie/Animation - 1751255045745.json";
+// This ensures the main loading animation is ready immediately
+if (typeof window !== "undefined") {
+  const DEFAULT_ANIMATION_PATH =
+    "/assets/lottie/Animation - 1751255045745.json";
   lottieCache.preloadAnimation(DEFAULT_ANIMATION_PATH).catch(console.error);
 }
