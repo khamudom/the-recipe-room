@@ -50,6 +50,48 @@
   font-weight: 600;
 }
 
+.techInfo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.techStack h4 {
+  color: var(--primary-color);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-family-header);
+}
+
+.techStack ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.techStack li {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.appInfo p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.githubLink {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.githubLink:hover {
+  color: var(--color-foreground-second-dark);
+  text-decoration: underline;
+}
+
 .footer {
   margin-top: 2rem;
   padding-top: 1.5rem;
@@ -82,5 +124,15 @@
 
   .section ul {
     padding-left: 1rem;
+  }
+
+  .techInfo {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .techStack li,
+  .appInfo p {
+    font-size: 0.85rem;
   }
 }

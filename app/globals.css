@@ -58,6 +58,7 @@
   --font-size-chat: clamp(16px, 3vw, 18px);
 
   --font-size-button: 18px;
+  --font-size-badge: 12px;
 
   /* Font Weights */
   --font-weight-regular: 400;
@@ -75,7 +76,7 @@
 
   /* Text */
   --color-heading: var(--primary-color);
-  --color-text: var(--secondary-dark-color);
+  --color-text: var(--primary-color);
   --color-foreground-primary-light: var(--primary-light-color);
   --color-foreground-accent: var(--accent-color);
   --color-input-foreground: var(--foreground-color);
@@ -220,12 +221,13 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
   color: var(--foreground-color);
-  background: linear-gradient(
+  background: var(--color-background-gradient);
+  /* background: linear-gradient(
       135deg,
       rgba(253, 246, 227, 0.75),
       rgba(254, 215, 170, 0.75)
     ),
-    url("/assets/worn-paper-optimized.webp");
+    url("/assets/worn-paper-optimized.webp"); */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

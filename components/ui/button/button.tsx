@@ -8,6 +8,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "small" | "medium" | "large";
   iconOnly?: boolean;
   shape?: "square" | "round" | "circle";
+  status?: "success" | "danger" | "warning" | "info";
+  align?: "left" | "center" | "right";
 }
 
 export function Button({
@@ -20,6 +22,8 @@ export function Button({
   size = "medium",
   iconOnly = false,
   shape = "round",
+  status,
+  align = "center",
   ...props
 }: ButtonProps) {
   const buttonClasses = [
@@ -33,6 +37,12 @@ export function Button({
     iconOnly && styles.iconOnly,
     shape === "square" && styles.square,
     shape === "circle" && styles.circle,
+    status === "success" && styles.success,
+    status === "danger" && styles.danger,
+    status === "warning" && styles.warning,
+    status === "info" && styles.info,
+    align === "left" && styles.alignLeft,
+    align === "right" && styles.alignRight,
     className,
   ]
     .filter(Boolean)

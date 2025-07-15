@@ -78,6 +78,41 @@ export function About() {
         </p>
       </div>
 
+      <div className={styles.section}>
+        <h3>About This App</h3>
+        <p>
+          The Recipe Room is built with modern web technologies to provide a fast,
+          reliable, and user-friendly experience.
+        </p>
+        <div className={styles.techInfo}>
+          <div className={styles.techStack}>
+            <h4>Technology Stack</h4>
+            <ul>
+              <li><strong>Frontend:</strong> Next.js 15, React 18, TypeScript</li>
+              <li><strong>Database:</strong> Supabase (PostgreSQL)</li>
+              <li><strong>Authentication:</strong> Supabase Auth</li>
+              <li><strong>AI Features:</strong> OpenAI API</li>
+              <li><strong>Styling:</strong> CSS Modules</li>
+              <li><strong>PWA:</strong> Next.js PWA</li>
+            </ul>
+          </div>
+          <div className={styles.appInfo}>
+            <p><strong>Version:</strong> 0.1.0</p>
+            <p>
+              <strong>Source Code:</strong>{" "}
+              <a
+                href="https://github.com/khamudom/the-recipe-room"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.githubLink}
+              >
+                View on GitHub
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.footer}>
         <p className={styles.footerText}>
           <em>Happy cooking!</em>

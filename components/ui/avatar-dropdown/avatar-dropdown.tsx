@@ -81,6 +81,11 @@ export function AvatarDropdown() {
     setIsOpen(false);
   };
 
+  const onProfileClick = () => {
+    router.push("/profile");
+    setIsOpen(false);
+  };
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -148,12 +153,14 @@ export function AvatarDropdown() {
               Add Recipe
             </button>
           )}
-          <Link href="/" className={styles.dropdownItem}>
-            Shopping List - Coming Soon
-          </Link>
           <button onClick={onAboutClick} className={styles.dropdownItem}>
             About
           </button>
+          {user && (
+            <button onClick={onProfileClick} className={styles.dropdownItem}>
+              Profile
+            </button>
+          )}
           <div className={styles.divider} />
           {user ? (
             <button onClick={handleSignOut} className={styles.dropdownItem}>

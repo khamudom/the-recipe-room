@@ -148,3 +148,98 @@
   background-color: #ffe082;
   color: #3a1a00;
 }
+
+/* Status variants */
+.success {
+  background-color: #10b981;
+  color: white;
+  border: none;
+}
+
+.success:hover {
+  background-color: #059669;
+}
+
+.danger {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+.danger:hover {
+  background-color: #dc2626;
+}
+
+.warning {
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+}
+
+.warning:hover {
+  background-color: #d97706;
+}
+
+.info {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.info:hover {
+  background-color: #2563eb;
+}
+
+/* Status outline variants */
+.success.outline {
+  background-color: transparent;
+  color: #10b981;
+  border: 1px solid #10b981;
+}
+
+.success.outline:hover {
+  background-color: #10b981;
+  color: white;
+}
+
+.danger.outline {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+.danger.outline:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+.warning.outline {
+  background-color: transparent;
+  color: #f59e0b;
+  border: 1px solid #f59e0b;
+}
+
+.warning.outline:hover {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.info.outline {
+  background-color: transparent;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+}
+
+.info.outline:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Content alignment variants */
+.alignLeft {
+  justify-content: flex-start;
+}
+
+.alignRight {
+  justify-content: flex-end;
+}
