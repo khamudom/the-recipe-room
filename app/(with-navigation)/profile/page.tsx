@@ -5,12 +5,12 @@ import { Card } from "../../../components/ui/card/card";
 import { Modal } from "../../../components/ui/modal/modal";
 import { Button } from "@/components/ui/button/button";
 import styles from "./profile.module.css";
-import { Calendar, Camera, Clock, Mail, PencilIcon, PenIcon, Shield, Trash2, User, X } from "lucide-react";
+import { Calendar, Camera, Clock, Mail, PencilIcon, Shield, Trash2, User, X } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "../../../lib/supabase";
 
 export default function ProfilePage() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const [isUpdateProfileOpen, setIsUpdateProfileOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isUpdateEmailOpen, setIsUpdateEmailOpen] = useState(false);
