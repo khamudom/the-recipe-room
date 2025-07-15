@@ -9,9 +9,11 @@ import {
   X,
   AlertCircle,
   Plus,
+  ArrowLeft,
 } from "lucide-react";
 import Image from "next/image";
 import styles from "./ai-recipe-analyzer.module.css";
+import { Button } from "@/components/ui/button/button";
 
 interface RecipeAnalysis {
   title: string;
@@ -244,15 +246,18 @@ export function AIRecipeAnalyzer({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button onClick={onCancel} className={styles.cancelButton}>
-          <X className={styles.buttonIcon} />
-          Cancel
-        </button>
+        <Button
+          variant="outline"
+          onClick={onCancel}
+          iconOnly
+          className={styles.cancelButton}
+        >
+          <ArrowLeft />
+        </Button>
         <h1 className={`${styles.title} page-header`}>
           <Sparkles className={styles.sparklesIcon} />
           AI Recipe Analyzer
         </h1>
-        <div className={styles.spacer}></div>
       </div>
 
       <div className={styles.content}>
@@ -334,25 +339,23 @@ export function AIRecipeAnalyzer({
               onChange={handleImageUpload}
               className={styles.hiddenInput}
             />
-            <button
-              type="button"
+            <Button
               onClick={() => fileInputRef.current?.click()}
               className={styles.uploadButton}
               disabled={isAnalyzing}
             >
               <Upload className={styles.buttonIcon} />
               {imageData.length > 0 ? "Add More Images" : "Choose Images"}
-            </button>
+            </Button>
             {imageData.length > 0 && (
-              <button
-                type="button"
+              <Button
+                variant="outline"
                 onClick={removeAllImages}
-                className={styles.clearButton}
                 disabled={isAnalyzing}
               >
                 <X className={styles.buttonIcon} />
                 Clear All
-              </button>
+              </Button>
             )}
           </div>
 
@@ -365,10 +368,11 @@ export function AIRecipeAnalyzer({
         </div>
 
         <div className={styles.analyzeSection}>
-          <button
+          <Button
             onClick={analyzeRecipe}
             disabled={imageData.length === 0 || isAnalyzing}
             className={styles.analyzeButton}
+            size="large"
           >
             {isAnalyzing ? (
               <>
@@ -383,7 +387,7 @@ export function AIRecipeAnalyzer({
                 Analyze Recipe
               </>
             )}
-          </button>
+          </Button>
 
           {isAnalyzing && (
             <div className={styles.analyzingInfo}>

@@ -8,6 +8,10 @@
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
   font-family: var(--font-family-body);
   font-size: var(--font-size-button);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: var(--spacing-small);
 }
 
 /* Shape variants */

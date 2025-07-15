@@ -29,12 +29,7 @@ export function RecipeDetail({
       <div className={styles.content}>
         {/* Hero Section */}
         <div className={styles.headerControls}>
-          <Button
-            onClick={onBack}
-            variant="outline"
-            iconOnly
-            className={styles.backButton}
-          >
+          <Button onClick={onBack} variant="outline" iconOnly>
             <ArrowLeft className={styles.buttonIcon} />
           </Button>
           <h1 className={`${styles.recipeTitle} section-header`}>
@@ -45,18 +40,10 @@ export function RecipeDetail({
         {/* Action Buttons */}
         {isOwner && (
           <div className={styles.actionButtons}>
-            <Button
-              onClick={onEdit}
-              variant="outline"
-              iconOnly
-            >
+            <Button onClick={onEdit} variant="outline" iconOnly>
               <Edit className={styles.buttonIcon} />
             </Button>
-            <Button
-              onClick={onDelete}
-              variant="outline"
-              iconOnly
-            >
+            <Button onClick={onDelete} variant="outline" iconOnly>
               <Trash2 className={styles.buttonIcon} />
             </Button>
           </div>

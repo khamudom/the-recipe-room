@@ -149,12 +149,7 @@ export default function CategoryPage() {
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.header}>
-            <Button
-              onClick={handleBack}
-              variant="outline"
-              iconOnly
-              className={styles.backButton}
-            >
+            <Button onClick={handleBack} variant="outline" iconOnly>
               <ArrowLeft className={styles.buttonIcon} />
             </Button>
             <h1 className={`${styles.mainTitle} page-header`}>

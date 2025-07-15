@@ -21,6 +21,7 @@ import {
   ImageIcon,
   Loader2,
   Sparkles,
+  ArrowLeft,
   //Globe,
 } from "lucide-react";
 // TODO: Import MultiImageAnalysisResponse when we add URL extraction
@@ -30,6 +31,7 @@ import { AIRecipeAnalyzer } from "@/components/features/ai-recipe-analyzer/ai-re
 import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-form.module.css";
 import Image from "next/image";
+import { Button } from "@/components/ui/button/button";
 
 interface RecipeFormProps {
   recipe?: Recipe | null;
@@ -233,9 +235,9 @@ export function RecipeForm({
       <div className={styles.content}>
         {/* Hero Section */}
         <div className={styles.header}>
-          <button onClick={onCancel} className={styles.cancelSubmitButton}>
-            Cancel
-          </button>
+          <Button onClick={onCancel} variant="outline" iconOnly>
+            <ArrowLeft />
+          </Button>
           <h1 className={`${styles.title} section-header`}>
             {recipe ? "Edit Recipe" : "Add New Recipe"}
           </h1>
@@ -284,14 +286,10 @@ export function RecipeForm({
                     onChange={handleImageUpload}
                     className={styles.hiddenInput}
                   />
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className={styles.uploadButton}
-                  >
+                  <Button onClick={() => fileInputRef.current?.click()}>
                     <Upload className={styles.buttonIcon} />
                     {formData.image ? "Change Image" : "Upload Image"}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -299,7 +297,7 @@ export function RecipeForm({
 
           {/* AI Analysis Option - Only show for new recipes */}
           {!recipe && (
-            <div className={styles.card}>
+            <div className={`${styles.card} ${styles.aiCard}`}>
               <div className={styles.cardHeader}>
                 <h3 className={styles.cardTitle}>AI Recipe Analysis</h3>
                 <div className={styles.cardLine}></div>
@@ -309,21 +307,18 @@ export function RecipeForm({
                   <div className={styles.aiDescription}>
                     <Sparkles className={styles.aiIcon} />
                     <div>
-                      <h4>Extract Recipe from Image</h4>
+                      <h4>Try AI Recipe Analysis</h4>
                       <p>
-                        Upload a photo of a recipe and our AI will automatically
-                        extract all the details for you.
+                        Upload a photo of your recipe and let our AI extract all
+                        the details automatically. Perfect for handwritten
+                        recipes, cookbook pages, or recipe cards!
                       </p>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowAIAnalyzer(true)}
-                    className={styles.aiButton}
-                  >
+                  <Button onClick={() => setShowAIAnalyzer(true)}>
                     <Sparkles className={styles.buttonIcon} />
                     Analyze Recipe Image
-                  </button>
+                  </Button>
                 </div>
 
                 {/* <div className={styles.aiDivider}></div>
@@ -537,14 +532,14 @@ export function RecipeForm({
                   )}
                 </div>
               ))}
-              <button
-                type="button"
+              <Button
                 onClick={addIngredient}
+                variant="outline"
                 className={styles.addButton}
               >
                 <Plus className={styles.buttonIcon} />
                 Add Ingredient
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -575,32 +570,23 @@ export function RecipeForm({
                   )}
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={addInstruction}
-                className={styles.addButton}
-              >
+              <Button variant="outline" onClick={addInstruction}>
                 <Plus className={styles.buttonIcon} />
                 Add Step
-              </button>
+              </Button>
             </div>
           </div>
 
           {/* Submit Buttons */}
           <div className={styles.submitButtons}>
-            <button
-              type="button"
+            <Button
+              variant="outline"
               onClick={onCancel}
-              className={styles.cancelSubmitButton}
               disabled={isSubmitting}
             >
               Cancel
-            </button>
-            <button
-              type="submit"
-              className={styles.saveButton}
-              disabled={isSubmitting}
-            >
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <div className={styles.loadingTextContainer}>
                   <Loader2
@@ -613,7 +599,7 @@ export function RecipeForm({
               ) : (
                 "Save Recipe"
               )}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

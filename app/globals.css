@@ -9,6 +9,7 @@
   --primary-light-color: #fefcf3;
   --secondary-color: #fbbf24;
   --secondary-light-color: #fef3c7;
+  --secondary-light-color-hover: hsla(48, 96%, 89%, 0.1);
   --secondary-dark-color: #92400e;
   --accent-color: #d97706;
   --white-color: #ffffff;
@@ -23,6 +24,11 @@
     #7c021d 0%,
     #7c021d 50%,
     #580000 100%
+  );
+  --color-linear-gradient-primary: linear-gradient(
+    135deg,
+    #a0334a 0%,
+    #7c021d 100%
   );
   --color-linear-gradient-transparent: linear-gradient(
     to right,
@@ -79,6 +85,7 @@
   --color-background-light: var(--secondary-light-color);
   --color-background-gradient: var(--color-linear-gradient);
   --color-background-gradient-dark: var(--color-linear-gradient-dark);
+  --color-background-gradient-primary: var(--color-linear-gradient-primary);
   --color-background-accent: var(--accent-color);
   --color-background-card: var(--primary-light-color);
   --color-background-primary-dark: var(--primary-dark-color);

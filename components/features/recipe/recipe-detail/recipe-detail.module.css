@@ -9,6 +9,7 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem 1rem 4rem 1rem;
+  margin-top: 6rem;
 }
 
 .headerControls {
@@ -16,10 +17,15 @@
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 2rem;
-}
-
-.backButton {
-  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background: var(--color-background-primary-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  z-index: 100;
+  padding: 1rem 1.5rem;
+  backdrop-filter: blur(4px);
 }
 
 .actionButtons {
@@ -29,10 +35,10 @@
   margin-bottom: 0.5rem;
 }
 
-.buttonIcon {
+/* .buttonIcon {
   width: var(--icon-size-large);
   height: var(--icon-size-large);
-}
+} */
 
 .heroImageContainer {
   margin-bottom: 2rem;
