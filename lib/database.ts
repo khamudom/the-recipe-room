@@ -70,7 +70,8 @@ export const database = {
       .eq("featured", true)
       .order("created_at", { ascending: false });
     if (error) throw new Error("Failed to fetch featured recipes");
-    return data.map(normalizeRecipe);
+    const recipes = data.map(normalizeRecipe);
+    return recipes;
   },
 
   // Get a single recipe by ID
@@ -143,6 +144,8 @@ export const database = {
     const { prepTime, cookTime, featured, ...rest } = updates;
     const isAdmin = user.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
 
+    console.log("Updating recipe:", { id, updates, isAdmin });
+
     const { data, error } = await supabase
       .from("recipes")
       .update({
@@ -160,7 +163,10 @@ export const database = {
       console.error("Supabase update recipe error:", error);
       throw new Error("Failed to update recipe");
     }
-    return normalizeRecipe(data);
+
+    const normalizedRecipe = normalizeRecipe(data);
+    console.log("Recipe updated in database:", normalizedRecipe);
+    return normalizedRecipe;
   },
 
   // Delete a recipe

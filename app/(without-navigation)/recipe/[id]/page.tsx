@@ -47,7 +47,7 @@ function RecipeDetailContent() {
   // Show loading state
   if (isLoading) {
     return (
-      <div style={{ padding: "30%" }}>
+      <div style={{ padding: "10%" }}>
         <LoadingSpinner />
       </div>
     );

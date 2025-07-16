@@ -1,9 +1,6 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { persistQueryClient } from "@tanstack/react-query-persist-client";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
@@ -27,24 +24,6 @@ export function ReactQueryProvider({
         },
       },
     });
-
-    // Set up persistence if we're on the client side
-    if (typeof window !== "undefined") {
-      const persister = createSyncStoragePersister({
-        storage: window.localStorage,
-        // Add serialization options to handle potential issues
-        serialize: (data: unknown) => JSON.stringify(data),
-        deserialize: (data: string) => JSON.parse(data),
-      });
-
-      persistQueryClient({
-        queryClient: client,
-        persister,
-        // Add options to handle persistence issues
-        maxAge: 1000 * 60 * 60 * 24, // 24 hours
-        buster: "v1", // Add a version buster
-      });
-    }
 
     return client;
   });
