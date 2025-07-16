@@ -23,7 +23,6 @@
 
 .card:hover {
   box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
   border-color: var(--color-border-secondary);
 }
 
@@ -31,7 +30,6 @@
   outline: 3px solid #f59e0b;
   outline-offset: 2px;
   box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
 }
 
 .imageContainer {

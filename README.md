@@ -1,8 +1,8 @@
 # The Recipe Room 🍳
 
-A beautiful, modern recipe management application built with Next.js 15, React, and Supabase. Store, organize, and discover your favorite recipes with an intuitive interface that makes cooking more enjoyable.
+A recipe management application built with Next.js 15, React, and Supabase. Store, organize, and discover your favorite recipes with an intuitive interface that makes cooking more enjoyable.
 
-🌐 **[Live Demo](https://thereciperoom.vercel.app/)**
+🌐 **[Live Demo](https://www.thereciperoom.net/)**
 
 ## ✨ Features
 
@@ -23,8 +23,20 @@ A beautiful, modern recipe management application built with Next.js 15, React, 
 - **Lottie Animations**: Beautiful loading animations and micro-interactions
 - **Performance Optimizations**: Intelligent caching, preloading, and optimized rendering
 - **Development Tools**: Enhanced debugging capabilities in development mode
+- **Mobile Carousel**: Smooth, touch-friendly carousel for featured recipes on mobile devices
+- **Progressive Web App**: Installable app with offline support and automatic updates
 
 ## 🚀 New Features & Improvements
+
+### Enhanced Mobile Experience
+
+The application now provides an exceptional mobile experience with:
+
+- **Swiper.js Carousel**: Professional carousel implementation for featured recipes
+- **Touch & Mouse Support**: Smooth drag/swipe functionality on both touch and mouse devices
+- **Optimized Performance**: Hardware-accelerated animations and smooth scrolling
+- **Responsive Layouts**: Adaptive grid/carousel layouts based on screen size
+- **Mobile-First Design**: Optimized interactions for mobile devices
 
 ### React Query Integration
 
@@ -56,6 +68,7 @@ The application now uses **TanStack React Query** for advanced state management:
 - **Component Memoization**: Optimized re-rendering for better performance
 - **Image Optimization**: Next.js Image component for optimized image loading
 - **Code Splitting**: Automatic code splitting for faster initial loads
+- **Hardware Acceleration**: GPU-accelerated animations and transitions
 
 ### Development Experience
 
@@ -156,6 +169,13 @@ Chat with Chef Gusto, your virtual cooking assistant! Get help with:
 - Get personalized advice and recommendations
 - Close the chat when you're done
 
+### Mobile Experience
+
+- **Swipe Through Recipes**: On mobile, swipe left/right through featured recipes
+- **Touch-Friendly**: All interactions optimized for touch devices
+- **Responsive Design**: Automatic layout adjustments for different screen sizes
+- **Smooth Animations**: Hardware-accelerated transitions
+
 ## 🛠️ Technology Stack
 
 - **Framework**: [Next.js 15](https://nextjs.org/) - React framework with App Router
@@ -166,6 +186,7 @@ Chat with Chef Gusto, your virtual cooking assistant! Get help with:
 - **Authentication**: Supabase Auth - Secure user authentication
 - **AI Integration**: [OpenAI GPT-4](https://openai.com/) - Recipe analysis and chef assistant
 - **State Management**: [TanStack React Query](https://tanstack.com/query) - Advanced data fetching and caching
+- **Carousel**: [Swiper.js](https://swiperjs.com/) - Professional carousel and touch slider
 - **Animations**: [Lottie React](https://lottiefiles.com/) - Beautiful loading animations
 - **Markdown**: [React Markdown](https://github.com/remarkjs/react-markdown) - Rich text rendering
 - **Deployment**: Ready for Vercel, Netlify, or any Next.js hosting platform
@@ -199,7 +220,7 @@ the-recipe-room/
 │   ├── recipe-form/       # Recipe creation/editing form
 │   ├── search-controls/   # Search and navigation controls
 │   ├── categories-section/ # Category browsing section
-│   ├── featured-recipes/  # Featured recipes section
+│   ├── featured-recipes/  # Featured recipes section with Swiper carousel
 │   ├── loading-skeleton/  # Loading skeleton components
 │   ├── loading-spinner/   # Lottie-based loading animations
 │   ├── error-boundary/    # Error boundary components
@@ -249,140 +270,113 @@ The application integrates with OpenAI's GPT-4 for two main features:
 - Returns validated JSON with recipe information
 - Handles errors gracefully with user-friendly messages
 
-### Chef Assistant (GPT-4)
+### AI Chef Assistant (GPT-4)
 
-- Provides cooking advice and instructions
-- Answers food-related questions
-- Offers wine pairings and substitutions
-- Maintains context throughout conversations
+- Provides cooking advice and techniques
+- Answers questions about ingredients and substitutions
+- Offers meal planning suggestions
+- Explains cooking methods and food science
 
-For detailed integration instructions, see the [AI Integration Guide](AI_INTEGRATION_GUIDE.md).
+## 📱 Mobile Experience
 
-## 🎨 Design Features
+The Recipe Room is optimized for mobile devices with:
 
-- **Responsive Layout**: Adapts to different screen sizes
-- **Card-based UI**: Clean recipe cards with hover effects
-- **Typography**: Readable fonts and proper hierarchy
-- **Color Scheme**: Warm, food-friendly color palette
-- **Animations**: Smooth transitions and micro-interactions
-- **Accessibility**: Proper semantic HTML and keyboard navigation
-- **AI Interface**: Beautiful gradient design for AI analysis feature
-- **Loading States**: Skeleton loaders and spinners for better UX
-- **Error Boundaries**: Graceful error handling throughout the app
-- **Lottie Animations**: Engaging loading and interaction animations
-
-## 📝 Recipe Data Structure
-
-Each recipe follows this structure:
-
-```typescript
-interface Recipe {
-  id: string;
-  userId: string;
-  title: string;
-  description: string;
-  ingredients: string[];
-  instructions: string[];
-  prepTime?: string;
-  cookTime?: string;
-  servings: number;
-  category: string;
-  image?: string; // Base64 encoded image or URL
-  featured?: boolean;
-  createdAt: string;
-  updatedAt?: string;
-}
-```
+- **Touch-Friendly Interface**: All interactions designed for touch
+- **Swiper.js Carousel**: Professional carousel for featured recipes
+- **Responsive Design**: Adaptive layouts for all screen sizes
+- **Smooth Animations**: Hardware-accelerated transitions
+- **Progressive Web App**: Installable with offline support
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 18+ 
 - npm or yarn
 - Supabase account
 - OpenAI API key (for AI features)
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/the-recipe-room.git
+   cd the-recipe-room
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Fill in your environment variables:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   OPENAI_API_KEY=your_openai_api_key
+   NEXT_PUBLIC_ADMIN_USER_ID=your_admin_user_id
+   ```
+
+4. **Set up the database**
+   ```bash
+   # Run the schema.sql file in your Supabase SQL editor
+   # Or use the Supabase CLI
+   ```
+
+5. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 🧪 Testing
 
 ```bash
-git clone https://github.com/yourusername/the-recipe-room.git
-cd the-recipe-room
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
 ```
 
-2. Install dependencies:
+## 📦 Deployment
 
-```bash
-npm install
-```
+The Recipe Room is ready for deployment on Vercel, Netlify, or any Next.js hosting platform.
 
-3. Set up environment variables:
+### Vercel Deployment
 
-Create a `.env.local` file with the following variables:
+1. Connect your GitHub repository to Vercel
+2. Add your environment variables in the Vercel dashboard
+3. Deploy automatically on every push
 
-```env
-# Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+### Environment Variables
 
-# OpenAI Configuration (for AI features)
-OPENAI_API_KEY=your_openai_api_key
+Make sure to set these environment variables in production:
 
-# Admin Configuration (optional)
-NEXT_PUBLIC_ADMIN_USER_ID=your_admin_user_id
-```
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `OPENAI_API_KEY`
+- `NEXT_PUBLIC_ADMIN_USER_ID`
 
-4. Set up the database:
+## 🤝 Contributing
 
-```bash
-# Run the schema file in your Supabase SQL editor
-# Copy the contents of supabase/schema.sql
-```
-
-5. Run the development server:
-
-```bash
-npm run dev
-```
-
-6. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-### Testing the AI Features
-
-1. Start the development server
-2. Navigate to the "Add Recipe" page
-3. Click "Analyze Recipe Image"
-4. Upload any recipe image
-5. Review and save the extracted recipe
-6. Test the AI Chef by clicking the floating chef button
-
-### Development Features
-
-- **Supabase Debugging**: In development mode, the Supabase client is exposed to `window.supabase` for debugging
-- **React Query DevTools**: Available in development for query debugging (currently commented out)
-- **Error Boundaries**: Detailed error information shown in development mode
-- **Hot Reloading**: Fast development experience with Next.js hot reloading
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Connect your repository to [Vercel](https://vercel.com)
-3. Add your environment variables in the Vercel dashboard
-4. Deploy automatically on every push
-
-### Other Platforms
-
-The app can be deployed to any platform that supports Next.js:
-
-- Netlify
-- Railway
-- DigitalOcean App Platform
-- AWS Amplify
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📄 License
 
@@ -390,14 +384,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Built with [Next.js](https://nextjs.org/)
-- Database powered by [Supabase](https://supabase.com/)
-- AI features powered by [OpenAI](https://openai.com/)
-- State management with [TanStack React Query](https://tanstack.com/query)
-- Animations with [Lottie](https://lottiefiles.com/)
-- Icons from [Lucide](https://lucide.dev/)
-- Inspired by the joy of cooking and sharing recipes
-
----
-
-**Happy Cooking! 👨‍🍳👩‍🍳**
+- [Next.js](https://nextjs.org/) for the amazing React framework
+- [Supabase](https://supabase.com/) for the backend infrastructure
+- [OpenAI](https://openai.com/) for the AI capabilities
+- [Swiper.js](https://swiperjs.com/) for the carousel functionality
+- [Lottie](https://lottiefiles.com/) for the beautiful animations
+- [TanStack](https://tanstack.com/) for React Query
+- [Lucide](https://lucide.dev/) for the beautiful icons

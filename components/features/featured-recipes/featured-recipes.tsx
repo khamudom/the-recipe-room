@@ -1,10 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Mousewheel, FreeMode } from "swiper/modules";
 import { RecipeCard } from "../recipe/recipe-card/recipe-card";
 import { LoadingSkeleton } from "../../ui/loading-skeleton/loading-skeleton";
 import type { Recipe } from "@/types/recipe";
 import styles from "./featured-recipes.module.css";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/mousewheel";
+import "swiper/css/free-mode";
 
 // Custom hook to detect mobile view
 function useIsMobile() {
@@ -77,16 +84,48 @@ export function FeaturedRecipes({
           {/* Desktop Grid Layout */}
           <div className={styles.recipeGrid}>{renderRecipeCards()}</div>
 
-          {/* Mobile Carousel Layout */}
+          {/* Mobile Carousel Layout with Swiper */}
           <div className={styles.recipeCarousel}>
-            {featuredRecipes.map((recipe) => (
-              <div key={recipe.id} className={styles.recipeCarouselItem}>
-                <RecipeCard
-                  recipe={recipe}
-                  onClick={() => onRecipeClick(recipe)}
-                />
-              </div>
-            ))}
+            <Swiper
+              modules={[Mousewheel, FreeMode]}
+              spaceBetween={24}
+              slidesPerView="auto"
+              freeMode={{
+                enabled: true,
+                sticky: true,
+                momentumBounce: false,
+                momentumRatio: 0.4,
+                momentumVelocityRatio: 0.4,
+                minimumVelocity: 0.02,
+              }}
+              mousewheel={{
+                forceToAxis: true,
+                sensitivity: 1,
+              }}
+              grabCursor={true}
+              resistance={true}
+              resistanceRatio={0.85}
+              touchStartPreventDefault={false}
+              touchMoveStopPropagation={false}
+              preventClicks={false}
+              preventClicksPropagation={false}
+              threshold={10}
+              shortSwipes={true}
+              longSwipes={true}
+              longSwipesRatio={0.5}
+              longSwipesMs={300}
+              followFinger={true}
+              className={styles.swiperContainer}
+            >
+              {featuredRecipes.map((recipe) => (
+                <SwiperSlide key={recipe.id} className={styles.recipeCarouselItem}>
+                  <RecipeCard
+                    recipe={recipe}
+                    onClick={() => onRecipeClick(recipe)}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </>
       ) : (

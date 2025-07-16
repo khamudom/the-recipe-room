@@ -1,6 +1,6 @@
 # Design System
 
-This directory contains the design system for The Recipe Room application.
+This directory contains the design system for The Recipe Room application, including design tokens, component styles, and mobile optimization guidelines.
 
 ## Structure
 
@@ -87,3 +87,204 @@ The design system includes utility classes for quick styling:
   border-color: var(--color-primary);
 }
 ```
+
+## Mobile Optimization
+
+### Hardware Acceleration
+
+For smooth animations and transitions on mobile devices, use hardware acceleration:
+
+```css
+.hardware-accelerated {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+```
+
+### Touch Optimizations
+
+Optimize touch interactions for mobile devices:
+
+```css
+.touch-optimized {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+```
+
+### Responsive Breakpoints
+
+The design system uses these breakpoints for responsive design:
+
+```css
+/* Mobile first approach */
+@media (min-width: 768px) {
+  /* Tablet and up */
+}
+
+@media (min-width: 1024px) {
+  /* Desktop */
+}
+
+@media (min-width: 1280px) {
+  /* Large desktop */
+}
+```
+
+## Carousel Styling
+
+### Swiper.js Integration
+
+For carousel components using Swiper.js, use these optimized styles:
+
+```css
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  /* Hardware acceleration for smoother animations */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+
+.swiper-slide {
+  /* Prevent layout shifts during animation */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+```
+
+### Carousel Item Sizing
+
+```css
+.carousel-item {
+  width: calc(100% - 2rem) !important;
+  max-width: 400px;
+  /* Prevent layout shifts during animation */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+```
+
+## Performance Guidelines
+
+### Animation Performance
+
+- Use `transform` and `opacity` for animations (GPU-accelerated)
+- Avoid animating `width`, `height`, `margin`, `padding` (layout-triggering)
+- Use `will-change` sparingly and only when needed
+- Prefer CSS animations over JavaScript when possible
+
+### Mobile Performance
+
+- Minimize layout shifts during animations
+- Use `contain: layout` for isolated components
+- Optimize images for mobile devices
+- Consider reducing animation complexity on lower-end devices
+
+### Touch Performance
+
+- Ensure touch targets are at least 44px × 44px
+- Provide visual feedback for touch interactions
+- Use `touch-action` to control touch behavior
+- Test on actual mobile devices, not just browser dev tools
+
+## Accessibility
+
+### Color Contrast
+
+Ensure sufficient color contrast for text readability:
+
+- **Normal text**: Minimum 4.5:1 contrast ratio
+- **Large text**: Minimum 3:1 contrast ratio
+- **UI components**: Minimum 3:1 contrast ratio
+
+### Focus States
+
+Provide clear focus indicators:
+
+```css
+.focusable:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+```
+
+### Reduced Motion
+
+Respect user preferences for reduced motion:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+## Component Guidelines
+
+### Consistent Spacing
+
+Use consistent spacing throughout the application:
+
+```css
+:root {
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+}
+```
+
+### Typography Scale
+
+Maintain consistent typography hierarchy:
+
+```css
+:root {
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+}
+```
+
+### Border Radius
+
+Use consistent border radius values:
+
+```css
+:root {
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+}
+```
+
+## Best Practices
+
+1. **Mobile First**: Design for mobile devices first, then enhance for larger screens
+2. **Performance**: Optimize for performance, especially on mobile devices
+3. **Accessibility**: Ensure all components are accessible to users with disabilities
+4. **Consistency**: Maintain consistent spacing, typography, and color usage
+5. **Touch Friendly**: Design for touch interactions on mobile devices
+6. **Hardware Acceleration**: Use GPU-accelerated properties for smooth animations
+7. **Reduced Motion**: Respect user preferences for reduced motion
+8. **Testing**: Test on actual devices, not just browser dev tools
