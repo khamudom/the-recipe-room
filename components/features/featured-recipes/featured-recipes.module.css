@@ -27,6 +27,42 @@
   gap: 1.5rem;
 }
 
+/* Mobile carousel styles */
+.recipeCarousel {
+  display: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  padding: 0 1rem;
+  margin: 0 -1rem;
+}
+
+.recipeCarousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.recipeCarouselItem {
+  flex: 0 0 calc(100% - 2rem);
+  scroll-snap-align: start;
+  margin-right: 1.5rem;
+}
+
+.recipeCarouselItem:last-child {
+  margin-right: 0;
+}
+
+/* Show carousel on mobile, grid on desktop */
+@media (max-width: 767px) {
+  .recipeGrid {
+    display: none;
+  }
+
+  .recipeCarousel {
+    display: flex;
+  }
+}
+
 @media (min-width: 768px) {
   .featuredSection {
     padding-block-end: 8rem;

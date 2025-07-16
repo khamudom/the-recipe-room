@@ -27,6 +27,16 @@ export function FeaturedRecipes({
     .filter((recipe) => recipe.featured)
     .slice(0, maxRecipes);
 
+  const renderRecipeCards = () => {
+    return featuredRecipes.map((recipe) => (
+      <RecipeCard
+        key={recipe.id}
+        recipe={recipe}
+        onClick={() => onRecipeClick(recipe)}
+      />
+    ));
+  };
+
   return (
     <section className={styles.featuredSection}>
       <h2 className={`${styles.sectionTitle} section-header`}>Featured</h2>
@@ -34,15 +44,22 @@ export function FeaturedRecipes({
       {isLoading ? (
         <LoadingSkeleton count={maxRecipes} type="recipe" />
       ) : featuredRecipes.length > 0 ? (
-        <div className={styles.recipeGrid}>
-          {featuredRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onClick={() => onRecipeClick(recipe)}
-            />
-          ))}
-        </div>
+        <>
+          {/* Desktop Grid Layout */}
+          <div className={styles.recipeGrid}>{renderRecipeCards()}</div>
+
+          {/* Mobile Carousel Layout */}
+          <div className={styles.recipeCarousel}>
+            {featuredRecipes.map((recipe) => (
+              <div key={recipe.id} className={styles.recipeCarouselItem}>
+                <RecipeCard
+                  recipe={recipe}
+                  onClick={() => onRecipeClick(recipe)}
+                />
+              </div>
+            ))}
+          </div>
+        </>
       ) : (
         <div style={{ minHeight: "64px" }}></div>
       )}
