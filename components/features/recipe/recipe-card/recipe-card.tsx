@@ -19,12 +19,21 @@ export const RecipeCard = React.memo(function RecipeCard({
   const { user } = useAuth();
   const isMyRecipe = user && recipe.userId === user.id;
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <button
+    <div
       className={styles.card}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
       aria-label={`View recipe: ${recipe.title}`}
-      type="button"
     >
       <div>
         {/* Recipe Image */}
@@ -89,6 +98,6 @@ export const RecipeCard = React.memo(function RecipeCard({
           <span>{recipe.servings} servings</span>
         </div>
       </div>
-    </button>
+    </div>
   );
 });

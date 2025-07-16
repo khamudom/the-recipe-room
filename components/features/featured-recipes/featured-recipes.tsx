@@ -39,10 +39,6 @@ interface FeaturedRecipesProps {
   recipes: Recipe[];
   isLoading: boolean;
   onRecipeClick: (recipe: Recipe) => void;
-  /**
-   * Option to set maximum number of featured recipes to display.
-   * Defaults to 3 for desktop, 6 for mobile if not provided.
-   */
   maxRecipes?: number;
 }
 
@@ -107,8 +103,8 @@ export function FeaturedRecipes({
               resistanceRatio={0.85}
               touchStartPreventDefault={false}
               touchMoveStopPropagation={false}
-              preventClicks={false}
-              preventClicksPropagation={false}
+              preventClicks={true}
+              preventClicksPropagation={true}
               threshold={10}
               shortSwipes={true}
               longSwipes={true}
@@ -118,7 +114,10 @@ export function FeaturedRecipes({
               className={styles.swiperContainer}
             >
               {featuredRecipes.map((recipe) => (
-                <SwiperSlide key={recipe.id} className={styles.recipeCarouselItem}>
+                <SwiperSlide
+                  key={recipe.id}
+                  className={styles.recipeCarouselItem}
+                >
                   <RecipeCard
                     recipe={recipe}
                     onClick={() => onRecipeClick(recipe)}
