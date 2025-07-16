@@ -16,15 +16,9 @@
   margin-bottom: 2rem;
 }
 
-.recipeGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-/* Mobile carousel styles */
+/* Mobile-first: Start with carousel for mobile */
 .recipeCarousel {
-  display: none;
+  display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none; /* Firefox - Safari will ignore this but that's expected */
@@ -47,29 +41,32 @@
   margin-right: 0;
 }
 
-@media (min-width: 1024px) {
-  .recipeGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* Mobile-first: Start with single column grid (hidden on mobile) */
+.recipeGrid {
+  display: none;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 }
 
+/* Tablet and up: Show grid, hide carousel */
 @media (min-width: 768px) {
   .featuredSection {
     padding-block-end: 8rem;
   }
 
   .recipeGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Show carousel on mobile, grid on desktop */
-@media (max-width: 767px) {
-  .recipeGrid {
-    display: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .recipeCarousel {
-    display: flex;
+    display: none;
+  }
+}
+
+/* Desktop: Keep 3-column grid */
+@media (min-width: 1024px) {
+  .recipeGrid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
