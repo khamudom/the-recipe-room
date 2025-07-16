@@ -30,10 +30,16 @@
     #a0334a 0%,
     #7c021d 100%
   );
-  --color-linear-gradient-transparent: linear-gradient(
+  --color-linear-gradient-transparent-primary: linear-gradient(
     to right,
     transparent,
     #7c021d,
+    transparent
+  );
+  --color-linear-gradient-transparent-accent: linear-gradient(
+    to right,
+    transparent,
+    #d97706,
     transparent
   );
 
@@ -92,7 +98,12 @@
   --color-background-primary-dark: var(--primary-dark-color);
   --color-input-background: var(--background-color);
 
-  --color-decorative-line: var(--color-linear-gradient-transparent);
+  --color-decorative-line-primary: var(
+    --color-linear-gradient-transparent-primary
+  );
+  --color-decorative-line-accent: var(
+    --color-linear-gradient-transparent-accent
+  );
 
   /* Borders */
   --color-border-secondary: var(--secondary-color);

@@ -7,7 +7,7 @@
 .footerLine {
   width: 12rem;
   height: 4px;
-  background: var(--color-decorative-line);
+  background: var(--color-decorative-line-primary);
   margin: 0 auto 1rem;
 }
 

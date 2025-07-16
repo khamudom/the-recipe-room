@@ -119,12 +119,7 @@
 .decorativeLine {
   width: 8rem;
   height: 4px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--primary-color),
-    transparent
-  );
+  background: var(--color-decorative-line-primary);
   margin: 0 auto 0.5rem;
   margin-bottom: 2rem;
 }

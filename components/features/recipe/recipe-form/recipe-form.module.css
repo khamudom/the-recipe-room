@@ -101,10 +101,10 @@
   margin: 0;
 }
 
-.cardLine {
+.decorativeLine {
   width: 4rem;
   height: 2px;
-  background: linear-gradient(to right, transparent, #d97706, transparent);
+  background: var(--color-decorative-line-accent);
   margin: 0.5rem auto 0;
 }
 

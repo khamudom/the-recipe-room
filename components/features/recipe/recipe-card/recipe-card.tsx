@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Clock, Users, Tag, Star, User, ChefHat } from "lucide-react";
+import { Clock, Users, Tag, User, ChefHat } from "lucide-react";
 import type { Recipe } from "@/types/recipe";
 import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-card.module.css";
@@ -55,12 +55,12 @@ export const RecipeCard = React.memo(function RecipeCard({
             <Tag className={styles.tagIcon} />
             <span className={styles.categoryText}>{recipe.category}</span>
           </div>
-          {recipe.featured && (
+          {/* {recipe.featured && (
             <div className={styles.featuredBadge}>
               <Star className={styles.featuredIcon} />
               <span className={styles.featuredText}>Featured</span>
             </div>
-          )}
+          )} */}
           {isMyRecipe && !recipe.featured && (
             <div className={styles.myRecipeBadge}>
               <User className={styles.myRecipeIcon} />

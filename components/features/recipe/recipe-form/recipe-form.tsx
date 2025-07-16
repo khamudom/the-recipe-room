@@ -230,6 +230,10 @@ export function RecipeForm({
   //   );
   // }
 
+  const CardLine = () => {
+    return <div className={styles.decorativeLine}></div>;
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -249,7 +253,7 @@ export function RecipeForm({
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>Recipe Photo</h3>
-              <div className={styles.cardLine}></div>
+              <CardLine />
             </div>
             <div className={styles.cardContent}>
               <div className={styles.imageUploadSection}>
@@ -300,7 +304,7 @@ export function RecipeForm({
             <div className={`${styles.card} ${styles.aiCard}`}>
               <div className={styles.cardHeader}>
                 <h3 className={styles.cardTitle}>AI Recipe Analysis</h3>
-                <div className={styles.cardLine}></div>
+                <CardLine />
               </div>
               <div className={styles.cardContent}>
                 <div className={styles.aiSection}>
@@ -352,7 +356,7 @@ export function RecipeForm({
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>Recipe Details</h3>
-              <div className={styles.cardLine}></div>
+              <CardLine />
             </div>
             <div className={styles.cardContent}>
               <div className={styles.inputGrid}>
@@ -510,7 +514,7 @@ export function RecipeForm({
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>Ingredients</h3>
-              <div className={styles.cardLine}></div>
+              <CardLine />
             </div>
             <div className={styles.cardContent}>
               {formData.ingredients.map((ingredient, index) => (
@@ -547,7 +551,7 @@ export function RecipeForm({
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>Instructions</h3>
-              <div className={styles.cardLine}></div>
+              <CardLine />
             </div>
             <div className={styles.cardContent}>
               {formData.instructions.map((instruction, index) => (

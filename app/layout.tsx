@@ -27,7 +27,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#b48a78" />
+        <meta name="theme-color" content="#7c021d" />
+        <title>The Recipe Room</title>
       </head>
       <body suppressHydrationWarning={true}>
         <ReactQueryProvider>
