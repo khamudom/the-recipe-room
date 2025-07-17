@@ -93,6 +93,7 @@ export const database = {
       .from("recipes")
       .select("*")
       .eq("featured", true)
+      .order("featured_order", { ascending: true, nullsFirst: true })
       .order("created_at", { ascending: false });
     if (error) throw new Error("Failed to fetch featured recipes");
 
@@ -202,7 +203,14 @@ export const database = {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("User not authenticated");
 
-    const { prepTime, cookTime, featured, ingredientGroups, ...rest } = recipe;
+    const {
+      prepTime,
+      cookTime,
+      featured,
+      featuredOrder,
+      ingredientGroups,
+      ...rest
+    } = recipe;
 
     // Check if user is admin for featured recipe creation
     const isAdmin = user.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
@@ -217,6 +225,7 @@ export const database = {
           prep_time: prepTime,
           cook_time: cookTime,
           featured: isAdmin && featured ? true : false,
+          featured_order: isAdmin && featuredOrder ? featuredOrder : null,
           by_admin: isAdmin, // Mark if created by admin
         },
       ])
@@ -310,7 +319,14 @@ export const database = {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("User not authenticated");
 
-    const { prepTime, cookTime, featured, ingredientGroups, ...rest } = updates;
+    const {
+      prepTime,
+      cookTime,
+      featured,
+      featuredOrder,
+      ingredientGroups,
+      ...rest
+    } = updates;
     const isAdmin = user.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
 
     console.log("Updating recipe:", { id, updates, isAdmin });
@@ -322,6 +338,8 @@ export const database = {
         ...(prepTime !== undefined && { prep_time: prepTime }),
         ...(cookTime !== undefined && { cook_time: cookTime }),
         ...(featured !== undefined && isAdmin && { featured }),
+        ...(featuredOrder !== undefined &&
+          isAdmin && { featured_order: featuredOrder }),
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)
@@ -521,6 +539,7 @@ const normalizeRecipe = (recipe: Record<string, unknown>): Recipe => ({
   category: recipe.category as string,
   image: recipe.image as string,
   featured: recipe.featured as boolean,
+  featuredOrder: recipe.featured_order as number,
   byAdmin: recipe.by_admin as boolean,
   createdAt: recipe.created_at as string,
   updatedAt: recipe.updated_at as string,

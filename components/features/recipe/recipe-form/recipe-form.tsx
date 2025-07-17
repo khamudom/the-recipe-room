@@ -94,6 +94,7 @@ export function RecipeForm({
     category: recipe?.category || "",
     image: recipe?.image || "",
     featured: recipe?.featured || false,
+    featuredOrder: recipe?.featuredOrder || undefined,
   });
 
   const [showAIAnalyzer, setShowAIAnalyzer] = useState(false);
@@ -292,6 +293,7 @@ export function RecipeForm({
       category: recipeData.category || "",
       image: recipeData.image || formData.image,
       featured: formData.featured, // Preserve the featured setting
+      featuredOrder: formData.featuredOrder, // Preserve the featured order
     });
     setShowAIAnalyzer(false);
   };
@@ -585,6 +587,34 @@ export function RecipeForm({
                       </span>
                     </label>
                   </div>
+                </div>
+              )}
+
+              {/* Admin-only featured order input */}
+              {isAdmin && formData.featured && (
+                <div className={styles.inputGroup}>
+                  <label htmlFor="featuredOrder" className={styles.label}>
+                    Featured Order
+                  </label>
+                  <input
+                    id="featuredOrder"
+                    type="number"
+                    min="1"
+                    value={formData.featuredOrder || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        featuredOrder: e.target.value
+                          ? parseInt(e.target.value)
+                          : undefined,
+                      }))
+                    }
+                    placeholder="e.g., 1 (first), 2 (second), etc."
+                    className={styles.input}
+                  />
+                  <span className={styles.helpText}>
+                    Lower numbers appear first. Leave empty for default order.
+                  </span>
                 </div>
               )}
 

@@ -54,9 +54,21 @@ export function FeaturedRecipes({
   // Default to 3 during SSR to prevent hydration mismatch
   const effectiveMaxRecipes = maxRecipes ?? (isMobile ? 6 : 3);
 
-  // Filter recipes that have featured=true and limit by maxRecipes
+  // Filter and sort featured recipes by featuredOrder
   const featuredRecipes = recipes
     .filter((recipe) => recipe.featured)
+    .sort((a, b) => {
+      // Sort by featuredOrder first, then by createdAt as fallback
+      const orderA = a.featuredOrder ?? Number.MAX_SAFE_INTEGER;
+      const orderB = b.featuredOrder ?? Number.MAX_SAFE_INTEGER;
+
+      if (orderA !== orderB) {
+        return orderA - orderB;
+      }
+
+      // Fallback to createdAt for recipes without featuredOrder
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    })
     .slice(0, effectiveMaxRecipes);
 
   const renderRecipeCards = () => {

@@ -11,7 +11,7 @@ export interface Recipe {
   title: string;
   description: string;
   ingredients: string[]; // Keep for backward compatibility
-  ingredientGroups?: IngredientGroup[]; // New grouped ingredients structure
+  ingredientGroups?: IngredientGroup[]; // Grouped ingredients structure
   instructions: string[];
   prepTime?: string;
   cookTime?: string;
@@ -19,6 +19,7 @@ export interface Recipe {
   category: string;
   image?: string; // Base64 encoded image or URL
   featured?: boolean;
+  featuredOrder?: number;
   byAdmin?: boolean;
   createdAt: string;
   updatedAt?: string;
