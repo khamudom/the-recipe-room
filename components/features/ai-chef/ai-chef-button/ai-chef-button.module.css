@@ -10,12 +10,22 @@
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
   transition: all 0.3s ease;
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .chefButton:hover,
 .chefButton:active {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(139, 69, 19, 0.4);
+}
+
+/* Immediate feedback for touch devices */
+.chefButton:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: transform 0.05s ease;
 }
 
 .chefButton img {

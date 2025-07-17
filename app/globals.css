@@ -317,6 +317,17 @@ main {
   main {
     overflow-x: hidden;
   }
+
+  /* Touch optimizations for interactive elements */
+  button,
+  [role="button"],
+  a[href],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
 }
 
 /* Reduce motion for users who prefer it */

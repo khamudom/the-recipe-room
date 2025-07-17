@@ -30,12 +30,22 @@
   line-height: inherit;
   color: inherit;
   position: relative;
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .categoryCard:hover {
   box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
   transform: translateY(var(--translate-y-2));
   border-color: #f59e0b;
+}
+
+/* Immediate feedback for touch devices */
+.categoryCard:active {
+  transform: translateY(var(--translate-y-2)) scale(0.98);
+  transition: transform 0.05s ease;
 }
 
 .categoryCard:focus-visible {

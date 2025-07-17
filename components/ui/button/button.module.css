@@ -5,13 +5,18 @@
   border: none;
   border-radius: var(--radius-large);
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s,
+    transform 0.1s;
   font-family: var(--font-family-body);
   font-size: var(--font-size-button);
   display: flex;
   align-items: center;
   justify-content: center;
   column-gap: var(--spacing-small);
+  /* Touch optimizations */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 /* Shape variants */
@@ -26,6 +31,12 @@
 .button:hover {
   background-color: var(--color-button-background-hover);
   cursor: pointer;
+}
+
+/* Consistent active state for all buttons */
+.button:active {
+  transform: scale(0.98);
+  transition: transform 0.05s ease;
 }
 
 .button:focus-visible {
