@@ -32,6 +32,12 @@ const pwaConfig = withPWA({
   disable: process.env.NODE_ENV === "development", // Standard: disable in dev, enable in production
   sw: "/sw-custom.js",
   runtimeCaching: [
+    // Exclude API routes from caching - they should always be fresh
+    {
+      urlPattern: /\/api\/.*/,
+      handler: "NetworkOnly",
+    },
+    // Cache everything else with NetworkFirst strategy
     {
       urlPattern: /^https?.*/,
       handler: "NetworkFirst",

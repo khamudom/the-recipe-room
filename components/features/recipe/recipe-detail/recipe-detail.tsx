@@ -24,6 +24,41 @@ export function RecipeDetail({
   const { user } = useAuth();
   const isOwner = user && recipe.userId === user.id;
 
+  // Helper function to render ingredients (grouped or flat)
+  const renderIngredients = () => {
+    if (recipe.ingredientGroups && recipe.ingredientGroups.length > 0) {
+      return (
+        <div className={styles.ingredientGroups}>
+          {recipe.ingredientGroups.map((group, groupIndex) => (
+            <div key={groupIndex} className={styles.ingredientGroup}>
+              <h4 className={styles.groupTitle}>{group.name}</h4>
+              <ul className={styles.ingredientsList}>
+                {group.ingredients.map((ingredient, index) => (
+                  <li key={index} className={styles.ingredientItem}>
+                    <div className={styles.ingredientBullet}></div>
+                    <span className={styles.ingredientText}>{ingredient}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // Fallback to old ingredients array
+    return (
+      <ul className={styles.ingredientsList}>
+        {recipe.ingredients.map((ingredient, index) => (
+          <li key={index} className={styles.ingredientItem}>
+            <div className={styles.ingredientBullet}></div>
+            <span className={styles.ingredientText}>{ingredient}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -104,16 +139,7 @@ export function RecipeDetail({
               <h3 className={styles.sectionTitle}>Ingredients</h3>
               <div className={styles.sectionLine}></div>
             </div>
-            <div className={styles.cardContent}>
-              <ul className={styles.ingredientsList}>
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index} className={styles.ingredientItem}>
-                    <div className={styles.ingredientBullet}></div>
-                    <span className={styles.ingredientText}>{ingredient}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <div className={styles.cardContent}>{renderIngredients()}</div>
           </div>
 
           {/* Instructions */}

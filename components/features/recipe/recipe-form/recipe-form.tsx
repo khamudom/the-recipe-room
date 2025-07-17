@@ -6,6 +6,7 @@
  * - AI-powered recipe extraction from images
  * - Image upload and preview functionality
  * - Dynamic ingredient and instruction management (add/remove fields)
+ * - Ingredient grouping functionality
  * - Admin-only featured recipe toggle
  * - Form validation and submission handling
  */
@@ -22,10 +23,15 @@ import {
   Loader2,
   Sparkles,
   ArrowLeft,
+  FolderPlus,
   //Globe,
 } from "lucide-react";
 // TODO: Import MultiImageAnalysisResponse when we add URL extraction
-import type { Recipe, AIRecipeAnalysisResult } from "@/types/recipe";
+import type {
+  Recipe,
+  AIRecipeAnalysisResult,
+  IngredientGroup,
+} from "@/types/recipe";
 import { AIRecipeAnalyzer } from "@/components/features/ai-recipe-analyzer/ai-recipe-analyzer";
 // import { URLRecipeExtractor } from "@/components/url-recipe-extractor/url-recipe-extractor";
 import { useAuth } from "@/lib/auth-context";
@@ -49,10 +55,38 @@ export function RecipeForm({
   const { user } = useAuth();
   const isAdmin = user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
 
+  // Initialize ingredient groups from existing recipe or create default structure
+  const initializeIngredientGroups = (): IngredientGroup[] => {
+    if (recipe?.ingredientGroups && recipe.ingredientGroups.length > 0) {
+      return recipe.ingredientGroups;
+    }
+
+    // If recipe has old ingredients array, convert to a default group
+    if (recipe?.ingredients && recipe.ingredients.length > 0) {
+      return [
+        {
+          name: "Ingredients",
+          ingredients: recipe.ingredients.filter((ing) => ing.trim()),
+          sortOrder: 0,
+        },
+      ];
+    }
+
+    // Default empty group
+    return [
+      {
+        name: "Ingredients",
+        ingredients: [""],
+        sortOrder: 0,
+      },
+    ];
+  };
+
   const [formData, setFormData] = useState({
     title: recipe?.title || "",
     description: recipe?.description || "",
-    ingredients: recipe?.ingredients || [""],
+    ingredients: recipe?.ingredients || [""], // Keep for backward compatibility
+    ingredientGroups: initializeIngredientGroups(),
     instructions: recipe?.instructions || [""],
     prepTime: recipe?.prepTime || "",
     cookTime: recipe?.cookTime || "",
@@ -70,16 +104,27 @@ export function RecipeForm({
     e.preventDefault();
     if (!formData.title.trim() || !formData.category) return;
 
-    const filteredIngredients = formData.ingredients.filter((ing) =>
-      ing.trim()
-    );
+    // Filter out empty ingredients from all groups
+    const filteredGroups = formData.ingredientGroups
+      .map((group) => ({
+        ...group,
+        ingredients: group.ingredients.filter((ing) => ing.trim()),
+      }))
+      .filter((group) => group.ingredients.length > 0);
+
     const filteredInstructions = formData.instructions.filter((inst) =>
       inst.trim()
     );
 
+    // Flatten ingredients for backward compatibility
+    const flattenedIngredients = filteredGroups.flatMap(
+      (group) => group.ingredients
+    );
+
     onSubmit({
       ...formData,
-      ingredients: filteredIngredients,
+      ingredients: flattenedIngredients,
+      ingredientGroups: filteredGroups,
       instructions: filteredInstructions,
     });
   };
@@ -103,25 +148,85 @@ export function RecipeForm({
     }
   };
 
-  const addIngredient = () => {
+  // Ingredient group management
+  const addIngredientGroup = () => {
     setFormData((prev) => ({
       ...prev,
-      ingredients: [...prev.ingredients, ""],
+      ingredientGroups: [
+        ...prev.ingredientGroups,
+        {
+          name: `Group ${prev.ingredientGroups.length + 1}`,
+          ingredients: [""],
+          sortOrder: prev.ingredientGroups.length,
+        },
+      ],
     }));
   };
 
-  const removeIngredient = (index: number) => {
+  const removeIngredientGroup = (groupIndex: number) => {
     setFormData((prev) => ({
       ...prev,
-      ingredients: prev.ingredients.filter((_, i) => i !== index),
+      ingredientGroups: prev.ingredientGroups.filter(
+        (_, i) => i !== groupIndex
+      ),
     }));
   };
 
-  const updateIngredient = (index: number, value: string) => {
+  const updateIngredientGroupName = (groupIndex: number, name: string) => {
     setFormData((prev) => ({
       ...prev,
-      ingredients: prev.ingredients.map((ing, i) =>
-        i === index ? value : ing
+      ingredientGroups: prev.ingredientGroups.map((group, i) =>
+        i === groupIndex ? { ...group, name } : group
+      ),
+    }));
+  };
+
+  const addIngredientToGroup = (groupIndex: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      ingredientGroups: prev.ingredientGroups.map((group, i) =>
+        i === groupIndex
+          ? { ...group, ingredients: [...group.ingredients, ""] }
+          : group
+      ),
+    }));
+  };
+
+  const removeIngredientFromGroup = (
+    groupIndex: number,
+    ingredientIndex: number
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      ingredientGroups: prev.ingredientGroups.map((group, i) =>
+        i === groupIndex
+          ? {
+              ...group,
+              ingredients: group.ingredients.filter(
+                (_, j) => j !== ingredientIndex
+              ),
+            }
+          : group
+      ),
+    }));
+  };
+
+  const updateIngredientInGroup = (
+    groupIndex: number,
+    ingredientIndex: number,
+    value: string
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      ingredientGroups: prev.ingredientGroups.map((group, i) =>
+        i === groupIndex
+          ? {
+              ...group,
+              ingredients: group.ingredients.map((ing, j) =>
+                j === ingredientIndex ? value : ing
+              ),
+            }
+          : group
       ),
     }));
   };
@@ -150,9 +255,51 @@ export function RecipeForm({
   };
 
   const handleAIAnalysisComplete = (recipeData: AIRecipeAnalysisResult) => {
+    // Handle both old ingredients array and new ingredient groups
+    let ingredientGroups: IngredientGroup[] = [];
+
+    if (recipeData.ingredientGroups && recipeData.ingredientGroups.length > 0) {
+      ingredientGroups = recipeData.ingredientGroups;
+    } else if (recipeData.ingredients && recipeData.ingredients.length > 0) {
+      // Convert old ingredients array to a default group
+      const dedupedIngredients = deduplicateIngredients(recipeData.ingredients);
+      ingredientGroups = [
+        {
+          name: "Ingredients",
+          ingredients: dedupedIngredients,
+          sortOrder: 0,
+        },
+      ];
+    } else {
+      ingredientGroups = [
+        {
+          name: "Ingredients",
+          ingredients: [""],
+          sortOrder: 0,
+        },
+      ];
+    }
+
+    setFormData({
+      title: recipeData.title || "",
+      description: recipeData.description || "",
+      ingredients: recipeData.ingredients || [""],
+      ingredientGroups,
+      instructions: recipeData.instructions || [""],
+      prepTime: recipeData.prepTime || "",
+      cookTime: recipeData.cookTime || "",
+      servings: recipeData.servings || "",
+      category: recipeData.category || "",
+      image: recipeData.image || formData.image,
+      featured: formData.featured, // Preserve the featured setting
+    });
+    setShowAIAnalyzer(false);
+  };
+
+  const deduplicateIngredients = (ingredients: string[]): string[] => {
     // Deduplicate ingredients (case-insensitive, preserves first occurrence's original casing)
     const seen = new Map<string, string>();
-    (recipeData.ingredients || [""]).forEach((ing) => {
+    ingredients.forEach((ing) => {
       const key = ing.trim().toLowerCase();
       if (key && !seen.has(key)) {
         seen.set(key, ing.trim());
@@ -171,19 +318,7 @@ export function RecipeForm({
       );
     });
 
-    setFormData({
-      title: recipeData.title || "",
-      description: recipeData.description || "",
-      ingredients: dedupedIngredients.length > 0 ? dedupedIngredients : [""],
-      instructions: recipeData.instructions || [""],
-      prepTime: recipeData.prepTime || "",
-      cookTime: recipeData.cookTime || "",
-      servings: recipeData.servings || "",
-      category: recipeData.category || "",
-      image: recipeData.image || formData.image,
-      featured: formData.featured, // Preserve the featured setting
-    });
-    setShowAIAnalyzer(false);
+    return dedupedIngredients;
   };
 
   const handleAIAnalyzerCancel = () => {
@@ -510,39 +645,84 @@ export function RecipeForm({
             </div>
           </div>
 
-          {/* Ingredients - Dynamic list with add/remove functionality */}
+          {/* Ingredients - Grouped with add/remove functionality */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>Ingredients</h3>
               <CardLine />
             </div>
             <div className={styles.cardContent}>
-              {formData.ingredients.map((ingredient, index) => (
-                <div key={index} className={styles.listItem}>
-                  <input
-                    value={ingredient}
-                    onChange={(e) => updateIngredient(index, e.target.value)}
-                    placeholder={`Ingredient ${index + 1}...`}
-                    className={styles.input}
-                  />
-                  {formData.ingredients.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeIngredient(index)}
-                      className={styles.removeButton}
-                    >
-                      <X className={styles.buttonIcon} />
-                    </button>
-                  )}
+              {formData.ingredientGroups.map((group, groupIndex) => (
+                <div key={groupIndex} className={styles.ingredientGroup}>
+                  <div className={styles.groupHeader}>
+                    <input
+                      value={group.name}
+                      onChange={(e) =>
+                        updateIngredientGroupName(groupIndex, e.target.value)
+                      }
+                      placeholder="Group name (e.g., 'Avocado Topping')"
+                      className={styles.groupNameInput}
+                    />
+                    {formData.ingredientGroups.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeIngredientGroup(groupIndex)}
+                        className={styles.removeGroupButton}
+                      >
+                        <X className={styles.buttonIcon} />
+                      </button>
+                    )}
+                  </div>
+
+                  {group.ingredients.map((ingredient, ingredientIndex) => (
+                    <div key={ingredientIndex} className={styles.listItem}>
+                      <input
+                        value={ingredient}
+                        onChange={(e) =>
+                          updateIngredientInGroup(
+                            groupIndex,
+                            ingredientIndex,
+                            e.target.value
+                          )
+                        }
+                        placeholder={`Ingredient ${ingredientIndex + 1}...`}
+                        className={styles.input}
+                      />
+                      {group.ingredients.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            removeIngredientFromGroup(
+                              groupIndex,
+                              ingredientIndex
+                            )
+                          }
+                          className={styles.removeButton}
+                        >
+                          <X className={styles.buttonIcon} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  <Button
+                    onClick={() => addIngredientToGroup(groupIndex)}
+                    variant="outline"
+                    className={styles.addIngredientButton}
+                  >
+                    <Plus className={styles.buttonIcon} />
+                    Add Ingredient
+                  </Button>
                 </div>
               ))}
+
               <Button
-                onClick={addIngredient}
+                onClick={addIngredientGroup}
                 variant="outline"
-                className={styles.addButton}
+                className={styles.addGroupButton}
               >
-                <Plus className={styles.buttonIcon} />
-                Add Ingredient
+                <FolderPlus className={styles.buttonIcon} />
+                Add Ingredient Group
               </Button>
             </div>
           </div>

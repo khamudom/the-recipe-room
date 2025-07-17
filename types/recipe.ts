@@ -1,9 +1,17 @@
+export interface IngredientGroup {
+  id?: string;
+  name: string;
+  ingredients: string[];
+  sortOrder?: number;
+}
+
 export interface Recipe {
   id: string;
   userId: string;
   title: string;
   description: string;
-  ingredients: string[];
+  ingredients: string[]; // Keep for backward compatibility
+  ingredientGroups?: IngredientGroup[]; // New grouped ingredients structure
   instructions: string[];
   prepTime?: string;
   cookTime?: string;
@@ -20,6 +28,7 @@ export interface AIRecipeAnalysisResult {
   title?: string;
   description?: string;
   ingredients?: string[];
+  ingredientGroups?: IngredientGroup[];
   instructions?: string[];
   prepTime?: string;
   cookTime?: string;

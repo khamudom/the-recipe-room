@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import type { IngredientGroup } from "@/types/recipe";
 
 interface RecipeAnalysis {
   title: string;
   description: string;
   ingredients: string[];
+  ingredientGroups?: IngredientGroup[];
   instructions: string[];
   prepTime: string;
   cookTime: string;
@@ -101,19 +103,25 @@ async function analyzeSingleImage(imageData: string): Promise<NextResponse> {
     messages: [
       {
         role: "system",
-        content: `You are an expert recipe analyzer. Your task is to extract recipe information from images and return it in a specific JSON format. Be precise and thorough in your analysis.`,
+        content: `You are an expert recipe analyzer. Your task is to extract recipe information from images and return it in a specific JSON format. Be precise and thorough in your analysis. Pay special attention to ingredient organization and grouping.`,
       },
       {
         role: "user",
         content: [
           {
             type: "text",
-            text: `Please analyze this recipe image and extract all available recipe information. Return ONLY a valid JSON object with this exact structure:
+            text: `Please analyze this recipe image and extract all available recipe information. Look for ingredient groupings and organize them logically. Return ONLY a valid JSON object with this exact structure:
 
 {
   "title": "Recipe title",
   "description": "Brief description of the recipe",
   "ingredients": ["ingredient 1", "ingredient 2", ...],
+  "ingredientGroups": [
+    {
+      "name": "Group name (e.g., 'Avocado Topping', 'Main Ingredients', 'Sauce')",
+      "ingredients": ["ingredient 1", "ingredient 2", ...]
+    }
+  ],
   "instructions": ["step 1", "step 2", ...],
   "prepTime": "prep time in minutes or descriptive text",
   "cookTime": "cook time in minutes or descriptive text", 
@@ -121,8 +129,13 @@ async function analyzeSingleImage(imageData: string): Promise<NextResponse> {
   "category": "one of: Appetizer, Breakfast, Lunch, Dinner, Side Dish, Dessert, Snack, Beverage"
 }
 
-Guidelines:
-- Extract ingredients as individual strings in an array
+Guidelines for ingredient grouping:
+- Look for visual or logical groupings in the recipe (e.g., "For the sauce:", "Topping:", "Main ingredients:")
+- Common group names: "Main Ingredients", "Sauce", "Topping", "Garnish", "Dressing", "Marinade", "Filling", "Batter", "Frosting", "Glaze"
+- If ingredients are clearly separated into sections, create groups for each section
+- If no clear groupings exist, put all ingredients in a single group called "Ingredients"
+- Each group should have a descriptive name and an array of ingredients
+- Extract ingredients as individual strings in arrays
 - Extract instructions as numbered steps in an array
 - For time fields, use descriptive text like "30 minutes" or "1 hour"
 - For servings, use a string that is a number
@@ -220,7 +233,7 @@ async function analyzeMultipleImages(images: string[]): Promise<NextResponse> {
               i + 1
             } of ${
               images.length
-            } - analyze it independently and extract any recipe information you can find.`,
+            } - analyze it independently and extract any recipe information you can find. Pay special attention to ingredient organization and grouping.`,
           },
           {
             role: "user",
@@ -229,12 +242,18 @@ async function analyzeMultipleImages(images: string[]): Promise<NextResponse> {
                 type: "text",
                 text: `Please analyze this recipe image (image ${i + 1} of ${
                   images.length
-                }) and extract all available recipe information. Return ONLY a valid JSON object with this exact structure:
+                }) and extract all available recipe information. Look for ingredient groupings and organize them logically. Return ONLY a valid JSON object with this exact structure:
 
 {
   "title": "Recipe title or partial title",
   "description": "Brief description of the recipe",
   "ingredients": ["ingredient 1", "ingredient 2", ...],
+  "ingredientGroups": [
+    {
+      "name": "Group name (e.g., 'Avocado Topping', 'Main Ingredients', 'Sauce')",
+      "ingredients": ["ingredient 1", "ingredient 2", ...]
+    }
+  ],
   "instructions": ["step 1", "step 2", ...],
   "prepTime": "prep time in minutes or descriptive text",
   "cookTime": "cook time in minutes or descriptive text", 
@@ -242,8 +261,13 @@ async function analyzeMultipleImages(images: string[]): Promise<NextResponse> {
   "category": "one of: Appetizer, Breakfast, Lunch, Dinner, Side Dish, Dessert, Snack, Beverage"
 }
 
-Guidelines:
-- Extract ingredients as individual strings in an array
+Guidelines for ingredient grouping:
+- Look for visual or logical groupings in the recipe (e.g., "For the sauce:", "Topping:", "Main ingredients:")
+- Common group names: "Main Ingredients", "Sauce", "Topping", "Garnish", "Dressing", "Marinade", "Filling", "Batter", "Frosting", "Glaze"
+- If ingredients are clearly separated into sections, create groups for each section
+- If no clear groupings exist, put all ingredients in a single group called "Ingredients"
+- Each group should have a descriptive name and an array of ingredients
+- Extract ingredients as individual strings in arrays
 - Extract instructions as numbered steps in an array
 - For time fields, use descriptive text like "30 minutes" or "1 hour"
 - For servings, use a string that is a number
@@ -321,6 +345,7 @@ function combineRecipeResults(results: RecipeAnalysis[]): RecipeAnalysis {
     title: "",
     description: "",
     ingredients: [],
+    ingredientGroups: [],
     instructions: [],
     prepTime: "",
     cookTime: "",
@@ -355,6 +380,53 @@ function combineRecipeResults(results: RecipeAnalysis[]): RecipeAnalysis {
     .filter((i) => i.trim());
 
   combined.ingredients = uniqueIngredients;
+
+  // Combine ingredient groups intelligently
+  const allIngredientGroups = results.flatMap((r) => r.ingredientGroups || []);
+  if (allIngredientGroups.length > 0) {
+    // Group by group name and merge ingredients
+    const groupMap = new Map<string, string[]>();
+
+    allIngredientGroups.forEach((group) => {
+      const groupName = group.name.trim();
+      const existingIngredients = groupMap.get(groupName) || [];
+      const newIngredients = group.ingredients || [];
+
+      // Combine ingredients and remove duplicates
+      const combinedIngredients = [...existingIngredients, ...newIngredients];
+      const uniqueIngredients = Array.from(
+        new Set(combinedIngredients.map((i) => i.trim().toLowerCase()))
+      )
+        .map((ingredient) => {
+          return (
+            combinedIngredients.find(
+              (i) => i.trim().toLowerCase() === ingredient
+            ) || ingredient
+          );
+        })
+        .filter((i) => i.trim());
+
+      groupMap.set(groupName, uniqueIngredients);
+    });
+
+    // Convert back to IngredientGroup format
+    combined.ingredientGroups = Array.from(groupMap.entries()).map(
+      ([name, ingredients], index) => ({
+        name,
+        ingredients,
+        sortOrder: index,
+      })
+    );
+  } else {
+    // If no groups were detected, create a default group with all ingredients
+    combined.ingredientGroups = [
+      {
+        name: "Ingredients",
+        ingredients: uniqueIngredients,
+        sortOrder: 0,
+      },
+    ];
+  }
 
   // Combine instructions (maintain order and remove duplicates)
   const allInstructions = results.flatMap((r) => r.instructions || []);
@@ -442,11 +514,31 @@ function processRecipeData(
     );
   }
 
+  // Ensure ingredient groups are properly formatted
+  if (!Array.isArray(recipeData.ingredientGroups)) {
+    recipeData.ingredientGroups = [];
+  }
+
+  // If no ingredient groups were detected, create a default group
+  if (
+    recipeData.ingredientGroups.length === 0 &&
+    recipeData.ingredients.length > 0
+  ) {
+    recipeData.ingredientGroups = [
+      {
+        name: "Ingredients",
+        ingredients: recipeData.ingredients,
+        sortOrder: 0,
+      },
+    ];
+  }
+
   // Set defaults for missing optional fields
   const analysis: RecipeAnalysis = {
     title: recipeData.title || "Untitled Recipe",
     description: recipeData.description || "",
     ingredients: recipeData.ingredients || [],
+    ingredientGroups: recipeData.ingredientGroups || [],
     instructions: recipeData.instructions || [],
     prepTime: recipeData.prepTime || "",
     cookTime: recipeData.cookTime || "",
@@ -455,6 +547,10 @@ function processRecipeData(
   };
 
   console.log("Successfully analyzed recipe:", analysis.title);
+  console.log(
+    "Ingredient groups detected:",
+    analysis.ingredientGroups?.length || 0
+  );
 
   return NextResponse.json({
     recipe: analysis,
