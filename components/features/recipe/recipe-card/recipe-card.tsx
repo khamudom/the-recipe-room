@@ -35,67 +35,64 @@ export const RecipeCard = React.memo(function RecipeCard({
       tabIndex={0}
       aria-label={`View recipe: ${recipe.title}`}
     >
-      <div>
-        {/* Recipe Image */}
-        <div className={styles.imageContainer}>
-          {recipe.image ? (
+      {/* Recipe Image */}
+      <div className={styles.imageContainer}>
+        {recipe.image ? (
+          <Image
+            src={recipe.image}
+            alt={recipe.title}
+            width={800}
+            height={450}
+            className={styles.recipeImage}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            style={{ width: "100%", height: "auto" }}
+          />
+        ) : (
+          <div className={styles.placeholderImage}>
             <Image
-              src={recipe.image}
-              alt={recipe.title}
-              width={800}
-              height={450}
-              className={styles.recipeImage}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              style={{ width: "100%", height: "auto" }}
+              src="/placeholder.svg"
+              alt="Recipe placeholder"
+              width={48}
+              height={48}
+              className={styles.placeholderIcon}
             />
-          ) : (
-            <div className={styles.placeholderImage}>
-              <Image
-                src="/placeholder.svg"
-                alt="Recipe placeholder"
-                width={48}
-                height={48}
-                className={styles.placeholderIcon}
-              />
-              <p className={styles.placeholderText}>No image</p>
-            </div>
-          )}
-          <div className={styles.categoryTag}>
-            <Tag className={styles.tagIcon} />
-            <span className={styles.categoryText}>{recipe.category}</span>
+            <p className={styles.placeholderText}>No image</p>
           </div>
-          {/* {recipe.featured && (
-            <div className={styles.featuredBadge}>
-              <Star className={styles.featuredIcon} />
-              <span className={styles.featuredText}>Featured</span>
-            </div>
-          )} */}
-          {isMyRecipe && !recipe.featured && (
-            <div className={styles.myRecipeBadge}>
-              <User className={styles.myRecipeIcon} />
-              <span className={styles.myRecipeText}>My Recipe</span>
-            </div>
-          )}
+        )}
+        <div className={styles.categoryTag}>
+          <Tag className={styles.tagIcon} />
+          <span className={styles.categoryText}>{recipe.category}</span>
         </div>
-
-        <div className={styles.header}>
-          <h3 className={`${styles.title} card-title`}>{recipe.title}</h3>
-          <p className={styles.description}>{recipe.description}</p>
-        </div>
+        {isMyRecipe && !recipe.featured && (
+          <div className={styles.myRecipeBadge}>
+            <User className={styles.myRecipeIcon} />
+            <span className={styles.myRecipeText}>My Recipe</span>
+          </div>
+        )}
       </div>
 
+      {/* Recipe Content */}
+      <div className={styles.header}>
+        <h3 className={`${styles.title} card-title`}>{recipe.title}</h3>
+        <p className={styles.description}>{recipe.description}</p>
+      </div>
+
+      {/* Recipe Metrics */}
       <div className={`${styles.metaInfo} card-meta`}>
         <div className={styles.metaItem}>
           <Clock className={styles.metaIcon} />
+          <span>Prep</span>
           <span>{recipe.prepTime}</span>
         </div>
         <div className={styles.metaItem}>
           <ChefHat className={styles.metaIcon} />
+          <span>Cook</span>
           <span>{recipe.cookTime}</span>
         </div>
         <div className={styles.metaItem}>
           <Users className={styles.metaIcon} />
-          <span>{recipe.servings} servings</span>
+          <span>Serves</span>
+          <span>{recipe.servings}</span>
         </div>
       </div>
     </div>

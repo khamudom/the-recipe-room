@@ -63,13 +63,15 @@ export function RecipeDetail({
     <div className={styles.container}>
       <div className={styles.content}>
         {/* Hero Section */}
-        <div className={styles.headerControls}>
-          <Button onClick={onBack} variant="outline" iconOnly>
-            <ArrowLeft className={styles.buttonIcon} />
-          </Button>
-          <h1 className={`${styles.recipeTitle} section-header`}>
-            {recipe.title}
-          </h1>
+        <div className={`${styles.headerControls} glass-morphism-bottom`}>
+          <div className={styles.headerControlsContent}>
+            <Button onClick={onBack} variant="outline" iconOnly>
+              <ArrowLeft className={styles.buttonIcon} />
+            </Button>
+            <h1 className={`${styles.recipeTitle} section-header`}>
+              {recipe.title}
+            </h1>
+          </div>
         </div>
 
         {/* Action Buttons */}

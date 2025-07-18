@@ -148,13 +148,15 @@ export default function CategoryPage() {
     <ErrorBoundary>
       <div className={styles.container}>
         <div className={styles.content}>
-          <div className={styles.header}>
-            <Button onClick={handleBack} variant="outline" iconOnly>
-              <ArrowLeft className={styles.buttonIcon} />
-            </Button>
-            <h1 className={`${styles.mainTitle} page-header`}>
-              {category} Recipes
-            </h1>
+          <div className={`${styles.header} glass-morphism-bottom`}>
+            <div className={styles.headerContent}>
+              <Button onClick={handleBack} variant="outline" iconOnly>
+                <ArrowLeft className={styles.buttonIcon} />
+              </Button>
+              <h1 className={`${styles.mainTitle} page-header`}>
+                {category} Recipes
+              </h1>
+            </div>
           </div>
           <div className={styles.resultsContainer}>{renderResults()}</div>
         </div>
