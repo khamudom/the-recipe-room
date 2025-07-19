@@ -29,7 +29,7 @@ export function useRecipes() {
       console.log("All recipes fetched:", data);
       return data;
     },
-    staleTime: 0, // Temporarily disable stale time for debugging
+    staleTime: 0, // Allow immediate refetches for real-time updates
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
@@ -43,7 +43,7 @@ export function useFeaturedRecipes() {
       console.log("Featured recipes fetched:", data);
       return data;
     },
-    staleTime: 0, // Temporarily disable stale time for debugging
+    staleTime: 0, // Allow immediate refetches for real-time updates
     gcTime: 10 * 60 * 1000, // 10 minutes
     refetchOnWindowFocus: false, // Don't refetch when window gains focus
     refetchOnMount: true, // Force refetch when component mounts
@@ -56,8 +56,9 @@ export function useRecipe(id: string) {
     queryKey: recipeKeys.detail(id),
     queryFn: () => database.getRecipe(supabase, id),
     enabled: !!id, // Only run if id exists
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0, // Allow immediate refetches for real-time updates
     gcTime: 10 * 60 * 1000,
+    refetchOnMount: true, // Always refetch when component mounts
   });
 }
 
@@ -95,7 +96,9 @@ export function useRecipesByCategoryWithUser(category: string) {
 }
 
 // Hook to create a recipe
-export function useCreateRecipe() {
+export function useCreateRecipe(options?: {
+  onSuccess?: (recipe: Recipe) => void;
+}) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -105,19 +108,22 @@ export function useCreateRecipe() {
       // Add the new recipe to the cache immediately
       queryClient.setQueryData(recipeKeys.detail(newRecipe.id), newRecipe);
 
-      // Force refetch all recipe-related queries to ensure immediate updates
-      queryClient.refetchQueries({ queryKey: recipeKeys.lists() });
-      queryClient.refetchQueries({ queryKey: ["recipes"] });
+      // Remove category counts from cache to force fresh fetch
+      queryClient.removeQueries({ queryKey: ["category-counts"] });
+
+      // Invalidate all recipe-related queries to ensure fresh data
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.all });
+
+      // Force refetch category counts immediately
+      queryClient.refetchQueries({ queryKey: ["category-counts"] });
 
       if (newRecipe.featured) {
-        queryClient.refetchQueries({ queryKey: recipeKeys.featured() });
+        queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
       }
 
-      // Also invalidate to ensure consistency
-      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
-      queryClient.invalidateQueries({ queryKey: ["recipes"] });
-      queryClient.invalidateQueries({ queryKey: ["category-counts"] });
+      // Call the optional onSuccess callback
+      options?.onSuccess?.(newRecipe);
     },
     onError: (error) => {
       console.error("Error creating recipe:", error);
@@ -127,7 +133,9 @@ export function useCreateRecipe() {
 }
 
 // Hook to update a recipe
-export function useUpdateRecipe() {
+export function useUpdateRecipe(options?: {
+  onSuccess?: (recipe: Recipe) => void;
+}) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -139,33 +147,26 @@ export function useUpdateRecipe() {
       recipe: Partial<Omit<Recipe, "id" | "createdAt" | "userId">>;
     }) => database.updateRecipe(supabase, id, recipe),
     onSuccess: (updatedRecipe) => {
-      console.log("Recipe updated successfully:", updatedRecipe);
-
       // Update the recipe in cache immediately
       queryClient.setQueryData(
         recipeKeys.detail(updatedRecipe.id),
         updatedRecipe
       );
 
-      // Clear all recipe-related caches to force fresh data
-      queryClient.removeQueries({ queryKey: recipeKeys.lists() });
-      queryClient.removeQueries({ queryKey: recipeKeys.featured() });
-      queryClient.removeQueries({ queryKey: ["recipes"] });
-      queryClient.removeQueries({ queryKey: recipeKeys.all });
+      // Remove category counts from cache to force fresh fetch
+      queryClient.removeQueries({ queryKey: ["category-counts"] });
 
-      // Force refetch all recipe-related queries to ensure immediate updates
-      queryClient.refetchQueries({ queryKey: recipeKeys.lists() });
-      queryClient.refetchQueries({ queryKey: recipeKeys.featured() });
-      queryClient.refetchQueries({ queryKey: ["recipes"] });
-      queryClient.refetchQueries({ queryKey: recipeKeys.all });
-
-      // Also invalidate to ensure consistency
+      // Invalidate all recipe-related queries to ensure fresh data
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.details() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.all });
-      queryClient.invalidateQueries({ queryKey: ["recipes"] });
-      queryClient.invalidateQueries({ queryKey: ["category-counts"] });
+
+      // Force refetch category counts immediately
+      queryClient.refetchQueries({ queryKey: ["category-counts"] });
+
+      // Call the optional onSuccess callback
+      options?.onSuccess?.(updatedRecipe);
     },
     onError: (error) => {
       console.error("Error updating recipe:", error);
@@ -184,18 +185,16 @@ export function useDeleteRecipe() {
       // Remove the recipe from cache immediately
       queryClient.removeQueries({ queryKey: recipeKeys.detail(deletedId) });
 
-      // Force refetch all recipe-related queries to ensure immediate updates
-      queryClient.refetchQueries({ queryKey: recipeKeys.lists() });
-      queryClient.refetchQueries({ queryKey: recipeKeys.featured() });
-      queryClient.refetchQueries({ queryKey: ["recipes"] });
-      queryClient.refetchQueries({ queryKey: recipeKeys.all });
+      // Remove category counts from cache to force fresh fetch
+      queryClient.removeQueries({ queryKey: ["category-counts"] });
 
-      // Also invalidate to ensure consistency
+      // Invalidate all recipe-related queries to ensure fresh data
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.featured() });
       queryClient.invalidateQueries({ queryKey: recipeKeys.all });
-      queryClient.invalidateQueries({ queryKey: ["recipes"] });
-      queryClient.invalidateQueries({ queryKey: ["category-counts"] });
+
+      // Force refetch category counts immediately
+      queryClient.refetchQueries({ queryKey: ["category-counts"] });
     },
     onError: (error) => {
       console.error("Error deleting recipe:", error);
@@ -217,17 +216,20 @@ export function useCategoryCounts() {
       }
       return response.json() as Promise<Record<string, number>>;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0, // Allow immediate refetches for real-time updates
     gcTime: 10 * 60 * 1000,
+    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnWindowFocus: true, // Refetch when window gains focus
+    refetchOnReconnect: true, // Refetch when reconnecting
   });
 }
 
 // User-aware recipes hook for correct cache per user
 export function useRecipesWithUser() {
   return useQuery({
-    queryKey: ["recipes"],
+    queryKey: recipeKeys.all,
     queryFn: () => database.getRecipes(supabase),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0, // Allow immediate refetches for real-time updates
     gcTime: 10 * 60 * 1000,
   });
 }

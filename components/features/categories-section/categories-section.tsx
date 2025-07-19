@@ -14,7 +14,7 @@ import {
   Wine,
 } from "lucide-react";
 import styles from "./categories-section.module.css";
-import { useCategoryCounts } from "@/hooks/use-recipes-query";
+import { useCategoryCounts, recipeKeys } from "@/hooks/use-recipes-query";
 import { useQueryClient } from "@tanstack/react-query";
 
 // Icon mapping object
@@ -56,13 +56,13 @@ export function CategoriesSection({
     (category: string) => {
       // Preload the category data on hover
       queryClient.prefetchQuery({
-        queryKey: ["recipes", "category", category],
+        queryKey: recipeKeys.category(category),
         queryFn: async () => {
           const { database } = await import("@/lib/database");
           const { supabase } = await import("@/lib/supabase");
           return database.getRecipesByCategory(supabase, category);
         },
-        staleTime: 5 * 60 * 1000,
+        staleTime: 0, // Allow immediate refetches for real-time updates
         gcTime: 10 * 60 * 1000,
       });
     },

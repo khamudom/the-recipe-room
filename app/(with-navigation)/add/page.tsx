@@ -10,19 +10,24 @@ import type { Recipe } from "@/types/recipe";
 
 export default function AddRecipePage() {
   const router = useRouter();
-  const createRecipeMutation = useCreateRecipe();
+
+  const createRecipeMutation = useCreateRecipe({
+    onSuccess: (newRecipe) => {
+      router.push(`/recipe/${newRecipe.id}`);
+    },
+  });
 
   const handleAddRecipe = useCallback(
     async (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
       try {
         await createRecipeMutation.mutateAsync(recipe);
-        router.push("/");
+        // Navigation will be handled by the onSuccess callback
       } catch (error) {
         console.error("Error creating recipe:", error);
         // Error is handled by the mutation hook
       }
     },
-    [createRecipeMutation, router]
+    [createRecipeMutation]
   );
 
   const handleCancel = useCallback(() => {
