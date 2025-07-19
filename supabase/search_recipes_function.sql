@@ -1,36 +1,24 @@
-CREATE OR REPLACE FUNCTION search_recipes(search_term TEXT)
+-- Search function for old ingredients array structure
+-- This function searches through the ingredients array field in recipes table
+CREATE OR REPLACE FUNCTION search_old_ingredients(search_term TEXT)
 RETURNS TABLE (
-  id UUID,
-  user_id UUID,
-  title TEXT,
-  description TEXT,
-  ingredients TEXT[],
-  instructions TEXT[],
-  prep_time TEXT,
-  cook_time TEXT,
-  servings TEXT,
-  category TEXT,
-  image TEXT,
-  featured BOOLEAN,
-  created_at TIMESTAMPTZ,
-  updated_at TIMESTAMPTZ,
-  by_admin BOOLEAN
+  id UUID
 ) AS $$
 BEGIN
   RETURN QUERY
-  SELECT *
-  FROM recipes
+  SELECT r.id
+  FROM recipes r
   WHERE
-    (
-      auth.uid() = recipes.user_id
-      OR recipes.featured = TRUE
-      OR recipes.by_admin = TRUE
-    )
+    r.ingredients IS NOT NULL
+    AND array_to_string(r.ingredients, ' ') ILIKE '%' || search_term || '%'
     AND (
-      to_tsvector('english', recipes.title || ' ' || recipes.description || ' ' || array_to_string(recipes.ingredients, ' '))
-        @@ websearch_to_tsquery('english', search_term)
-      OR
-      recipes.category ILIKE '%' || search_term || '%'
+      auth.uid() = r.user_id
+      OR r.featured = TRUE
+      OR r.by_admin = TRUE
     );
 END;
-$$ LANGUAGE plpgsql; 
+$$ LANGUAGE plpgsql;
+
+-- Optional: Add index for better ingredient content search performance
+-- Uncomment the line below if you want to add this index
+-- CREATE INDEX IF NOT EXISTS idx_ingredients_content_search ON ingredients USING gin(to_tsvector('english', content)); 

@@ -376,41 +376,14 @@ export const database = {
   },
 
   // Search recipes by title, description, category, or ingredients
-  // Uses RPC function with fallback to manual search
   async searchRecipes(
     supabase: SupabaseClient,
     query: string
   ): Promise<Recipe[]> {
-    // Try the optimized RPC function first for better performance
-    const { data, error } = await supabase.rpc("search_recipes", {
-      search_term: query,
-    });
+    // Get user authentication status
+    const { data: userData } = await supabase.auth.getUser();
 
-    if (!error && data) {
-      // Fetch ingredient groups for each recipe
-      const recipesWithGroups = await Promise.all(
-        data.map(async (recipe: Recipe) => {
-          const ingredientGroups = await this.getIngredientGroups(
-            supabase,
-            recipe.id
-          );
-          return { ...recipe, ingredientGroups };
-        })
-      );
-
-      return recipesWithGroups.map(normalizeRecipe);
-    }
-
-    // Log the error for debugging
-    console.error(
-      "Supabase search recipes RPC error:",
-      error,
-      "Falling back to ilike search.",
-      { query }
-    );
-
-    // Fallback: Perform a performant ilike/or query
-    // Only show public/featured/admin recipes to anonymous users
+    // Search for title, description, and category
     let fallbackQuery = supabase
       .from("recipes")
       .select("*")
@@ -419,26 +392,113 @@ export const database = {
           `title.ilike.%${query}%`,
           `description.ilike.%${query}%`,
           `category.ilike.%${query}%`,
-          `ingredients.cs.{${query}}`, // Try to match ingredients array
         ].join(",")
       )
       .order("created_at", { ascending: false });
 
-    // If not authenticated, only show featured/admin recipes
-    const { data: userData } = await supabase.auth.getUser();
+    // Apply RLS filtering for anonymous users
     if (!userData?.user) {
       fallbackQuery = fallbackQuery.or("featured.eq.true,by_admin.eq.true");
     }
 
     const { data: fallbackData, error: fallbackError } = await fallbackQuery;
+
+    // Search for recipes with matching ingredients in the old array structure
+    const { data: oldIngredientsMatches, error: oldIngredientsError } =
+      await supabase.rpc("search_old_ingredients", { search_term: query });
+
+    if (oldIngredientsError) {
+      console.error("Old ingredients search error:", oldIngredientsError);
+    }
+
+    // Search for recipes with matching ingredients in the new grouped structure
+    let ingredientQuery = supabase
+      .from("ingredients")
+      .select("recipe_id")
+      .ilike("content", `%${query}%`);
+
+    // Apply RLS filtering for anonymous users
+    if (!userData?.user) {
+      const { data: featuredRecipeIds } = await supabase
+        .from("recipes")
+        .select("id")
+        .or("featured.eq.true,by_admin.eq.true");
+
+      if (featuredRecipeIds && featuredRecipeIds.length > 0) {
+        const ids = featuredRecipeIds.map((r) => r.id);
+        ingredientQuery = ingredientQuery.in("recipe_id", ids);
+      } else {
+        ingredientQuery = ingredientQuery.eq(
+          "recipe_id",
+          "00000000-0000-0000-0000-000000000000"
+        );
+      }
+    }
+
+    const { data: ingredientMatches, error: ingredientError } =
+      await ingredientQuery;
+
+    if (ingredientError) {
+      console.error("New ingredients search error:", ingredientError);
+    }
+
+    const ingredientRecipeIds = ingredientMatches
+      ? [...new Set(ingredientMatches.map((match) => match.recipe_id))]
+      : [];
+
     if (fallbackError) {
       console.error("Supabase search recipes fallback error:", fallbackError);
       throw new Error("Failed to search recipes (fallback)");
     }
 
+    // Fetch full recipe data for ingredient matches
+    const [oldIngredientRecipes, ingredientRecipes] = await Promise.all([
+      // Fetch old ingredient matches
+      oldIngredientsMatches && oldIngredientsMatches.length > 0
+        ? supabase
+            .from("recipes")
+            .select("*")
+            .in(
+              "id",
+              oldIngredientsMatches.map((match: { id: string }) => match.id)
+            )
+            .order("created_at", { ascending: false })
+            .then(({ data, error }) => {
+              if (error)
+                console.error("Old ingredient recipes fetch error:", error);
+              return data || [];
+            })
+        : Promise.resolve([]),
+
+      // Fetch new ingredient matches
+      ingredientRecipeIds.length > 0
+        ? supabase
+            .from("recipes")
+            .select("*")
+            .in("id", ingredientRecipeIds)
+            .order("created_at", { ascending: false })
+            .then(({ data, error }) => {
+              if (error)
+                console.error("New ingredient recipes fetch error:", error);
+              return data || [];
+            })
+        : Promise.resolve([]),
+    ]);
+
+    // Combine all results and remove duplicates
+    const allRecipes = [
+      ...(fallbackData || []),
+      ...oldIngredientRecipes,
+      ...ingredientRecipes,
+    ];
+    const uniqueRecipes = allRecipes.filter(
+      (recipe, index, self) =>
+        index === self.findIndex((r) => r.id === recipe.id)
+    );
+
     // Fetch ingredient groups for each recipe
     const recipesWithGroups = await Promise.all(
-      fallbackData.map(async (recipe: Recipe) => {
+      uniqueRecipes.map(async (recipe: Recipe) => {
         const ingredientGroups = await this.getIngredientGroups(
           supabase,
           recipe.id
