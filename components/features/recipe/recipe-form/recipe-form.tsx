@@ -38,6 +38,11 @@ import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-form.module.css";
 import Image from "next/image";
 import { Button } from "@/components/ui/button/button";
+import {
+  uploadImageToSupabase,
+  deleteImageFromSupabase,
+  isBase64Image,
+} from "@/lib/image-upload";
 
 interface RecipeFormProps {
   recipe?: Recipe | null;
@@ -93,6 +98,7 @@ export function RecipeForm({
     servings: recipe?.servings || "",
     category: recipe?.category || "",
     image: recipe?.image || "",
+    imagePath: recipe?.imagePath || "",
     featured: recipe?.featured || false,
     featuredOrder: recipe?.featuredOrder || undefined,
   });
@@ -130,22 +136,70 @@ export function RecipeForm({
     });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setFormData((prev) => ({ ...prev, image: result }));
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image file");
+      return;
+    }
+
+    // Validate file size (20MB limit)
+    if (file.size > 20 * 1024 * 1024) {
+      alert("Image file size must be less than 20MB");
+      return;
+    }
+
+    setIsUploadingImage(true);
+
+    try {
+      // Delete old image from storage if it exists
+      if (formData.imagePath && !isBase64Image(formData.image)) {
+        await deleteImageFromSupabase(formData.imagePath);
+      }
+
+      // Upload new image to Supabase storage
+      const uploadResult = await uploadImageToSupabase(file);
+
+      if (uploadResult.error) {
+        throw new Error(uploadResult.error);
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        image: uploadResult.url,
+        imagePath: uploadResult.path,
+      }));
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploadingImage(false);
     }
   };
 
-  const removeImage = () => {
-    setFormData((prev) => ({ ...prev, image: "" }));
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+  const removeImage = async () => {
+    try {
+      // Delete image from storage if it exists and is not base64
+      if (formData.imagePath && !isBase64Image(formData.image)) {
+        await deleteImageFromSupabase(formData.imagePath);
+      }
+
+      setFormData((prev) => ({ ...prev, image: "", imagePath: "" }));
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (error) {
+      console.error("Error removing image:", error);
+      // Still remove from form even if storage deletion fails
+      setFormData((prev) => ({ ...prev, image: "", imagePath: "" }));
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -292,6 +346,7 @@ export function RecipeForm({
       servings: recipeData.servings || "",
       category: recipeData.category || "",
       image: recipeData.image || formData.image,
+      imagePath: recipeData.imagePath || formData.imagePath, // Use AI result or preserve existing
       featured: formData.featured, // Preserve the featured setting
       featuredOrder: formData.featuredOrder, // Preserve the featured order
     });
@@ -427,9 +482,20 @@ export function RecipeForm({
                     onChange={handleImageUpload}
                     className={styles.hiddenInput}
                   />
-                  <Button onClick={() => fileInputRef.current?.click()}>
-                    <Upload className={styles.buttonIcon} />
-                    {formData.image ? "Change Image" : "Upload Image"}
+                  <Button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingImage}
+                  >
+                    {isUploadingImage ? (
+                      <Loader2 className={styles.buttonIcon} />
+                    ) : (
+                      <Upload className={styles.buttonIcon} />
+                    )}
+                    {isUploadingImage
+                      ? "Uploading..."
+                      : formData.image
+                      ? "Change Image"
+                      : "Upload Image"}
                   </Button>
                 </div>
               </div>

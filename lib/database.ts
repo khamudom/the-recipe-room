@@ -209,6 +209,7 @@ export const database = {
       featured,
       featuredOrder,
       ingredientGroups,
+      imagePath,
       ...rest
     } = recipe;
 
@@ -224,6 +225,7 @@ export const database = {
           user_id: user.id,
           prep_time: prepTime,
           cook_time: cookTime,
+          ...(imagePath && { image_path: imagePath }), // Only include if imagePath exists
           featured: isAdmin && featured ? true : false,
           featured_order: isAdmin && featuredOrder ? featuredOrder : null,
           by_admin: isAdmin, // Mark if created by admin
@@ -325,6 +327,7 @@ export const database = {
       featured,
       featuredOrder,
       ingredientGroups,
+      imagePath,
       ...rest
     } = updates;
     const isAdmin = user.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
@@ -337,6 +340,7 @@ export const database = {
         ...rest,
         ...(prepTime !== undefined && { prep_time: prepTime }),
         ...(cookTime !== undefined && { cook_time: cookTime }),
+        ...(imagePath && { image_path: imagePath }), // Only include if imagePath exists
         ...(featured !== undefined && isAdmin && { featured }),
         ...(featuredOrder !== undefined &&
           isAdmin && { featured_order: featuredOrder }),
@@ -364,6 +368,21 @@ export const database = {
   // Delete a recipe
   // RLS policies ensure users can only delete their own recipes
   async deleteRecipe(supabase: SupabaseClient, id: string): Promise<void> {
+    // Get the recipe first to check if it has an image to delete
+    // Use a try-catch to handle case where image_path column doesn't exist yet
+    let recipe: { image_path?: string } | null = null;
+    try {
+      const { data } = await supabase
+        .from("recipes")
+        .select("image_path")
+        .eq("id", id)
+        .single();
+      recipe = data;
+    } catch {
+      // If image_path column doesn't exist, continue without it
+      console.log("image_path column not available, skipping image deletion");
+    }
+
     // Delete ingredients and ingredient groups first (cascade should handle this, but being explicit)
     await supabase.from("ingredients").delete().eq("recipe_id", id);
     await supabase.from("ingredient_groups").delete().eq("recipe_id", id);
@@ -372,6 +391,23 @@ export const database = {
     if (error) {
       console.error("Supabase delete recipe error:", error);
       throw new Error("Failed to delete recipe");
+    }
+
+    // Delete the image from storage if it exists
+    if (recipe?.image_path) {
+      try {
+        const { error: storageError } = await supabase.storage
+          .from("recipe-images")
+          .remove([recipe.image_path]);
+
+        if (storageError) {
+          console.error("Error deleting image from storage:", storageError);
+          // Don't throw error here as the recipe was already deleted
+        }
+      } catch (storageError) {
+        console.error("Error deleting image from storage:", storageError);
+        // Don't throw error here as the recipe was already deleted
+      }
     }
   },
 
@@ -550,7 +586,7 @@ export const database = {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("User not authenticated");
 
-    const { prepTime, cookTime, ingredientGroups, ...rest } = recipe;
+    const { prepTime, cookTime, ingredientGroups, imagePath, ...rest } = recipe;
 
     const { data, error } = await supabase
       .from("recipes")
@@ -560,6 +596,7 @@ export const database = {
           user_id: user.id,
           prep_time: prepTime,
           cook_time: cookTime,
+          ...(imagePath && { image_path: imagePath }), // Only include if imagePath exists
           featured: true, // Featured recipes are visible to everyone
           by_admin: true, // Admin-created recipes are visible to everyone
         },
@@ -598,6 +635,7 @@ const normalizeRecipe = (recipe: Record<string, unknown>): Recipe => ({
   servings: recipe.servings as string,
   category: recipe.category as string,
   image: recipe.image as string,
+  imagePath: (recipe.image_path as string) || undefined, // Handle case where column doesn't exist yet
   featured: recipe.featured as boolean,
   featuredOrder: recipe.featured_order as number,
   byAdmin: recipe.by_admin as boolean,

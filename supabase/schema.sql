@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS recipes (
   servings INTEGER NOT NULL DEFAULT 1,
   category TEXT NOT NULL,
   image TEXT,
+  image_path TEXT,
   featured BOOLEAN DEFAULT FALSE,
   by_admin BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

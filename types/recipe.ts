@@ -17,7 +17,8 @@ export interface Recipe {
   cookTime?: string;
   servings: string;
   category: string;
-  image?: string; // Base64 encoded image or URL
+  image?: string; // Image URL (Supabase storage URL or base64 for backward compatibility)
+  imagePath?: string; // Supabase storage path for the image
   featured?: boolean;
   featuredOrder?: number;
   byAdmin?: boolean;
@@ -36,6 +37,7 @@ export interface AIRecipeAnalysisResult {
   servings?: string;
   category?: string;
   image?: string;
+  imagePath?: string;
 }
 
 export interface MultiImageAnalysisRequest {

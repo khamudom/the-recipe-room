@@ -14,6 +14,7 @@ import {
 import Image from "next/image";
 import styles from "./ai-recipe-analyzer.module.css";
 import { Button } from "@/components/ui/button/button";
+import { uploadImageToSupabase } from "@/lib/image-upload";
 
 interface RecipeAnalysis {
   title: string;
@@ -24,6 +25,8 @@ interface RecipeAnalysis {
   cookTime: string;
   servings: string;
   category: string;
+  image?: string;
+  imagePath?: string;
 }
 
 interface AIRecipeAnalyzerProps {
@@ -224,11 +227,49 @@ export function AIRecipeAnalyzer({
         throw new Error("No recipe data received from AI analysis");
       }
 
+      setAnalysisProgress("Uploading image to storage...");
+
+      // Upload the first image to Supabase storage if we have images
+      let imageUrl = data.recipe.image || "";
+      let imagePath = "";
+
+      if (imageData.length > 0) {
+        try {
+          // Convert base64 to file for upload
+          const base64Data = imageData[0];
+          const response = await fetch(base64Data);
+          const blob = await response.blob();
+          const file = new File([blob], `recipe-${Date.now()}.jpg`, {
+            type: "image/jpeg",
+          });
+
+          const uploadResult = await uploadImageToSupabase(file);
+
+          if (uploadResult.error) {
+            console.warn(
+              "Failed to upload image to storage:",
+              uploadResult.error
+            );
+            // Continue with base64 image if upload fails
+          } else {
+            imageUrl = uploadResult.url;
+            imagePath = uploadResult.path;
+          }
+        } catch (uploadError) {
+          console.warn("Error uploading image to storage:", uploadError);
+          // Continue with base64 image if upload fails
+        }
+      }
+
       setAnalysisProgress("Analysis complete!");
 
       // Small delay to show completion message
       setTimeout(() => {
-        onAnalysisComplete(data.recipe);
+        onAnalysisComplete({
+          ...data.recipe,
+          image: imageUrl,
+          imagePath: imagePath,
+        });
       }, 500);
     } catch (err) {
       if (progressInterval) {
