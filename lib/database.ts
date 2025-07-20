@@ -138,6 +138,33 @@ export const database = {
     return null;
   },
 
+  // Get a single recipe by slug
+  // Returns null if recipe doesn't exist or user doesn't have access
+  async getRecipeBySlug(
+    supabase: SupabaseClient,
+    slug: string
+  ): Promise<Recipe | null> {
+    const { data, error } = await supabase
+      .from("recipes")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+    if (error) {
+      if (error.code === "PGRST116") return null; // No rows returned
+      throw new Error("Failed to fetch recipe");
+    }
+
+    if (data) {
+      const ingredientGroups = await this.getIngredientGroups(
+        supabase,
+        data.id
+      );
+      return normalizeRecipe({ ...data, ingredientGroups });
+    }
+
+    return null;
+  },
+
   // Get ingredient groups for a recipe
   async getIngredientGroups(
     supabase: SupabaseClient,
@@ -196,7 +223,7 @@ export const database = {
   // Automatically sets user_id and handles admin permissions
   async createRecipe(
     supabase: SupabaseClient,
-    recipe: Omit<Recipe, "id" | "createdAt" | "userId">
+    recipe: Omit<Recipe, "id" | "createdAt" | "userId" | "slug">
   ): Promise<Recipe> {
     const {
       data: { user },
@@ -314,7 +341,7 @@ export const database = {
   async updateRecipe(
     supabase: SupabaseClient,
     id: string,
-    updates: Partial<Omit<Recipe, "id" | "createdAt" | "userId">>
+    updates: Partial<Omit<Recipe, "id" | "createdAt" | "userId" | "slug">>
   ): Promise<Recipe> {
     const {
       data: { user },
@@ -626,6 +653,7 @@ const normalizeRecipe = (recipe: Record<string, unknown>): Recipe => ({
   id: recipe.id as string,
   userId: recipe.user_id as string,
   title: recipe.title as string,
+  slug: recipe.slug as string,
   description: recipe.description as string,
   ingredients: recipe.ingredients as string[],
   ingredientGroups: recipe.ingredientGroups as IngredientGroup[],

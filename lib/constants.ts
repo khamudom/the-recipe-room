@@ -42,6 +42,23 @@ export const CATEGORY_ICONS = {
   Beverage: "Wine",
 } as const;
 
+// Category slug mapping for SEO-friendly URLs
+export const CATEGORY_SLUGS = {
+  Appetizer: "appetizer",
+  Breakfast: "breakfast",
+  Lunch: "lunch",
+  Dinner: "dinner",
+  "Side Dish": "side-dish",
+  Dessert: "dessert",
+  Snack: "snack",
+  Beverage: "beverage",
+} as const;
+
+// Reverse mapping from slug to category name
+export const CATEGORY_FROM_SLUG = Object.fromEntries(
+  Object.entries(CATEGORY_SLUGS).map(([category, slug]) => [slug, category])
+) as Record<string, string>;
+
 // Debounce delay for search input to prevent excessive API calls
 export const SEARCH_DEBOUNCE_DELAY = 300;
 

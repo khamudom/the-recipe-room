@@ -5,37 +5,44 @@ import { useRouter, useParams } from "next/navigation";
 import { RecipeForm } from "@/components/features/recipe/recipe-form/recipe-form";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { ProtectedRoute } from "@/components/layout/protected-route/protected-route";
-import { useRecipe, useUpdateRecipe } from "@/hooks/use-recipes-query";
+import { useRecipeBySlug, useUpdateRecipe } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 
 export default function EditRecipePage() {
   const router = useRouter();
   const params = useParams();
-  const recipeId = params.id as string;
+  const recipeSlug = params.slug as string;
 
-  const { data: recipe, isLoading, error } = useRecipe(recipeId);
+  const { data: recipe, isLoading, error } = useRecipeBySlug(recipeSlug);
 
   const updateRecipeMutation = useUpdateRecipe();
 
   const handleUpdateRecipe = useCallback(
-    async (updatedRecipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
+    async (
+      updatedRecipe: Omit<Recipe, "id" | "createdAt" | "userId" | "slug">
+    ) => {
       try {
+        if (!recipe) return;
         await updateRecipeMutation.mutateAsync({
-          id: recipeId,
+          id: recipe.id,
           recipe: updatedRecipe,
         });
-        router.push(`/recipe/${recipeId}`);
+        router.push(`/recipe/${recipe.slug}`);
       } catch (error) {
         console.error("Error updating recipe:", error);
         // Error is handled by the mutation hook
       }
     },
-    [recipeId, updateRecipeMutation, router]
+    [recipe, updateRecipeMutation, router]
   );
 
   const handleCancel = useCallback(() => {
-    router.push(`/recipe/${recipeId}`);
-  }, [recipeId, router]);
+    if (recipe) {
+      router.push(`/recipe/${recipe.slug}`);
+    } else {
+      router.push("/");
+    }
+  }, [recipe, router]);
 
   if (isLoading) {
     return (

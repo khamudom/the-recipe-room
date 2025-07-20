@@ -46,7 +46,9 @@ import {
 
 interface RecipeFormProps {
   recipe?: Recipe | null;
-  onSubmit: (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) => void;
+  onSubmit: (
+    recipe: Omit<Recipe, "id" | "createdAt" | "userId" | "slug">
+  ) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
 }

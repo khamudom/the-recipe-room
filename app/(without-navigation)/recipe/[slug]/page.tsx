@@ -1,26 +1,24 @@
 "use client";
 
 import { useCallback } from "react";
-import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { RecipeDetail } from "@/components/features/recipe/recipe-detail/recipe-detail";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
-import { useRecipe, useDeleteRecipe } from "@/hooks/use-recipes-query";
+import { useRecipeBySlug, useDeleteRecipe } from "@/hooks/use-recipes-query";
 
 function RecipeDetailContent() {
   const router = useRouter();
   const params = useParams();
-  const searchParams = useSearchParams();
-  const recipeId = params.id as string;
-  const from = searchParams.get("from");
+  const recipeSlug = params.slug as string;
 
-  const { data: recipe, isLoading, error } = useRecipe(recipeId);
+  const { data: recipe, isLoading, error } = useRecipeBySlug(recipeSlug);
 
   const deleteRecipeMutation = useDeleteRecipe();
 
   const handleEdit = useCallback(() => {
     if (recipe) {
-      router.push(`/recipe/${recipe.id}/edit`);
+      router.push(`/recipe/${recipe.slug}/edit`);
     }
   }, [recipe, router]);
 
@@ -37,12 +35,13 @@ function RecipeDetailContent() {
   }, [recipe, deleteRecipeMutation, router]);
 
   const handleBack = useCallback(() => {
-    if (from) {
-      router.push(from);
+    // Use browser history to go back, or fallback to home
+    if (window.history.length > 1) {
+      router.back();
     } else {
       router.push("/");
     }
-  }, [router, from]);
+  }, [router]);
 
   // Show loading state
   if (isLoading) {

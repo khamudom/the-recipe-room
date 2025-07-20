@@ -33,12 +33,14 @@ import { Button } from "@/components/ui/button/button";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
 import type { Recipe } from "@/types/recipe";
+import { CATEGORY_FROM_SLUG } from "@/lib/constants";
 import styles from "./category.module.css";
 
 export default function CategoryPage() {
   const params = useParams();
   const router = useRouter();
-  const category = decodeURIComponent(params.category as string);
+  const categorySlug = params.category as string;
+  const category = CATEGORY_FROM_SLUG[categorySlug];
   const { user } = useAuth();
 
   const {
@@ -46,16 +48,13 @@ export default function CategoryPage() {
     isLoading,
     error,
     isSuccess,
-  } = useRecipesByCategoryWithUser(category);
+  } = useRecipesByCategoryWithUser(category || "");
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
-      const currentPath = `/category/${encodeURIComponent(category)}`;
-      router.push(
-        `/recipe/${recipe.id}?from=${encodeURIComponent(currentPath)}`
-      );
+      router.push(`/recipe/${recipe.slug}`);
     },
-    [router, category]
+    [router]
   );
 
   const handleBack = useCallback(() => {
@@ -65,6 +64,46 @@ export default function CategoryPage() {
   const onAddRecipe = useCallback(() => {
     router.push("/add");
   }, [router]);
+
+  // Handle invalid category slug
+  if (!category) {
+    return (
+      <ErrorBoundary>
+        <div className={styles.container}>
+          <div className={styles.content}>
+            <div className={`${styles.header} glass-morphism-bottom`}>
+              <div className={styles.headerContent}>
+                <Button
+                  onClick={() => router.push("/")}
+                  variant="outline"
+                  iconOnly
+                >
+                  <ArrowLeft className={styles.buttonIcon} />
+                </Button>
+                <h1 className={`${styles.mainTitle} page-header`}>
+                  Category Not Found
+                </h1>
+              </div>
+            </div>
+            <div className={styles.resultsContainer}>
+              <div className={styles.emptyState}>
+                <h3 className={styles.emptyTitle}>Invalid Category</h3>
+                <p className={styles.emptyText}>
+                  The category &ldquo;{categorySlug}&rdquo; was not found.
+                </p>
+                <Button
+                  onClick={() => router.push("/")}
+                  className={styles.addButton}
+                >
+                  Back to Home
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ErrorBoundary>
+    );
+  }
 
   const renderContent = () => {
     if (isSuccess && recipes.length > 0) {

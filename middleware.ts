@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { CATEGORY_SLUGS } from "@/lib/constants";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -35,6 +36,23 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // Handle category redirects for SEO-friendly URLs
+  if (request.nextUrl.pathname.startsWith("/category/")) {
+    const pathSegments = request.nextUrl.pathname.split("/");
+    if (pathSegments.length === 3) {
+      const categoryParam = decodeURIComponent(pathSegments[2]);
+
+      // Check if this is an old category name that needs to be redirected to slug
+      const categorySlug =
+        CATEGORY_SLUGS[categoryParam as keyof typeof CATEGORY_SLUGS];
+      if (categorySlug && categorySlug !== categoryParam) {
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = `/category/${categorySlug}`;
+        return NextResponse.redirect(redirectUrl, 301); // Permanent redirect for SEO
+      }
+    }
+  }
 
   if (!user && request.nextUrl.pathname.startsWith("/auth/protected")) {
     const redirectUrl = request.nextUrl.clone();

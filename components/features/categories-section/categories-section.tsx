@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CATEGORIES, CATEGORY_ICONS } from "@/lib/constants";
+import { CATEGORIES, CATEGORY_ICONS, CATEGORY_SLUGS } from "@/lib/constants";
 import {
   HandPlatter,
   Sun,
@@ -46,8 +46,9 @@ export function CategoriesSection({
       // Set loading state for immediate feedback
       setLoadingCategory(category);
 
-      // Navigate to the category page
-      router.push(`/category/${encodeURIComponent(category)}`);
+      // Navigate to the category page using SEO-friendly slug
+      const slug = CATEGORY_SLUGS[category as keyof typeof CATEGORY_SLUGS];
+      router.push(`/category/${slug}`);
     },
     [router]
   );

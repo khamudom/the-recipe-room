@@ -25,7 +25,7 @@ export function SearchResultsClient() {
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
-      router.push(`/recipe/${recipe.id}`);
+      router.push(`/recipe/${recipe.slug}`);
     },
     [router]
   );

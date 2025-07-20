@@ -62,6 +62,18 @@ export function useRecipe(id: string) {
   });
 }
 
+// Hook to get a single recipe by slug
+export function useRecipeBySlug(slug: string) {
+  return useQuery({
+    queryKey: recipeKeys.detail(slug),
+    queryFn: () => database.getRecipeBySlug(supabase, slug),
+    enabled: !!slug, // Only run if slug exists
+    staleTime: 0, // Allow immediate refetches for real-time updates
+    gcTime: 10 * 60 * 1000,
+    refetchOnMount: true, // Always refetch when component mounts
+  });
+}
+
 // Hook to search recipes
 export function useSearchRecipes(query: string) {
   return useQuery({
@@ -102,8 +114,9 @@ export function useCreateRecipe(options?: {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) =>
-      database.createRecipe(supabase, recipe),
+    mutationFn: (
+      recipe: Omit<Recipe, "id" | "createdAt" | "userId" | "slug">
+    ) => database.createRecipe(supabase, recipe),
     onSuccess: (newRecipe) => {
       // Add the new recipe to the cache immediately
       queryClient.setQueryData(recipeKeys.detail(newRecipe.id), newRecipe);
@@ -144,7 +157,7 @@ export function useUpdateRecipe(options?: {
       recipe,
     }: {
       id: string;
-      recipe: Partial<Omit<Recipe, "id" | "createdAt" | "userId">>;
+      recipe: Partial<Omit<Recipe, "id" | "createdAt" | "userId" | "slug">>;
     }) => database.updateRecipe(supabase, id, recipe),
     onSuccess: (updatedRecipe) => {
       // Update the recipe in cache immediately

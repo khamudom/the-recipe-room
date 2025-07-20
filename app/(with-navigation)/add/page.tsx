@@ -13,12 +13,12 @@ export default function AddRecipePage() {
 
   const createRecipeMutation = useCreateRecipe({
     onSuccess: (newRecipe) => {
-      router.push(`/recipe/${newRecipe.id}`);
+      router.push(`/recipe/${newRecipe.slug}`);
     },
   });
 
   const handleAddRecipe = useCallback(
-    async (recipe: Omit<Recipe, "id" | "createdAt" | "userId">) => {
+    async (recipe: Omit<Recipe, "id" | "createdAt" | "userId" | "slug">) => {
       try {
         await createRecipeMutation.mutateAsync(recipe);
         // Navigation will be handled by the onSuccess callback

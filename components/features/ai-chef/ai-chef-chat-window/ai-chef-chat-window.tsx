@@ -30,8 +30,11 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
     if (textarea) {
+      // Reset height to auto to get the correct scrollHeight
       textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
+      // Calculate the new height based on scrollHeight
+      const newHeight = Math.min(textarea.scrollHeight, 200); // Max 200px
+      textarea.style.height = `${newHeight}px`;
     }
   };
 
@@ -58,10 +61,13 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     };
   }, [onClose, buttonRef]);
 
-  // Auto-scroll to bottom when messages change, loading state changes, or streaming message changes
+  // Auto-scroll to bottom when messages change or loading starts, but not during streaming
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading, streamingMessage]);
+    // Only auto-scroll for new messages or when loading starts, not during streaming
+    if (!streamingMessage) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, loading]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -88,7 +94,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        
+
         const chunk = decoder.decode(value, { stream: true });
         fullResponse += chunk;
         setStreamingMessage(fullResponse);
@@ -104,9 +110,9 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
       console.error("Error sending message:", error);
       setMessages((prev) => [
         ...prev,
-        { 
-          sender: "ai" as const, 
-          text: "Sorry, I encountered an error. Please try again." 
+        {
+          sender: "ai" as const,
+          text: "Sorry, I encountered an error. Please try again.",
         },
       ]);
     } finally {

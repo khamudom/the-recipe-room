@@ -9,6 +9,7 @@ export interface Recipe {
   id: string;
   userId: string;
   title: string;
+  slug: string;
   description: string;
   ingredients: string[]; // Keep for backward compatibility
   ingredientGroups?: IngredientGroup[]; // Grouped ingredients structure
