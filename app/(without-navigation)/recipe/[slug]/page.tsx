@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { RecipeDetail } from "@/components/features/recipe/recipe-detail/recipe-detail";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
@@ -10,6 +10,7 @@ import { useRecipeBySlug, useDeleteRecipe } from "@/hooks/use-recipes-query";
 function RecipeDetailContent() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const recipeSlug = params.slug as string;
 
   const { data: recipe, isLoading, error } = useRecipeBySlug(recipeSlug);
@@ -35,13 +36,21 @@ function RecipeDetailContent() {
   }, [recipe, deleteRecipeMutation, router]);
 
   const handleBack = useCallback(() => {
-    // Use browser history to go back, or fallback to home
-    if (window.history.length > 1) {
-      router.back();
-    } else {
+    // Check if we came from the edit page
+    const fromEdit = searchParams.get("from") === "edit";
+
+    if (fromEdit) {
+      // If we came from edit, go directly to home
       router.push("/");
+    } else {
+      // Use browser history to go back, or fallback to home
+      if (window.history.length > 1) {
+        router.back();
+      } else {
+        router.push("/");
+      }
     }
-  }, [router]);
+  }, [router, searchParams]);
 
   // Show loading state
   if (isLoading) {

@@ -8,7 +8,7 @@
   z-index: 10;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 8rem 1rem 4rem 1rem;
+  padding: 8rem 1rem 6rem 1rem;
 }
 
 .headerControls {
@@ -232,15 +232,4 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   position: relative;
-}
-
-.groupTitle::after {
-  content: "";
-  position: absolute;
-  bottom: -0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 3rem;
-  height: 2px;
-  background: linear-gradient(to right, transparent, #d97706, transparent);
 }

@@ -115,7 +115,8 @@
   --color-focus-border: var(--accent-color);
 
   /* Button */
-  --color-button-text: var(--primary-light-color);
+  --color-button-text-light: var(--primary-light-color);
+  --color-button-text-dark: var(--primary-color);
   --color-button-background: var(--primary-color);
   --color-button-background-hover: var(--primary-dark-color);
   --color-button-border: var(--secondary-color);

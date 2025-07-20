@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loadingText {
+  font-size: 1.125rem;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.errorContent {
+  text-align: center;
+}
+
+.errorMessage {
+  font-size: 1.125rem;
+  color: #dc2626;
+  margin-bottom: 1rem;
+}
+
+.backButton {
+  padding: 0.5rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #1d4ed8;
+}

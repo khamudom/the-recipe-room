@@ -433,7 +433,7 @@ export function RecipeForm({
       <div className={styles.content}>
         {/* Hero Section */}
         <div className={styles.header}>
-          <Button onClick={onCancel} variant="outline" iconOnly>
+          <Button onClick={onCancel} variant="ghost" iconOnly>
             <ArrowLeft />
           </Button>
           <h1 className={`${styles.title} section-header`}>

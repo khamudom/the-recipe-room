@@ -4,7 +4,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   href?: string;
   className?: string;
-  variant?: "default" | "primary" | "outline" | "link" | "gold";
+  variant?: "default" | "primary" | "outline" | "link" | "gold" | "ghost";
   size?: "small" | "medium" | "large";
   iconOnly?: boolean;
   shape?: "square" | "round" | "circle";
@@ -32,6 +32,7 @@ export function Button({
     variant === "outline" && styles.outline,
     variant === "link" && styles.link,
     variant === "gold" && styles.gold,
+    variant === "ghost" && styles.ghost,
     size === "small" && styles.small,
     size === "large" && styles.large,
     iconOnly && styles.iconOnly,

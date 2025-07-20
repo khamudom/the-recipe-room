@@ -75,7 +75,7 @@ export default function CategoryPage() {
               <div className={styles.headerContent}>
                 <Button
                   onClick={() => router.push("/")}
-                  variant="outline"
+                  variant="ghost"
                   iconOnly
                 >
                   <ArrowLeft className={styles.buttonIcon} />
@@ -189,7 +189,7 @@ export default function CategoryPage() {
         <div className={styles.content}>
           <div className={`${styles.header} glass-morphism-bottom`}>
             <div className={styles.headerContent}>
-              <Button onClick={handleBack} variant="outline" iconOnly>
+              <Button onClick={handleBack} variant="ghost" iconOnly>
                 <ArrowLeft className={styles.buttonIcon} />
               </Button>
               <h1 className={`${styles.mainTitle} page-header`}>

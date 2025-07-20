@@ -65,7 +65,7 @@ export function RecipeDetail({
         {/* Hero Section */}
         <div className={`${styles.headerControls} glass-morphism-bottom`}>
           <div className={styles.headerControlsContent}>
-            <Button onClick={onBack} variant="outline" iconOnly>
+            <Button onClick={onBack} variant="ghost" iconOnly>
               <ArrowLeft className={styles.buttonIcon} />
             </Button>
             <h1 className={`${styles.recipeTitle} section-header`}>
@@ -104,8 +104,9 @@ export function RecipeDetail({
 
         {/* Recipe Description */}
         <div className={styles.recipeHeader}>
-          <div className={styles.titleLine}></div>
-          <p className={styles.recipeDescription}>{recipe.description}</p>
+          <div className={styles.infoCard} style={{ padding: "1rem" }}>
+            <p className={styles.recipeDescription}>{recipe.description}</p>
+          </div>
         </div>
 
         {/* Recipe Info */}

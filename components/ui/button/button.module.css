@@ -1,6 +1,6 @@
 .button {
   background-color: var(--color-button-background);
-  color: var(--color-button-text);
+  color: var(--color-button-text-light);
   padding: 0.5rem 1rem;
   border: none;
   border-radius: var(--radius-large);
@@ -81,6 +81,19 @@
 .link:hover {
   background-color: transparent;
   text-decoration: underline;
+}
+
+/* Ghost variant */
+.ghost {
+  background-color: transparent;
+  border: none;
+  color: var(--color-button-text-dark);
+  transition: background-color 0.2s ease;
+}
+
+.ghost:hover {
+  background-color: var(--color-button-background-hover);
+  color: var(--color-button-text-light);
 }
 
 /* Size variants */
