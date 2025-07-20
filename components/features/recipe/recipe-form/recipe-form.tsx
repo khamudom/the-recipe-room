@@ -443,6 +443,59 @@ export function RecipeForm({
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
+          {/* AI Analysis Option - Only show for new recipes */}
+          {!recipe && (
+            <div className={`${styles.card} ${styles.aiCard}`}>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.cardTitle}>AI Recipe Analysis</h3>
+                <CardLine />
+              </div>
+              <div className={styles.cardContent}>
+                <div className={styles.aiSection}>
+                  <div className={styles.aiDescription}>
+                    <Sparkles className={styles.aiIcon} />
+                    <div>
+                      <h4>Try AI Recipe Analysis</h4>
+                      <p>
+                        Upload a photo of your recipe and let our AI extract all
+                        the details automatically. Perfect for handwritten
+                        recipes, cookbook pages, or recipe cards!
+                      </p>
+                    </div>
+                  </div>
+                  <Button onClick={() => setShowAIAnalyzer(true)}>
+                    <Sparkles className={styles.buttonIcon} />
+                    Analyze Recipe Image
+                  </Button>
+                </div>
+
+                {/* <div className={styles.aiDivider}></div>
+                
+                <div className={styles.aiSection}>
+                  <div className={styles.aiDescription}>
+                    <Globe className={styles.aiIcon} />
+                    <div>
+                      <h4>Extract Recipe from URL</h4>
+                      <p>
+                        Enter a recipe webpage URL and our AI will automatically
+                        extract all the details for you.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    disabled={true}
+                    type="button"
+                    onClick={() => setShowURLExtractor(true)}
+                    className={styles.aiButton}
+                  >
+                    <Globe className={styles.buttonIcon} />
+                    Extract from URL
+                  </button>
+                </div> */}
+              </div>
+            </div>
+          )}
+
           {/* Recipe Image */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
@@ -503,59 +556,6 @@ export function RecipeForm({
               </div>
             </div>
           </div>
-
-          {/* AI Analysis Option - Only show for new recipes */}
-          {!recipe && (
-            <div className={`${styles.card} ${styles.aiCard}`}>
-              <div className={styles.cardHeader}>
-                <h3 className={styles.cardTitle}>AI Recipe Analysis</h3>
-                <CardLine />
-              </div>
-              <div className={styles.cardContent}>
-                <div className={styles.aiSection}>
-                  <div className={styles.aiDescription}>
-                    <Sparkles className={styles.aiIcon} />
-                    <div>
-                      <h4>Try AI Recipe Analysis</h4>
-                      <p>
-                        Upload a photo of your recipe and let our AI extract all
-                        the details automatically. Perfect for handwritten
-                        recipes, cookbook pages, or recipe cards!
-                      </p>
-                    </div>
-                  </div>
-                  <Button onClick={() => setShowAIAnalyzer(true)}>
-                    <Sparkles className={styles.buttonIcon} />
-                    Analyze Recipe Image
-                  </Button>
-                </div>
-
-                {/* <div className={styles.aiDivider}></div>
-                
-                <div className={styles.aiSection}>
-                  <div className={styles.aiDescription}>
-                    <Globe className={styles.aiIcon} />
-                    <div>
-                      <h4>Extract Recipe from URL</h4>
-                      <p>
-                        Enter a recipe webpage URL and our AI will automatically
-                        extract all the details for you.
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    disabled={true}
-                    type="button"
-                    onClick={() => setShowURLExtractor(true)}
-                    className={styles.aiButton}
-                  >
-                    <Globe className={styles.buttonIcon} />
-                    Extract from URL
-                  </button>
-                </div> */}
-              </div>
-            </div>
-          )}
 
           {/* Basic Info */}
           <div className={styles.card}>
