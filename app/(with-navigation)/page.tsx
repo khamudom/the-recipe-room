@@ -12,6 +12,7 @@ import { useFeaturedRecipes } from "@/hooks/use-recipes-query";
 import { usePageTransition } from "@/hooks/use-page-transition";
 import { Card } from "@/components/ui/card/card";
 import { Button } from "@/components/ui/button/button";
+import { ReduxDemo } from "@/components/dev/ReduxDemo";
 import type { Recipe } from "@/types/recipe";
 import styles from "../home.module.css";
 
@@ -104,6 +105,9 @@ export default function RecipeBook() {
           />
 
           {renderContent()}
+
+          {/* Redux Demo - Only show in development */}
+          {process.env.NODE_ENV === "development" && <ReduxDemo />}
 
           <Footer />
         </div>

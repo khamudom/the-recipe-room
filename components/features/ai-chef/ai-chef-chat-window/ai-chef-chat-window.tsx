@@ -67,7 +67,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
     if (!streamingMessage) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages, loading]);
+  }, [messages, loading, streamingMessage]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
