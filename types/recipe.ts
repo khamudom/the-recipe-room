@@ -5,6 +5,13 @@ export interface IngredientGroup {
   sortOrder?: number;
 }
 
+export interface InstructionGroup {
+  id?: string;
+  name: string;
+  instructions: string[];
+  sortOrder?: number;
+}
+
 export interface Recipe {
   id: string;
   userId: string;
@@ -13,7 +20,8 @@ export interface Recipe {
   description: string;
   ingredients: string[]; // Keep for backward compatibility
   ingredientGroups?: IngredientGroup[]; // Grouped ingredients structure
-  instructions: string[];
+  instructions: string[]; // Keep for backward compatibility
+  instructionGroups?: InstructionGroup[]; // Grouped instructions structure
   prepTime?: string;
   cookTime?: string;
   servings: string;
@@ -33,6 +41,7 @@ export interface AIRecipeAnalysisResult {
   ingredients?: string[];
   ingredientGroups?: IngredientGroup[];
   instructions?: string[];
+  instructionGroups?: InstructionGroup[];
   prepTime?: string;
   cookTime?: string;
   servings?: string;

@@ -26,7 +26,7 @@
  * - All methods return normalized Recipe objects
  */
 
-import type { Recipe, IngredientGroup } from "@/types/recipe";
+import type { Recipe, IngredientGroup, InstructionGroup } from "@/types/recipe";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export const database = {
@@ -43,14 +43,18 @@ export const database = {
 
     if (error) throw new Error("Failed to fetch recipes");
 
-    // Fetch ingredient groups for each recipe
+    // Fetch ingredient groups and instruction groups for each recipe
     const recipesWithGroups = await Promise.all(
       data.map(async (recipe) => {
         const ingredientGroups = await this.getIngredientGroups(
           supabase,
           recipe.id
         );
-        return { ...recipe, ingredientGroups };
+        const instructionGroups = await this.getInstructionGroups(
+          supabase,
+          recipe.id
+        );
+        return { ...recipe, ingredientGroups, instructionGroups };
       })
     );
 
@@ -73,14 +77,18 @@ export const database = {
 
     if (error) throw new Error("Failed to fetch user recipes");
 
-    // Fetch ingredient groups for each recipe
+    // Fetch ingredient groups and instruction groups for each recipe
     const recipesWithGroups = await Promise.all(
       data.map(async (recipe) => {
         const ingredientGroups = await this.getIngredientGroups(
           supabase,
           recipe.id
         );
-        return { ...recipe, ingredientGroups };
+        const instructionGroups = await this.getInstructionGroups(
+          supabase,
+          recipe.id
+        );
+        return { ...recipe, ingredientGroups, instructionGroups };
       })
     );
 
@@ -97,14 +105,18 @@ export const database = {
       .order("created_at", { ascending: false });
     if (error) throw new Error("Failed to fetch featured recipes");
 
-    // Fetch ingredient groups for each recipe
+    // Fetch ingredient groups and instruction groups for each recipe
     const recipesWithGroups = await Promise.all(
       data.map(async (recipe) => {
         const ingredientGroups = await this.getIngredientGroups(
           supabase,
           recipe.id
         );
-        return { ...recipe, ingredientGroups };
+        const instructionGroups = await this.getInstructionGroups(
+          supabase,
+          recipe.id
+        );
+        return { ...recipe, ingredientGroups, instructionGroups };
       })
     );
 
@@ -132,7 +144,11 @@ export const database = {
         supabase,
         data.id
       );
-      return normalizeRecipe({ ...data, ingredientGroups });
+      const instructionGroups = await this.getInstructionGroups(
+        supabase,
+        data.id
+      );
+      return normalizeRecipe({ ...data, ingredientGroups, instructionGroups });
     }
 
     return null;
@@ -159,7 +175,11 @@ export const database = {
         supabase,
         data.id
       );
-      return normalizeRecipe({ ...data, ingredientGroups });
+      const instructionGroups = await this.getInstructionGroups(
+        supabase,
+        data.id
+      );
+      return normalizeRecipe({ ...data, ingredientGroups, instructionGroups });
     }
 
     return null;
@@ -219,6 +239,60 @@ export const database = {
     return groupsWithIngredients;
   },
 
+  // Get instruction groups for a recipe
+  async getInstructionGroups(
+    supabase: SupabaseClient,
+    recipeId: string
+  ): Promise<InstructionGroup[]> {
+    const { data: groups, error: groupsError } = await supabase
+      .from("instruction_groups")
+      .select("*")
+      .eq("recipe_id", recipeId)
+      .order("sort_order", { ascending: true });
+
+    if (groupsError) {
+      console.error("Error fetching instruction groups:", groupsError);
+      return [];
+    }
+
+    if (!groups || groups.length === 0) {
+      return [];
+    }
+
+    // Fetch instructions for each group
+    const groupsWithInstructions = await Promise.all(
+      groups.map(async (group) => {
+        const { data: instructions, error: instructionsError } = await supabase
+          .from("instructions")
+          .select("*")
+          .eq("group_id", group.id)
+          .order("sort_order", { ascending: true });
+
+        if (instructionsError) {
+          console.error(
+            "Error fetching instructions for group:",
+            instructionsError
+          );
+          return {
+            id: group.id,
+            name: group.name,
+            instructions: [],
+            sortOrder: group.sort_order,
+          };
+        }
+
+        return {
+          id: group.id,
+          name: group.name,
+          instructions: instructions?.map((inst) => inst.content) || [],
+          sortOrder: group.sort_order,
+        };
+      })
+    );
+
+    return groupsWithInstructions;
+  },
+
   // Create a new recipe
   // Automatically sets user_id and handles admin permissions
   async createRecipe(
@@ -236,6 +310,7 @@ export const database = {
       featured,
       featuredOrder,
       ingredientGroups,
+      instructionGroups,
       imagePath,
       ...rest
     } = recipe;
@@ -272,6 +347,15 @@ export const database = {
         supabase,
         recipeData.id,
         ingredientGroups
+      );
+    }
+
+    // Save instruction groups if provided
+    if (instructionGroups && instructionGroups.length > 0) {
+      await this.saveInstructionGroups(
+        supabase,
+        recipeData.id,
+        instructionGroups
       );
     }
 
@@ -336,6 +420,65 @@ export const database = {
     }
   },
 
+  // Save instruction groups for a recipe
+  async saveInstructionGroups(
+    supabase: SupabaseClient,
+    recipeId: string,
+    instructionGroups: InstructionGroup[]
+  ): Promise<void> {
+    // Delete existing instruction groups and instructions for this recipe
+    await supabase.from("instructions").delete().eq("recipe_id", recipeId);
+    await supabase
+      .from("instruction_groups")
+      .delete()
+      .eq("recipe_id", recipeId);
+
+    // Insert new instruction groups
+    for (
+      let groupIndex = 0;
+      groupIndex < instructionGroups.length;
+      groupIndex++
+    ) {
+      const group = instructionGroups[groupIndex];
+
+      const { data: groupData, error: groupError } = await supabase
+        .from("instruction_groups")
+        .insert({
+          recipe_id: recipeId,
+          name: group.name,
+          sort_order: groupIndex,
+        })
+        .select()
+        .single();
+
+      if (groupError) {
+        console.error("Error creating instruction group:", groupError);
+        throw new Error("Failed to create instruction group");
+      }
+
+      // Insert instructions for this group
+      if (group.instructions && group.instructions.length > 0) {
+        const instructionsToInsert = group.instructions.map(
+          (instruction, instructionIndex) => ({
+            recipe_id: recipeId,
+            group_id: groupData.id,
+            content: instruction,
+            sort_order: instructionIndex,
+          })
+        );
+
+        const { error: instructionsError } = await supabase
+          .from("instructions")
+          .insert(instructionsToInsert);
+
+        if (instructionsError) {
+          console.error("Error creating instructions:", instructionsError);
+          throw new Error("Failed to create instructions");
+        }
+      }
+    }
+  },
+
   // Update a recipe
   // Only allows updates to user's own recipes or admin updates
   async updateRecipe(
@@ -354,6 +497,7 @@ export const database = {
       featured,
       featuredOrder,
       ingredientGroups,
+      instructionGroups,
       imagePath,
       ...rest
     } = updates;
@@ -387,6 +531,11 @@ export const database = {
       await this.saveIngredientGroups(supabase, id, ingredientGroups);
     }
 
+    // Update instruction groups if provided
+    if (instructionGroups !== undefined) {
+      await this.saveInstructionGroups(supabase, id, instructionGroups);
+    }
+
     const normalizedRecipe = await this.getRecipe(supabase, id);
     console.log("Recipe updated in database:", normalizedRecipe);
     return normalizedRecipe!;
@@ -410,9 +559,11 @@ export const database = {
       console.log("image_path column not available, skipping image deletion");
     }
 
-    // Delete ingredients and ingredient groups first (cascade should handle this, but being explicit)
+    // Delete ingredients, ingredient groups, instructions, and instruction groups first (cascade should handle this, but being explicit)
     await supabase.from("ingredients").delete().eq("recipe_id", id);
     await supabase.from("ingredient_groups").delete().eq("recipe_id", id);
+    await supabase.from("instructions").delete().eq("recipe_id", id);
+    await supabase.from("instruction_groups").delete().eq("recipe_id", id);
 
     const { error } = await supabase.from("recipes").delete().eq("id", id);
     if (error) {
@@ -559,14 +710,18 @@ export const database = {
         index === self.findIndex((r) => r.id === recipe.id)
     );
 
-    // Fetch ingredient groups for each recipe
+    // Fetch ingredient groups and instruction groups for each recipe
     const recipesWithGroups = await Promise.all(
       uniqueRecipes.map(async (recipe: Recipe) => {
         const ingredientGroups = await this.getIngredientGroups(
           supabase,
           recipe.id
         );
-        return { ...recipe, ingredientGroups };
+        const instructionGroups = await this.getInstructionGroups(
+          supabase,
+          recipe.id
+        );
+        return { ...recipe, ingredientGroups, instructionGroups };
       })
     );
 
@@ -588,14 +743,18 @@ export const database = {
 
     if (error) throw new Error("Failed to fetch recipes by category");
 
-    // Fetch ingredient groups for each recipe
+    // Fetch ingredient groups and instruction groups for each recipe
     const recipesWithGroups = await Promise.all(
       data.map(async (recipe) => {
         const ingredientGroups = await this.getIngredientGroups(
           supabase,
           recipe.id
         );
-        return { ...recipe, ingredientGroups };
+        const instructionGroups = await this.getInstructionGroups(
+          supabase,
+          recipe.id
+        );
+        return { ...recipe, ingredientGroups, instructionGroups };
       })
     );
 
@@ -613,7 +772,14 @@ export const database = {
     } = await supabase.auth.getUser();
     if (!user) throw new Error("User not authenticated");
 
-    const { prepTime, cookTime, ingredientGroups, imagePath, ...rest } = recipe;
+    const {
+      prepTime,
+      cookTime,
+      ingredientGroups,
+      instructionGroups,
+      imagePath,
+      ...rest
+    } = recipe;
 
     const { data, error } = await supabase
       .from("recipes")
@@ -641,6 +807,11 @@ export const database = {
       await this.saveIngredientGroups(supabase, data.id, ingredientGroups);
     }
 
+    // Save instruction groups if provided
+    if (instructionGroups && instructionGroups.length > 0) {
+      await this.saveInstructionGroups(supabase, data.id, instructionGroups);
+    }
+
     // Fetch the complete recipe with ingredient groups
     const completeRecipe = await this.getRecipe(supabase, data.id);
     return completeRecipe!;
@@ -658,6 +829,7 @@ const normalizeRecipe = (recipe: Record<string, unknown>): Recipe => ({
   ingredients: recipe.ingredients as string[],
   ingredientGroups: recipe.ingredientGroups as IngredientGroup[],
   instructions: recipe.instructions as string[],
+  instructionGroups: recipe.instructionGroups as InstructionGroup[],
   prepTime: recipe.prep_time as string,
   cookTime: recipe.cook_time as string,
   servings: recipe.servings as string,

@@ -31,6 +31,7 @@ import type {
   Recipe,
   AIRecipeAnalysisResult,
   IngredientGroup,
+  InstructionGroup,
 } from "@/types/recipe";
 import { AIRecipeAnalyzer } from "@/components/features/ai-recipe-analyzer/ai-recipe-analyzer";
 // import { URLRecipeExtractor } from "@/components/url-recipe-extractor/url-recipe-extractor";
@@ -89,12 +90,40 @@ export function RecipeForm({
     ];
   };
 
+  // Initialize instruction groups from existing recipe or create default structure
+  const initializeInstructionGroups = (): InstructionGroup[] => {
+    if (recipe?.instructionGroups && recipe.instructionGroups.length > 0) {
+      return recipe.instructionGroups;
+    }
+
+    // If recipe has old instructions array, convert to a default group
+    if (recipe?.instructions && recipe.instructions.length > 0) {
+      return [
+        {
+          name: "Instructions",
+          instructions: recipe.instructions.filter((inst) => inst.trim()),
+          sortOrder: 0,
+        },
+      ];
+    }
+
+    // Default empty group
+    return [
+      {
+        name: "Instructions",
+        instructions: [""],
+        sortOrder: 0,
+      },
+    ];
+  };
+
   const [formData, setFormData] = useState({
     title: recipe?.title || "",
     description: recipe?.description || "",
     ingredients: recipe?.ingredients || [""], // Keep for backward compatibility
     ingredientGroups: initializeIngredientGroups(),
-    instructions: recipe?.instructions || [""],
+    instructions: recipe?.instructions || [""], // Keep for backward compatibility
+    instructionGroups: initializeInstructionGroups(),
     prepTime: recipe?.prepTime || "",
     cookTime: recipe?.cookTime || "",
     servings: recipe?.servings || "",
@@ -125,16 +154,30 @@ export function RecipeForm({
       inst.trim()
     );
 
+    // Filter out empty instructions from all groups
+    const filteredInstructionGroups = formData.instructionGroups
+      .map((group) => ({
+        ...group,
+        instructions: group.instructions.filter((inst) => inst.trim()),
+      }))
+      .filter((group) => group.instructions.length > 0);
+
     // Flatten ingredients for backward compatibility
     const flattenedIngredients = filteredGroups.flatMap(
       (group) => group.ingredients
+    );
+
+    // Flatten instructions for backward compatibility
+    const flattenedInstructions = filteredInstructionGroups.flatMap(
+      (group) => group.instructions
     );
 
     onSubmit({
       ...formData,
       ingredients: flattenedIngredients,
       ingredientGroups: filteredGroups,
-      instructions: filteredInstructions,
+      instructions: flattenedInstructions,
+      instructionGroups: filteredInstructionGroups,
     });
   };
 
@@ -288,6 +331,89 @@ export function RecipeForm({
     }));
   };
 
+  // Instruction group management
+  const addInstructionGroup = () => {
+    setFormData((prev) => ({
+      ...prev,
+      instructionGroups: [
+        ...prev.instructionGroups,
+        {
+          name: `Group ${prev.instructionGroups.length + 1}`,
+          instructions: [""],
+          sortOrder: prev.instructionGroups.length,
+        },
+      ],
+    }));
+  };
+
+  const removeInstructionGroup = (groupIndex: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      instructionGroups: prev.instructionGroups.filter(
+        (_, i) => i !== groupIndex
+      ),
+    }));
+  };
+
+  const updateInstructionGroupName = (groupIndex: number, name: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      instructionGroups: prev.instructionGroups.map((group, i) =>
+        i === groupIndex ? { ...group, name } : group
+      ),
+    }));
+  };
+
+  const addInstructionToGroup = (groupIndex: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      instructionGroups: prev.instructionGroups.map((group, i) =>
+        i === groupIndex
+          ? { ...group, instructions: [...group.instructions, ""] }
+          : group
+      ),
+    }));
+  };
+
+  const removeInstructionFromGroup = (
+    groupIndex: number,
+    instructionIndex: number
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      instructionGroups: prev.instructionGroups.map((group, i) =>
+        i === groupIndex
+          ? {
+              ...group,
+              instructions: group.instructions.filter(
+                (_, j) => j !== instructionIndex
+              ),
+            }
+          : group
+      ),
+    }));
+  };
+
+  const updateInstructionInGroup = (
+    groupIndex: number,
+    instructionIndex: number,
+    value: string
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      instructionGroups: prev.instructionGroups.map((group, i) =>
+        i === groupIndex
+          ? {
+              ...group,
+              instructions: group.instructions.map((inst, j) =>
+                j === instructionIndex ? value : inst
+              ),
+            }
+          : group
+      ),
+    }));
+  };
+
   const addInstruction = () => {
     setFormData((prev) => ({
       ...prev,
@@ -337,12 +463,40 @@ export function RecipeForm({
       ];
     }
 
+    // Handle both old instructions array and new instruction groups
+    let instructionGroups: InstructionGroup[] = [];
+
+    if (
+      recipeData.instructionGroups &&
+      recipeData.instructionGroups.length > 0
+    ) {
+      instructionGroups = recipeData.instructionGroups;
+    } else if (recipeData.instructions && recipeData.instructions.length > 0) {
+      // Convert old instructions array to a default group
+      instructionGroups = [
+        {
+          name: "Instructions",
+          instructions: recipeData.instructions.filter((inst) => inst.trim()),
+          sortOrder: 0,
+        },
+      ];
+    } else {
+      instructionGroups = [
+        {
+          name: "Instructions",
+          instructions: [""],
+          sortOrder: 0,
+        },
+      ];
+    }
+
     setFormData({
       title: recipeData.title || "",
       description: recipeData.description || "",
       ingredients: recipeData.ingredients || [""],
       ingredientGroups,
       instructions: recipeData.instructions || [""],
+      instructionGroups,
       prepTime: recipeData.prepTime || "",
       cookTime: recipeData.cookTime || "",
       servings: recipeData.servings || "",
@@ -825,36 +979,87 @@ export function RecipeForm({
             </div>
           </div>
 
-          {/* Instructions - Dynamic list with step numbers and add/remove functionality */}
+          {/* Instructions - Grouped with add/remove functionality */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.cardTitle}>Instructions</h3>
               <CardLine />
             </div>
             <div className={styles.cardContent}>
-              {formData.instructions.map((instruction, index) => (
-                <div key={index} className={styles.listItem}>
-                  <div className={styles.stepNumber}>{index + 1}</div>
-                  <textarea
-                    value={instruction}
-                    onChange={(e) => updateInstruction(index, e.target.value)}
-                    placeholder={`Step ${index + 1}...`}
-                    className={styles.textarea}
-                  />
-                  {formData.instructions.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeInstruction(index)}
-                      className={styles.removeButton}
-                    >
-                      <X className={styles.buttonIcon} />
-                    </button>
-                  )}
+              {formData.instructionGroups.map((group, groupIndex) => (
+                <div key={groupIndex} className={styles.ingredientGroup}>
+                  <div className={styles.groupHeader}>
+                    <input
+                      value={group.name}
+                      onChange={(e) =>
+                        updateInstructionGroupName(groupIndex, e.target.value)
+                      }
+                      placeholder="Group name (e.g., 'Preheat & Prep')"
+                      className={styles.groupNameInput}
+                    />
+                    {formData.instructionGroups.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeInstructionGroup(groupIndex)}
+                        className={styles.removeGroupButton}
+                      >
+                        <X className={styles.buttonIcon} />
+                      </button>
+                    )}
+                  </div>
+
+                  {group.instructions.map((instruction, instructionIndex) => (
+                    <div key={instructionIndex} className={styles.listItem}>
+                      <div className={styles.stepNumber}>
+                        {instructionIndex + 1}
+                      </div>
+                      <textarea
+                        value={instruction}
+                        onChange={(e) =>
+                          updateInstructionInGroup(
+                            groupIndex,
+                            instructionIndex,
+                            e.target.value
+                          )
+                        }
+                        placeholder={`Step ${instructionIndex + 1}...`}
+                        className={styles.textarea}
+                      />
+                      {group.instructions.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            removeInstructionFromGroup(
+                              groupIndex,
+                              instructionIndex
+                            )
+                          }
+                          className={styles.removeButton}
+                        >
+                          <X className={styles.buttonIcon} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  <Button
+                    onClick={() => addInstructionToGroup(groupIndex)}
+                    variant="outline"
+                    className={styles.addIngredientButton}
+                  >
+                    <Plus className={styles.buttonIcon} />
+                    Add Step
+                  </Button>
                 </div>
               ))}
-              <Button variant="outline" onClick={addInstruction}>
-                <Plus className={styles.buttonIcon} />
-                Add Step
+
+              <Button
+                onClick={addInstructionGroup}
+                variant="outline"
+                className={styles.addGroupButton}
+              >
+                <FolderPlus className={styles.buttonIcon} />
+                Add Instruction Group
               </Button>
             </div>
           </div>

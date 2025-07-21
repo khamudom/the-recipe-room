@@ -233,3 +233,17 @@
   letter-spacing: 0.05em;
   position: relative;
 }
+
+/* Instruction Grouping Styles */
+.instructionGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.instructionGroup {
+  border: 2px solid #fbbf24;
+  border-radius: var(--radius-medium);
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fefcf3 0%, #fef7ed 100%);
+}

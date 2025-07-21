@@ -13,7 +13,7 @@ export default function AddRecipePage() {
 
   const createRecipeMutation = useCreateRecipe({
     onSuccess: (newRecipe) => {
-      router.push(`/recipe/${newRecipe.slug}`);
+      router.replace(`/recipe/${newRecipe.slug}`);
     },
   });
 

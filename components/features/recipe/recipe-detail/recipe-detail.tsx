@@ -59,6 +59,43 @@ export function RecipeDetail({
     );
   };
 
+  // Helper function to render instructions (grouped or flat)
+  const renderInstructions = () => {
+    if (recipe.instructionGroups && recipe.instructionGroups.length > 0) {
+      return (
+        <div className={styles.instructionGroups}>
+          {recipe.instructionGroups.map((group, groupIndex) => (
+            <div key={groupIndex} className={styles.instructionGroup}>
+              <h4 className={styles.groupTitle}>{group.name}</h4>
+              <ol className={styles.instructionsList}>
+                {group.instructions.map((instruction, index) => (
+                  <li key={index} className={styles.instructionItem}>
+                    <div className={styles.stepNumber}>{index + 1}</div>
+                    <span className={styles.instructionText}>
+                      {instruction}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // Fallback to old instructions array
+    return (
+      <ol className={styles.instructionsList}>
+        {recipe.instructions.map((instruction, index) => (
+          <li key={index} className={styles.instructionItem}>
+            <div className={styles.stepNumber}>{index + 1}</div>
+            <span className={styles.instructionText}>{instruction}</span>
+          </li>
+        ))}
+      </ol>
+    );
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -151,18 +188,7 @@ export function RecipeDetail({
               <h3 className={styles.sectionTitle}>Instructions</h3>
               <div className={styles.sectionLine}></div>
             </div>
-            <div className={styles.cardContent}>
-              <ol className={styles.instructionsList}>
-                {recipe.instructions.map((instruction, index) => (
-                  <li key={index} className={styles.instructionItem}>
-                    <div className={styles.stepNumber}>{index + 1}</div>
-                    <span className={styles.instructionText}>
-                      {instruction}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </div>
+            <div className={styles.cardContent}>{renderInstructions()}</div>
           </div>
         </div>
       </div>
