@@ -3,7 +3,7 @@
 import React, { useCallback, useRef } from "react";
 import { AIChefButton } from "./ai-chef-button/ai-chef-button";
 import { AIChefChatWindow } from "./ai-chef-chat-window/ai-chef-chat-window";
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
+import { useAppSelector, useAppDispatch } from "@/lib/store/store-hooks";
 import { openAIChefChat, closeAIChefChat } from "@/lib/store/slices/uiSlice";
 
 export function AIChefWidget() {

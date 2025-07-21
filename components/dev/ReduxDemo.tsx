@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
+import { useAppSelector, useAppDispatch } from "@/lib/store/store-hooks";
 import {
   setTheme,
   toggleTheme,

@@ -43,7 +43,7 @@ lib/store/
 ### 1. Reading State
 
 ```typescript
-import { useAppSelector } from "@/lib/store/hooks";
+import { useAppSelector } from "@/lib/store/store-hooks";
 
 function MyComponent() {
   const theme = useAppSelector((state) => state.ui.theme);
@@ -56,7 +56,7 @@ function MyComponent() {
 ### 2. Dispatching Actions
 
 ```typescript
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch } from "@/lib/store/store-hooks";
 import { toggleTheme, setLoading } from "@/lib/store/slices/uiSlice";
 
 function MyComponent() {
@@ -221,7 +221,7 @@ export default mySlice.reducer;
 ### Using in Components
 
 ```typescript
-import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
+import { useAppSelector, useAppDispatch } from "@/lib/store/store-hooks";
 import { increment, setLoading } from "@/lib/store/slices/mySlice";
 
 function MyComponent() {
