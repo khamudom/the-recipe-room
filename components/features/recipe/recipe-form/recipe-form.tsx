@@ -150,10 +150,6 @@ export function RecipeForm({
       }))
       .filter((group) => group.ingredients.length > 0);
 
-    const filteredInstructions = formData.instructions.filter((inst) =>
-      inst.trim()
-    );
-
     // Filter out empty instructions from all groups
     const filteredInstructionGroups = formData.instructionGroups
       .map((group) => ({
@@ -410,29 +406,6 @@ export function RecipeForm({
               ),
             }
           : group
-      ),
-    }));
-  };
-
-  const addInstruction = () => {
-    setFormData((prev) => ({
-      ...prev,
-      instructions: [...prev.instructions, ""],
-    }));
-  };
-
-  const removeInstruction = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      instructions: prev.instructions.filter((_, i) => i !== index),
-    }));
-  };
-
-  const updateInstruction = (index: number, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      instructions: prev.instructions.map((inst, i) =>
-        i === index ? value : inst
       ),
     }));
   };
