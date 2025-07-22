@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { HeroSection } from "@/components/layout/hero/hero";
 import { SearchControls } from "@/components/features/search/search-controls/search-controls";
@@ -18,7 +18,6 @@ import styles from "../home.module.css";
 
 export default function RecipeBook() {
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState("");
 
   const {
     data: featuredRecipes = [],
@@ -60,10 +59,6 @@ export default function RecipeBook() {
     [router]
   );
 
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchTerm(value);
-  }, []);
-
   const handleRetry = useCallback(() => {
     window.location.reload();
   }, []);
@@ -99,10 +94,7 @@ export default function RecipeBook() {
         <div className={styles.content}>
           <HeroSection />
 
-          <SearchControls
-            searchTerm={searchTerm}
-            onSearchChange={handleSearchChange}
-          />
+          <SearchControls />
 
           {renderContent()}
 

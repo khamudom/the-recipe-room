@@ -1,27 +1,56 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAppSelector, useAppDispatch } from "@/lib/store/store-hooks";
+import { setQuery, clearQuery } from "@/lib/store/slices/searchSlice";
+import { searchRecipes } from "@/lib/store/slices/searchThunks";
 import { SearchControls } from "@/components/features/search/search-controls/search-controls";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
-import { useSearchRecipes } from "@/hooks/use-recipes-query";
 import type { Recipe } from "@/types/recipe";
 import styles from "./search-results.module.css";
 
 export function SearchResultsClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawQuery = searchParams.get("q") || "";
-  const query = rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
-  const [searchTerm, setSearchTerm] = useState(query);
+  const dispatch = useAppDispatch();
+  const hasInitialized = useRef(false);
 
-  const { data: recipes = [], isLoading, error } = useSearchRecipes(query);
+  // Get search state from Redux
+  const {
+    query,
+    results: recipes,
+    isLoading,
+    error,
+  } = useAppSelector((state) => state.search);
 
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchTerm(value);
-  }, []);
+  // Initialize search from URL params only once
+  useEffect(() => {
+    if (!hasInitialized.current) {
+      const rawQuery = searchParams.get("q") || "";
+      const formattedQuery =
+        rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
+
+      if (formattedQuery) {
+        dispatch(setQuery(formattedQuery));
+        dispatch(searchRecipes(formattedQuery));
+      }
+      hasInitialized.current = true;
+    }
+  }, [searchParams, dispatch]);
+
+  // Clear search when navigating away from search page
+  useEffect(() => {
+    return () => {
+      // Only clear if we're not on a search page anymore
+      const currentPath = window.location.pathname;
+      if (!currentPath.includes("/search")) {
+        dispatch(clearQuery());
+      }
+    };
+  }, [dispatch]);
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
@@ -79,7 +108,7 @@ export function SearchResultsClient() {
       return (
         <div className={styles.noResults}>
           <h2>Search Error</h2>
-          <p>{error?.message || "Something went wrong with your search"}</p>
+          <p>{error || "Something went wrong with your search"}</p>
         </div>
       );
     }
@@ -96,10 +125,7 @@ export function SearchResultsClient() {
             <h1 className="section-header">Search Results for {query}</h1>
           </div>
 
-          <SearchControls
-            searchTerm={searchTerm}
-            onSearchChange={handleSearchChange}
-          />
+          <SearchControls />
 
           {renderResults()}
         </div>
